@@ -36,7 +36,7 @@
   .daybtns{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
   .daybtns button{padding:8px 10px;font-size:13px;background:#334155}
   .daybtns button.on{background:#a855f7}
-  .cal{position:relative;margin-left:48px;height:680px;background:#171724;border-radius:16px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+  .cal{position:relative;margin-left:48px;height:510px;background:#171724;border-radius:16px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
   .calhour{position:absolute;left:-48px;width:44px;text-align:right;font-size:11px;color:#c4b5fd}
   .calline{position:absolute;left:0;right:0;height:1px;background:#ffffff22}
   .calblock{position:absolute;left:6px;right:6px;border-radius:12px;padding:8px;font-size:13px;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.35)}
@@ -46,6 +46,8 @@
   .calblock b{display:block}
   .calblock small{color:#fff;opacity:.85}
   .bar i{display:block;height:100%;background:#a855f7}
+  #mealList,#workoutList,#weightList{max-height:110px;overflow:auto}
+  .card h2{margin-bottom:8px}
   @media(max-width:480px){
     body{padding:10px 10px 30px}
     h1{font-size:28px}
@@ -117,7 +119,7 @@
   <p class="small" style="margin:8px 0 0">Tap a day to see that day. Times move when you change them below. School days use bell times for recess and lunch.</p>
 </div>
 
-<div class="card" id="scheduleTimes">
+<details class="card" id="scheduleTimes"><summary>Change times</summary>
   <h2>Change times</h2>
   <p class="small">School days use your bell times for recess and lunch, so those can't move. Everything else you can change here.</p>
   <label style="font-size:14px;color:#ddd">Breakfast (no-school days)</label><input id="ctBreakfast" type="time">
@@ -138,13 +140,13 @@
 <div class="card" id="scheduleWeek">
   <h2>Week schedule</h2>
   <ul id="scheduleList"></ul>
-</div>
+</details>
 
 <div class="card" id="calendarSection">
   <h2>Calendar</h2>
   <p class="small" style="margin:0 0 8px">This is your planner, separate from the tracker above. Drag a block up or down to move it. Use the arrows on a block to move it to another day.</p>
   <div class="daybtns" id="calDayBtns"></div>
-  <div class="cal" id="dragCalView" style="height:680px"></div>
+  <div class="cal" id="dragCalView" style="height:510px"></div>
   <ul id="calDetailList"></ul>
   <h2 style="margin-top:14px">Add a block</h2>
   <input id="newBlockTitle" placeholder="What is it? e.g. Homework">
@@ -350,7 +352,7 @@ function enableReminders(){
 }
 
 var selectedDay = new Date().getDay();
-function calTop(hour){ return (hour-6)*40; }
+function calTop(hour){ return (hour-6)*30; }
 function renderCalendar(plan){
   var day = selectedDay;
   var meals = buildMeals(day, state.customTimes||{});
@@ -362,7 +364,7 @@ function renderCalendar(plan){
   var html = '';
   for(var h=6; h<=22; h++){ html += '<div class="calhour" style="top:'+(calTop(h)-6)+'px">'+((h%12===0?12:h%12)+(h<12?' AM':' PM'))+'</div><div class="calline" style="top:'+calTop(h)+'px"></div>'; }
   function block(startHour, endHour, color, title, sub){
-    var top=calTop(startHour), height=Math.max(28,(endHour-startHour)*40);
+    var top=calTop(startHour), height=Math.max(28,(endHour-startHour)*30);
     html += '<div class="calblock" style="top:'+top+'px;height:'+height+'px;background:'+color+'"><b>'+title+'</b><small>'+sub+'</small></div>';
   }
   block(6, 6.5, '#475569', 'Wake up', '6:00 AM');
@@ -412,7 +414,7 @@ function renderDragCalendar(){
   for(var h=6; h<=22; h++){ html += '<div class="calhour" style="top:'+(calTop(h)-6)+'px">'+((h%12===0?12:h%12)+(h<12?' AM':' PM'))+'</div><div class="calline" style="top:'+calTop(h)+'px"></div>'; }
   var mealsForDay = buildMeals(day, state.customTimes||{});
   evs.forEach(function(ev){
-    var top=calTop(ev.start), height=Math.max(28, ev.dur*40);
+    var top=calTop(ev.start), height=Math.max(28, ev.dur*30);
     var arrows = ev.fixed ? '' : '<span class="mv" onclick="event.stopPropagation();moveCalEvent('+day+',\''+ev.id+'\',-1)">◀</span><span class="mv" onclick="event.stopPropagation();moveCalEvent('+day+',\''+ev.id+'\',1)">▶</span>';
     var del = ev.id.indexOf('custom')===0 ? '<span class="mv" onclick="event.stopPropagation();deleteCalEvent('+day+',\''+ev.id+'\')">✕</span>' : '';
     var detail = fmtHour(ev.start)+' - '+fmtHour(ev.start+ev.dur);
@@ -446,7 +448,7 @@ function renderDragCalendar(){
     });
     el.addEventListener('pointermove', function(e){
       if(!dragging) return;
-      var deltaHours = (e.clientY-startY)/40;
+      var deltaHours = (e.clientY-startY)/30;
       var newStart = Math.round((origStart+deltaHours)*2)/2;
       if(newStart<6) newStart=6; if(newStart>21.5) newStart=21.5;
       el.style.top = calTop(newStart)+'px';
@@ -479,8 +481,13 @@ function switchSection(name){
   document.getElementById('tabCalendar').className = name==='calendar' ? 'on' : '';
   var scheduleIds = ['scheduleMyPlan','scheduleTodayWorkout','scheduleMealPlan','scheduleWeek','scheduleCal','scheduleTimes','calendarSection'];
   document.querySelectorAll('body > .card, body > .alert, body > details').forEach(function(el){
+    var isCalendarPage = el.id==='calendarSection' || el.id==='scheduleTimes';
     var isSchedule = scheduleIds.indexOf(el.id)>=0;
-    el.style.display = isSchedule ? (name==='calendar' ? 'block' : 'none') : (name==='tracker' ? 'block' : 'none');
+    if(name==='calendar'){
+      el.style.display = isCalendarPage ? 'block' : 'none';
+    } else {
+      el.style.display = isSchedule ? 'none' : 'block';
+    }
   });
   window.__section = name;
 }
