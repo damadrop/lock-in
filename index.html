@@ -138,9 +138,9 @@ var SCHEDULE = ['Legs','Upper Body','Rest','Legs','Upper Body','Rest','Rest'];
 var DAYNAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 var MEALS = [
   {name:'Breakfast', time:'8:00 AM', hour:8, share:0.25, cum:0.25},
-  {name:'Lunch', time:'12:00 PM', hour:12, share:0.30, cum:0.55},
+  {name:'Lunch', time:'1:00 PM', hour:13, share:0.30, cum:0.55},
   {name:'Snack', time:'4:00 PM', hour:16, share:0.20, cum:0.75},
-  {name:'Dinner', time:'7:00 PM', hour:19, share:0.25, cum:1.00}
+  {name:'Dinner', time:'8:30 PM', hour:20.5, share:0.25, cum:1.00}
 ];
 function todayKey(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
