@@ -7,7 +7,7 @@
 <title>Lock In</title>
 <style>
   *{box-sizing:border-box}
-  body{margin:0;background:linear-gradient(135deg,#ff8fb3 0%,#e879f9 35%,#a855f7 65%,#7c3aed 100%);background-attachment:fixed;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:16px 16px 40px;max-width:560px;margin-left:auto;margin-right:auto}
+  body{margin:0;background:linear-gradient(180deg,#171233 0%,#0b0620 100%);background-attachment:fixed;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:16px 16px 40px;max-width:560px;margin-left:auto;margin-right:auto}
   h1{font-size:34px;margin:4px 0 2px;letter-spacing:-.5px;text-shadow:0 2px 12px rgba(0,0,0,.3)}
   h2{font-size:19px;margin:0 0 10px}
   .sub{color:#c4b5fd;margin:0 0 16px}
@@ -19,7 +19,7 @@
   .total b{font-size:22px;display:block}
   .total span{font-size:12px;color:#c4b5fd}
   input,select{width:100%;padding:13px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:#2e2e42;color:#fff;font-size:16px;margin:0 0 8px}
-  button{padding:13px 16px;border-radius:14px;border:0;background:linear-gradient(90deg,#ec4899,#a855f7);color:#fff;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(168,85,247,.45)}
+  button{padding:13px 16px;border-radius:14px;border:0;background:linear-gradient(90deg,#6366f1,#a855f7);color:#fff;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(168,85,247,.45)}
   button.secondary{background:#3b3b52;box-shadow:none}
   button.danger{background:#7f1d1d;padding:6px 10px;font-size:13px}
   button.big{width:100%}
@@ -36,7 +36,7 @@
   .daybtns{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
   .daybtns button{padding:8px 10px;font-size:13px;background:#334155}
   .daybtns button.on{background:#a855f7}
-  .cal{position:relative;margin-left:48px;height:840px;background:#171724;border-radius:16px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+  .cal{position:relative;margin-left:48px;height:680px;background:#171724;border-radius:16px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
   .calhour{position:absolute;left:-48px;width:44px;text-align:right;font-size:11px;color:#c4b5fd}
   .calline{position:absolute;left:0;right:0;height:1px;background:#ffffff22}
   .calblock{position:absolute;left:6px;right:6px;border-radius:12px;padding:8px;font-size:13px;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.35)}
@@ -46,6 +46,18 @@
   .calblock b{display:block}
   .calblock small{color:#fff;opacity:.85}
   .bar i{display:block;height:100%;background:#a855f7}
+  @media(max-width:480px){
+    body{padding:10px 10px 30px}
+    h1{font-size:28px}
+    .card{padding:12px;margin-bottom:12px;border-radius:16px}
+    .total{flex:1 1 42%;min-width:0}
+    .total b{font-size:19px}
+    button{padding:11px 12px;font-size:15px}
+    input,select{padding:11px}
+    .cal{margin-left:38px}
+    .calhour{width:34px;left:-38px}
+    .calblock,.dragblock{padding:6px}
+  }
 </style>
 </head>
 <body>
@@ -85,19 +97,19 @@
   <p class="small" id="lastWeight" style="margin-bottom:0"></p>
 </div>
 
-<div class="card">
+<div class="card" id="scheduleMyPlan">
   <h2>My plan</h2>
   <p style="margin:0" id="planText">Calculating…</p>
   <p class="small" style="margin:8px 0 0">Your target: 2,900 cal a day. Eat every day, even on rest days.</p>
 </div>
 
-<div class="card">
+<div class="card" id="scheduleTodayWorkout">
   <h2>Today's workout</h2>
   <p style="margin:0" id="todayWorkout">—</p>
   <button class="big" id="workoutDoneBtn" style="margin-top:12px" onclick="markWorkoutDone()">Mark workout done</button>
 </div>
 
-<div class="card">
+<div class="card" id="scheduleCal">
   <h2>Schedule</h2>
   <p class="small" style="margin:0 0 8px" id="dayTypeLabel"></p>
   <div class="daybtns" id="dayBtns"></div>
@@ -105,7 +117,7 @@
   <p class="small" style="margin:8px 0 0">Tap a day to see that day. Times move when you change them below. School days use bell times for recess and lunch.</p>
 </div>
 
-<div class="card">
+<div class="card" id="scheduleTimes">
   <h2>Change times</h2>
   <p class="small">School days use your bell times for recess and lunch, so those can't move. Everything else you can change here.</p>
   <label style="font-size:14px;color:#ddd">Breakfast (no-school days)</label><input id="ctBreakfast" type="time">
@@ -116,14 +128,14 @@
   <button class="big" onclick="saveTimes()">Save times</button>
 </div>
 
-<div class="card">
+<div class="card" id="scheduleMealPlan">
   <h2>Calories through the day</h2>
   <ul id="mealPlanList"></ul>
   <button class="secondary" style="margin-top:12px" onclick="enableReminders()">Turn on eat reminders</button>
   <p class="small" style="margin-bottom:0">Reminders work while this app is open. On your phone, just open the app at meal times and the Time to Eat banner will show if you're behind.</p>
 </div>
 
-<div class="card">
+<div class="card" id="scheduleWeek">
   <h2>Week schedule</h2>
   <ul id="scheduleList"></ul>
 </div>
@@ -132,7 +144,7 @@
   <h2>Calendar</h2>
   <p class="small" style="margin:0 0 8px">This is your planner, separate from the tracker above. Drag a block up or down to move it. Use the arrows on a block to move it to another day.</p>
   <div class="daybtns" id="calDayBtns"></div>
-  <div class="cal" id="dragCalView" style="height:840px"></div>
+  <div class="cal" id="dragCalView" style="height:680px"></div>
   <ul id="calDetailList"></ul>
   <h2 style="margin-top:14px">Add a block</h2>
   <input id="newBlockTitle" placeholder="What is it? e.g. Homework">
@@ -338,7 +350,7 @@ function enableReminders(){
 }
 
 var selectedDay = new Date().getDay();
-function calTop(hour){ return (hour-6)*50; }
+function calTop(hour){ return (hour-6)*40; }
 function renderCalendar(plan){
   var day = selectedDay;
   var meals = buildMeals(day, state.customTimes||{});
@@ -350,14 +362,14 @@ function renderCalendar(plan){
   var html = '';
   for(var h=6; h<=22; h++){ html += '<div class="calhour" style="top:'+(calTop(h)-6)+'px">'+((h%12===0?12:h%12)+(h<12?' AM':' PM'))+'</div><div class="calline" style="top:'+calTop(h)+'px"></div>'; }
   function block(startHour, endHour, color, title, sub){
-    var top=calTop(startHour), height=Math.max(28,(endHour-startHour)*50);
+    var top=calTop(startHour), height=Math.max(28,(endHour-startHour)*40);
     html += '<div class="calblock" style="top:'+top+'px;height:'+height+'px;background:'+color+'"><b>'+title+'</b><small>'+sub+'</small></div>';
   }
   block(6, 6.5, '#475569', 'Wake up', '6:00 AM');
   if(isSchool) block(7.92, 14.92, '#7c3aed88', 'School', '7:55 AM - 2:55 PM');
   meals.forEach(function(m){
     var mins = m.name.indexOf('Recess')>=0 ? 20 : 30;
-    block(m.hour, m.hour+mins/60, '#ec4899', m.name, m.time+' - about '+Math.round(plan.cal*m.share)+' cal');
+    block(m.hour, m.hour+mins/60, '#3b82f6', m.name, m.time+' - about '+Math.round(plan.cal*m.share)+' cal');
   });
   if(isSchool) block(16, 16.5, '#334155', 'Home', '4:00 PM');
   var part = SCHEDULE[day];
@@ -374,7 +386,7 @@ function buildDefaultCalEvents(){
     var ev = [{id:'wake', title:'Wake up', start:6, dur:0.5, color:'#475569', sub:'6:00 AM'}];
     if(SCHOOL_BELLS[d]) ev.push({id:'school', title:'School', start:7.92, dur:7, color:'#7c3aed', sub:'7:55 AM - 2:55 PM', fixed:true});
     meals.forEach(function(m, i){
-      ev.push({id:'meal'+i, title:m.name, start:m.hour, dur:0.5, color:'#ec4899', sub:m.time});
+      ev.push({id:'meal'+i, title:m.name, start:m.hour, dur:0.5, color:'#3b82f6', sub:m.time});
     });
     if(SCHOOL_BELLS[d]) ev.push({id:'home', title:'Home', start:16, dur:0.5, color:'#334155', sub:'4:00 PM'});
     if(SCHEDULE[d]!=='Rest') ev.push({id:'workout', title:'Workout - '+SCHEDULE[d], start:17, dur:1, color:'#14b8a6', sub:'5:00 PM - 6:00 PM'});
@@ -400,7 +412,7 @@ function renderDragCalendar(){
   for(var h=6; h<=22; h++){ html += '<div class="calhour" style="top:'+(calTop(h)-6)+'px">'+((h%12===0?12:h%12)+(h<12?' AM':' PM'))+'</div><div class="calline" style="top:'+calTop(h)+'px"></div>'; }
   var mealsForDay = buildMeals(day, state.customTimes||{});
   evs.forEach(function(ev){
-    var top=calTop(ev.start), height=Math.max(28, ev.dur*50);
+    var top=calTop(ev.start), height=Math.max(28, ev.dur*40);
     var arrows = ev.fixed ? '' : '<span class="mv" onclick="event.stopPropagation();moveCalEvent('+day+',\''+ev.id+'\',-1)">◀</span><span class="mv" onclick="event.stopPropagation();moveCalEvent('+day+',\''+ev.id+'\',1)">▶</span>';
     var del = ev.id.indexOf('custom')===0 ? '<span class="mv" onclick="event.stopPropagation();deleteCalEvent('+day+',\''+ev.id+'\')">✕</span>' : '';
     var detail = fmtHour(ev.start)+' - '+fmtHour(ev.start+ev.dur);
@@ -434,7 +446,7 @@ function renderDragCalendar(){
     });
     el.addEventListener('pointermove', function(e){
       if(!dragging) return;
-      var deltaHours = (e.clientY-startY)/50;
+      var deltaHours = (e.clientY-startY)/40;
       var newStart = Math.round((origStart+deltaHours)*2)/2;
       if(newStart<6) newStart=6; if(newStart>21.5) newStart=21.5;
       el.style.top = calTop(newStart)+'px';
@@ -465,10 +477,30 @@ function resetCalendar(){ state.calEvents = buildDefaultCalEvents(); save(); ren
 function switchSection(name){
   document.getElementById('tabTracker').className = name==='tracker' ? 'on' : '';
   document.getElementById('tabCalendar').className = name==='calendar' ? 'on' : '';
+  var scheduleIds = ['scheduleMyPlan','scheduleTodayWorkout','scheduleMealPlan','scheduleWeek','scheduleCal','scheduleTimes','calendarSection'];
   document.querySelectorAll('body > .card, body > .alert, body > details').forEach(function(el){
-    if(el.id==='calendarSection'){ el.style.display = name==='calendar' ? 'block' : 'none'; }
-    else { el.style.display = name==='tracker' ? 'block' : 'none'; }
+    var isSchedule = scheduleIds.indexOf(el.id)>=0;
+    el.style.display = isSchedule ? (name==='calendar' ? 'block' : 'none') : (name==='tracker' ? 'block' : 'none');
   });
+  window.__section = name;
+}
+function initSwipe(){
+  var sx=0, sy=0;
+  document.addEventListener('touchstart', function(e){
+    if(e.touches.length!==1) return;
+    sx=e.touches[0].clientX; sy=e.touches[0].clientY;
+  }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if(!sx) return;
+    var dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
+    sx=0;
+    var tgt=e.target;
+    if(tgt && tgt.closest && (tgt.closest('.dragblock') || tgt.closest('input') || tgt.closest('select') || tgt.closest('textarea'))) return;
+    if(Math.abs(dx)>70 && Math.abs(dx)>Math.abs(dy)*1.5){
+      if(dx<0 && window.__section!=='calendar') switchSection('calendar');
+      else if(dx>0 && window.__section!=='tracker') switchSection('tracker');
+    }
+  }, {passive:true});
 }
 var SCHOOL_PERIODS = {
   3:['Period 2 — 8:00-9:20 AM','Recess — 9:20-9:40 AM','Advisory — 9:45-10:25 AM','Period 4 — 10:30-11:50 AM','Lunch — 11:50 AM-12:20 PM','Period 6 — 12:25-1:45 PM','Action Period — 1:45-2:25 PM','Admin Time — 2:35-2:55 PM'],
@@ -528,6 +560,7 @@ function saveOther(){
   document.getElementById('weightVal').value=''; document.getElementById('stepsVal').value='';
   save(); render();
 }
+initSwipe();
 render();
 switchSection('tracker');
 </script>
