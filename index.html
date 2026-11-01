@@ -7,7 +7,7 @@
 <title>Lock In</title>
 <style>
   *{box-sizing:border-box}
-  body{margin:0;background:linear-gradient(180deg,#171233 0%,#0b0620 100%);background-attachment:fixed;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:16px 16px 40px;max-width:560px;margin-left:auto;margin-right:auto}
+  body{margin:0;background:linear-gradient(180deg,#171233 0%,#0b0620 100%);background-attachment:fixed;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display',system-ui,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;padding:16px 16px calc(40px + env(safe-area-inset-bottom));max-width:560px;margin-left:auto;margin-right:auto}
   h1{font-size:34px;margin:4px 0 2px;letter-spacing:-.5px;text-shadow:0 2px 12px rgba(0,0,0,.3)}
   h2{font-size:19px;margin:0 0 10px}
   .sub{color:#c4b5fd;margin:0 0 16px}
@@ -60,6 +60,17 @@
     .calhour{width:34px;left:4px}
     .calblock,.dragblock{padding:6px}
   }
+  *{scroll-behavior:smooth}
+  .card{animation:fadeIn .25s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  button{transition:transform .15s ease,background-color .2s ease}
+  button:active{transform:scale(.97)}
+  .daybtns button:active{transform:scale(.96)}
+  .dragblock{transition:none}
+  ul{-webkit-overflow-scrolling:touch}
+  #sectionTabs{background:#2e2e42;border-radius:14px;padding:4px;display:flex;gap:4px}
+  #sectionTabs button{flex:1;background:transparent;box-shadow:none;color:#c4b5fd}
+  #sectionTabs button.on{background:#fff;color:#000;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 </style>
 </head>
 <body>
@@ -204,7 +215,7 @@ var DAYNAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Sat
 var SCHOOL_BELLS = {3:{recess:'9:20 AM', recessHour:9.33, lunch:'11:50 AM', lunchHour:11.83}, 4:{recess:'9:35 AM', recessHour:9.58, lunch:'12:25 PM', lunchHour:12.42}, 5:{recess:'9:35 AM', recessHour:9.58, lunch:'12:25 PM', lunchHour:12.42}};
 function fmtTime(hhmm){var parts=hhmm.split(':'); var h=parseInt(parts[0],10), m=parts[1]; var ap=h>=12?'PM':'AM'; var h12=h%12; if(h12===0) h12=12; return h12+':'+m+' '+ap;}
 function timeHour(hhmm){var parts=hhmm.split(':'); return parseInt(parts[0],10)+parseInt(parts[1],10)/60;}
-function buildMeals(day, ct){
+function buildMealsBase(day, ct){
   if(SCHOOL_BELLS[day]){
     var b=SCHOOL_BELLS[day];
     return [
@@ -222,10 +233,22 @@ function buildMeals(day, ct){
     {name:'Dinner', time:fmtTime(ct.dinner||'20:30'), hour:timeHour(ct.dinner||'20:30'), share:0.25, cum:1.00}
   ];
 }
+
+function buildMeals(day, ct){
+  var meals = buildMealsBase(day, ct);
+  var ov = (typeof state!=='undefined' && state && state.mealOverrides && state.mealOverrides[day]) || {};
+  meals.forEach(function(m){
+    if(ov[m.name]!==undefined && ov[m.name]!==null){
+      m.hour = ov[m.name];
+      m.time = fmtHour(ov[m.name]);
+    }
+  });
+  return meals;
+}
 var MEALS = buildMeals(new Date().getDay(), {});
 function todayKey(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
-function defaultState(){return {targets:{cal:2900,protein:114},workouts:[],meals:[],water:{},weights:[],steps:{},customTimes:{breakfast:'08:00',lunch:'13:00',snack:'16:00',dinner:'20:30',schoolBreakfast:'06:30',home:'16:00'},calEvents:null};}
+function defaultState(){return {targets:{cal:2900,protein:114},workouts:[],meals:[],water:{},weights:[],steps:{},customTimes:{breakfast:'08:00',lunch:'13:00',snack:'16:00',dinner:'20:30',schoolBreakfast:'06:30',home:'16:00'},calEvents:null,mealOverrides:{}};}
 var state = defaultState();
 try{
   var raw = localStorage.getItem(LS_KEY);
@@ -240,6 +263,7 @@ try{
     if(!state.steps || typeof state.steps!=='object') state.steps={};
     if(!state.customTimes || typeof state.customTimes!=='object') state.customTimes={breakfast:'08:00',lunch:'13:00',snack:'16:00',dinner:'20:30',schoolBreakfast:'06:30',home:'16:00'};
     if(!state.calEvents) state.calEvents = buildDefaultCalEvents();
+    if(!state.mealOverrides || typeof state.mealOverrides!=='object') state.mealOverrides={};
   }}
 }catch(e){}
 function save(){try{localStorage.setItem(LS_KEY, JSON.stringify(state));}catch(e){}}
@@ -332,9 +356,9 @@ function render(){
   }).join('');
 }
 function checkEatAlert(cal, plan){
-  var hour=new Date().getHours(), alertBox=document.getElementById('eatAlert');
+  var now=new Date(), hour=now.getHours()+now.getMinutes()/60, alertBox=document.getElementById('eatAlert');
   var due=null;
-  for(var i=0;i<MEALS.length;i++){ if(hour>=MEALS[i].hour) due=MEALS[i]; }
+  for(var i=0;i<MEALS.length;i++){ if(hour>=MEALS[i].hour && hour<=MEALS[i].hour+1) due=MEALS[i]; }
   if(due && cal < Math.round(plan.cal*due.cum)-50){
     alertBox.style.display='block';
     document.getElementById('eatAlertText').textContent='It is past '+due.name+' ('+due.time+'). You are at '+cal+' cal, aim for about '+Math.round(plan.cal*due.cum)+' by now.';
@@ -459,7 +483,14 @@ function renderDragCalendar(){
       if(!dragging) return; dragging=false;
       if(typeof el._newStart==='number'){
         var ev = state.calEvents[day].find(function(x){return x.id===el.getAttribute('data-id');});
-        if(ev){ ev.start=el._newStart; ev.sub=fmtHour(el._newStart); save(); render(); }
+        if(ev){
+          ev.start=el._newStart; ev.sub=fmtHour(el._newStart);
+          if(ev.id.indexOf('meal')===0){
+            if(!state.mealOverrides[day]) state.mealOverrides[day]={};
+            state.mealOverrides[day][ev.title]=el._newStart;
+          }
+          save(); render();
+        }
       }
     });
   });
@@ -471,6 +502,11 @@ function moveCalEvent(day, id, dir){
   var ev = evs.splice(idx,1)[0];
   var nd = (day+dir+7)%7;
   state.calEvents[nd].push(ev);
+  if(ev.id.indexOf('meal')===0){
+    if(state.mealOverrides[day]) delete state.mealOverrides[day][ev.title];
+    if(!state.mealOverrides[nd]) state.mealOverrides[nd]={};
+    state.mealOverrides[nd][ev.title]=ev.start;
+  }
   calSelectedDay = nd;
   save(); render();
 }
@@ -529,6 +565,7 @@ function deleteCalEvent(day, id){
   save(); render();
 }
 function saveTimes(){
+  state.mealOverrides = {};
   state.customTimes = {
     breakfast: document.getElementById('ctBreakfast').value||'08:00',
     schoolBreakfast: document.getElementById('ctSchoolBreakfast').value||'06:30',
