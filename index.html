@@ -7,24 +7,24 @@
 <title>Lock In</title>
 <style>
   *{box-sizing:border-box}
-  body{margin:0;background:#0b0620;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:16px 16px 40px;max-width:560px;margin-left:auto;margin-right:auto}
-  h1{font-size:30px;margin:4px 0 2px}
+  body{margin:0;background:linear-gradient(135deg,#ff8fb3 0%,#e879f9 35%,#a855f7 65%,#7c3aed 100%);background-attachment:fixed;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:16px 16px 40px;max-width:560px;margin-left:auto;margin-right:auto}
+  h1{font-size:34px;margin:4px 0 2px;letter-spacing:-.5px;text-shadow:0 2px 12px rgba(0,0,0,.3)}
   h2{font-size:19px;margin:0 0 10px}
   .sub{color:#c4b5fd;margin:0 0 16px}
-  .card{background:#1e103f;border-radius:16px;padding:14px;margin:0 0 14px}
+  .card{background:#232330;border:1px solid rgba(255,255,255,.10);border-radius:20px;padding:16px;margin:0 0 16px;box-shadow:0 12px 30px rgba(0,0,0,.35)}
   .alert{background:#7c2d12;border:1px solid #f97316;border-radius:16px;padding:14px;margin:0 0 14px;display:none}
   .alert b{font-size:18px}
   .totals{display:flex;gap:8px;flex-wrap:wrap}
-  .total{flex:1;min-width:100px;background:#120826;border-radius:12px;padding:10px;text-align:center}
+  .total{flex:1;min-width:100px;background:#2e2e42;border-radius:14px;padding:12px;text-align:center}
   .total b{font-size:22px;display:block}
   .total span{font-size:12px;color:#c4b5fd}
-  input,select{width:100%;padding:13px;border-radius:10px;border:1px solid #555;background:#120826;color:#fff;font-size:16px;margin:0 0 8px}
-  button{padding:13px 16px;border-radius:12px;border:0;background:#a855f7;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
-  button.secondary{background:#334155}
+  input,select{width:100%;padding:13px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:#2e2e42;color:#fff;font-size:16px;margin:0 0 8px}
+  button{padding:13px 16px;border-radius:14px;border:0;background:linear-gradient(90deg,#ec4899,#a855f7);color:#fff;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(168,85,247,.45)}
+  button.secondary{background:#3b3b52;box-shadow:none}
   button.danger{background:#7f1d1d;padding:6px 10px;font-size:13px}
   button.big{width:100%}
   ul{list-style:none;padding:0;margin:10px 0 0}
-  li{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#120826;border-radius:10px;padding:10px;margin:0 0 8px}
+  li{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#2e2e42;border-radius:12px;padding:11px;margin:0 0 8px}
   li small{color:#c4b5fd;display:block}
   li.today{background:#3b0764}
   .small{font-size:13px;color:#c4b5fd}
@@ -33,12 +33,28 @@
   details{color:#c4b5fd}
   details summary{color:#fff;cursor:pointer;padding:6px 0}
   .bar{background:#120826;border-radius:99px;height:14px;overflow:hidden;margin:10px 0}
+  .daybtns{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+  .daybtns button{padding:8px 10px;font-size:13px;background:#334155}
+  .daybtns button.on{background:#a855f7}
+  .cal{position:relative;margin-left:48px;height:840px;background:#171724;border-radius:16px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+  .calhour{position:absolute;left:-48px;width:44px;text-align:right;font-size:11px;color:#c4b5fd}
+  .calline{position:absolute;left:0;right:0;height:1px;background:#ffffff22}
+  .calblock{position:absolute;left:6px;right:6px;border-radius:12px;padding:8px;font-size:13px;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+  .dragblock{position:absolute;left:6px;right:6px;border-radius:12px;padding:8px;font-size:13px;overflow:hidden;touch-action:none;cursor:grab;user-select:none;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+  .dragblock:active{cursor:grabbing;opacity:.9}
+  .dragblock .mv{float:right;font-size:12px;background:#00000044;border-radius:6px;padding:2px 6px;margin-left:4px}
+  .calblock b{display:block}
+  .calblock small{color:#fff;opacity:.85}
   .bar i{display:block;height:100%;background:#a855f7}
 </style>
 </head>
 <body>
 <h1>Lock In</h1>
 <p class="sub" id="todayLabel">Today</p>
+<div class="daybtns" id="sectionTabs">
+  <button class="on" id="tabTracker" onclick="switchSection('tracker')">Tracker</button>
+  <button id="tabCalendar" onclick="switchSection('calendar')">Calendar</button>
+</div>
 
 <div class="card" id="rightNowCard">
   <h2>Right now</h2>
@@ -82,6 +98,25 @@
 </div>
 
 <div class="card">
+  <h2>Schedule</h2>
+  <p class="small" style="margin:0 0 8px" id="dayTypeLabel"></p>
+  <div class="daybtns" id="dayBtns"></div>
+  <div class="cal" id="calView"></div>
+  <p class="small" style="margin:8px 0 0">Tap a day to see that day. Times move when you change them below. School days use bell times for recess and lunch.</p>
+</div>
+
+<div class="card">
+  <h2>Change times</h2>
+  <p class="small">School days use your bell times for recess and lunch, so those can't move. Everything else you can change here.</p>
+  <label style="font-size:14px;color:#ddd">Breakfast (no-school days)</label><input id="ctBreakfast" type="time">
+  <label style="font-size:14px;color:#ddd">School breakfast</label><input id="ctSchoolBreakfast" type="time">
+  <label style="font-size:14px;color:#ddd">Lunch (no-school days)</label><input id="ctLunch" type="time">
+  <label style="font-size:14px;color:#ddd">Snack / Home meal</label><input id="ctSnack" type="time">
+  <label style="font-size:14px;color:#ddd">Dinner</label><input id="ctDinner" type="time">
+  <button class="big" onclick="saveTimes()">Save times</button>
+</div>
+
+<div class="card">
   <h2>Calories through the day</h2>
   <ul id="mealPlanList"></ul>
   <button class="secondary" style="margin-top:12px" onclick="enableReminders()">Turn on eat reminders</button>
@@ -91,6 +126,22 @@
 <div class="card">
   <h2>Week schedule</h2>
   <ul id="scheduleList"></ul>
+</div>
+
+<div class="card" id="calendarSection">
+  <h2>Calendar</h2>
+  <p class="small" style="margin:0 0 8px">This is your planner, separate from the tracker above. Drag a block up or down to move it. Use the arrows on a block to move it to another day.</p>
+  <div class="daybtns" id="calDayBtns"></div>
+  <div class="cal" id="dragCalView" style="height:840px"></div>
+  <ul id="calDetailList"></ul>
+  <h2 style="margin-top:14px">Add a block</h2>
+  <input id="newBlockTitle" placeholder="What is it? e.g. Homework">
+  <div class="row">
+    <input id="newBlockTime" type="time" value="15:00">
+    <select id="newBlockDur"><option value="0.5">30 min</option><option value="1" selected>1 hour</option><option value="1.5">1.5 hours</option><option value="2">2 hours</option></select>
+  </div>
+  <button class="big" onclick="addCalEvent()">Add block to this day</button>
+  <button class="secondary" style="margin-top:12px" onclick="resetCalendar()">Reset calendar to schedule</button>
 </div>
 
 <div class="card">
@@ -136,15 +187,31 @@ var LS_KEY = 'lockin_homescreen_v1';
 var GOAL_WT = 130, START_WT = 114, HEIGHT_CM = 152.4, AGE = 18;
 var SCHEDULE = ['Legs','Upper Body','Rest','Legs','Upper Body','Rest','Rest'];
 var DAYNAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-var MEALS = [
-  {name:'Breakfast', time:'8:00 AM', hour:8, share:0.25, cum:0.25},
-  {name:'Lunch', time:'1:00 PM', hour:13, share:0.30, cum:0.55},
-  {name:'Snack', time:'4:00 PM', hour:16, share:0.20, cum:0.75},
-  {name:'Dinner', time:'8:30 PM', hour:20.5, share:0.25, cum:1.00}
-];
+var SCHOOL_BELLS = {3:{recess:'9:20 AM', recessHour:9.33, lunch:'11:50 AM', lunchHour:11.83}, 4:{recess:'9:35 AM', recessHour:9.58, lunch:'12:25 PM', lunchHour:12.42}, 5:{recess:'9:35 AM', recessHour:9.58, lunch:'12:25 PM', lunchHour:12.42}};
+function fmtTime(hhmm){var parts=hhmm.split(':'); var h=parseInt(parts[0],10), m=parts[1]; var ap=h>=12?'PM':'AM'; var h12=h%12; if(h12===0) h12=12; return h12+':'+m+' '+ap;}
+function timeHour(hhmm){var parts=hhmm.split(':'); return parseInt(parts[0],10)+parseInt(parts[1],10)/60;}
+function buildMeals(day, ct){
+  if(SCHOOL_BELLS[day]){
+    var b=SCHOOL_BELLS[day];
+    return [
+      {name:'Breakfast', time:fmtTime(ct.schoolBreakfast||'06:30'), hour:timeHour(ct.schoolBreakfast||'06:30'), share:650/2900, cum:650/2900},
+      {name:'Recess snack', time:b.recess, hour:b.recessHour, share:400/2900, cum:1050/2900},
+      {name:'Lunch', time:b.lunch, hour:b.lunchHour, share:550/2900, cum:1600/2900},
+      {name:'Home meal', time:fmtTime(ct.home||'16:00'), hour:timeHour(ct.home||'16:00'), share:800/2900, cum:2400/2900},
+      {name:'Dinner', time:fmtTime(ct.dinner||'20:30'), hour:timeHour(ct.dinner||'20:30'), share:500/2900, cum:1.00}
+    ];
+  }
+  return [
+    {name:'Breakfast', time:fmtTime(ct.breakfast||'08:00'), hour:timeHour(ct.breakfast||'08:00'), share:0.25, cum:0.25},
+    {name:'Lunch', time:fmtTime(ct.lunch||'13:00'), hour:timeHour(ct.lunch||'13:00'), share:0.30, cum:0.55},
+    {name:'Snack', time:fmtTime(ct.snack||'16:00'), hour:timeHour(ct.snack||'16:00'), share:0.20, cum:0.75},
+    {name:'Dinner', time:fmtTime(ct.dinner||'20:30'), hour:timeHour(ct.dinner||'20:30'), share:0.25, cum:1.00}
+  ];
+}
+var MEALS = buildMeals(new Date().getDay(), {});
 function todayKey(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
-function defaultState(){return {targets:{cal:2900,protein:114},workouts:[],meals:[],water:{},weights:[],steps:{}};}
+function defaultState(){return {targets:{cal:2900,protein:114},workouts:[],meals:[],water:{},weights:[],steps:{},customTimes:{breakfast:'08:00',lunch:'13:00',snack:'16:00',dinner:'20:30',schoolBreakfast:'06:30',home:'16:00'},calEvents:null};}
 var state = defaultState();
 try{
   var raw = localStorage.getItem(LS_KEY);
@@ -157,6 +224,8 @@ try{
     if(!state.water || typeof state.water!=='object') state.water={};
     if(!Array.isArray(state.weights)) state.weights=[];
     if(!state.steps || typeof state.steps!=='object') state.steps={};
+    if(!state.customTimes || typeof state.customTimes!=='object') state.customTimes={breakfast:'08:00',lunch:'13:00',snack:'16:00',dinner:'20:30',schoolBreakfast:'06:30',home:'16:00'};
+    if(!state.calEvents) state.calEvents = buildDefaultCalEvents();
   }}
 }catch(e){}
 function save(){try{localStorage.setItem(LS_KEY, JSON.stringify(state));}catch(e){}}
@@ -180,6 +249,7 @@ function calcPlan(){
 }
 function render(){
   var today=todayKey(), now=new Date(), plan=calcPlan();
+  MEALS = buildMeals(now.getDay(), state.customTimes||{});
   document.getElementById('todayLabel').textContent = now.toDateString();
   var meals=state.meals.filter(function(m){return m.date===today;});
   var cal=meals.reduce(function(a,m){return a+(m.kcal||0);},0);
@@ -234,6 +304,10 @@ function render(){
     return '<li><div><b>'+w.lbs+' lb</b><small>'+w.date+(w.time?' at '+w.time:'')+'</small></div></li>';
   }).join('') || '<li class="small">No weights logged yet.</li>';
   document.getElementById('stepsLabel').textContent=state.steps[today]?('Steps today: '+state.steps[today]):'';
+  var isSchool = !!SCHOOL_BELLS[now.getDay()];
+  document.getElementById('dayTypeLabel').textContent = isSchool ? 'School day. No school Mon / Tue, so those days use the easier home schedule.' : 'No school today, so you can eat big meals at home, no rush.';
+  renderCalendar(plan);
+  renderDragCalendar();
   checkEatAlert(cal, plan);
   var days=[];
   for(var i=1;i<8;i++){var d=new Date(); d.setDate(d.getDate()-i); var k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); days.push(k);}
@@ -261,6 +335,170 @@ function enableReminders(){
     if(p==='granted'){alert('Reminders on while the app is open.'); setInterval(function(){render();}, 15*60*1000);}
     else {alert('Reminders need permission. The banner in the app will still show when you open it.');}
   });
+}
+
+var selectedDay = new Date().getDay();
+function calTop(hour){ return (hour-6)*50; }
+function renderCalendar(plan){
+  var day = selectedDay;
+  var meals = buildMeals(day, state.customTimes||{});
+  var isSchool = !!SCHOOL_BELLS[day];
+  var btns = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  document.getElementById('dayBtns').innerHTML = btns.map(function(d,i){
+    return '<button class="'+(i===day?'on':'')+'" onclick="selectedDay='+i+';render();">'+d+'</button>';
+  }).join('');
+  var html = '';
+  for(var h=6; h<=22; h++){ html += '<div class="calhour" style="top:'+(calTop(h)-6)+'px">'+((h%12===0?12:h%12)+(h<12?' AM':' PM'))+'</div><div class="calline" style="top:'+calTop(h)+'px"></div>'; }
+  function block(startHour, endHour, color, title, sub){
+    var top=calTop(startHour), height=Math.max(28,(endHour-startHour)*50);
+    html += '<div class="calblock" style="top:'+top+'px;height:'+height+'px;background:'+color+'"><b>'+title+'</b><small>'+sub+'</small></div>';
+  }
+  block(6, 6.5, '#475569', 'Wake up', '6:00 AM');
+  if(isSchool) block(7.92, 14.92, '#7c3aed88', 'School', '7:55 AM - 2:55 PM');
+  meals.forEach(function(m){
+    var mins = m.name.indexOf('Recess')>=0 ? 20 : 30;
+    block(m.hour, m.hour+mins/60, '#ec4899', m.name, m.time+' - about '+Math.round(plan.cal*m.share)+' cal');
+  });
+  if(isSchool) block(16, 16.5, '#334155', 'Home', '4:00 PM');
+  var part = SCHEDULE[day];
+  if(part!=='Rest') block(17, 18, '#14b8a6', 'Workout - '+part, '5:00 PM - 6:00 PM');
+  block(22, 22.5, '#475569', 'Bed', '10:00 PM');
+  document.getElementById('calView').innerHTML = html;
+}
+
+var calSelectedDay = new Date().getDay();
+function buildDefaultCalEvents(){
+  var out = {};
+  for(var d=0; d<7; d++){
+    var meals = buildMeals(d, {breakfast:'08:00',lunch:'13:00',snack:'16:00',dinner:'20:30',schoolBreakfast:'06:30',home:'16:00'});
+    var ev = [{id:'wake', title:'Wake up', start:6, dur:0.5, color:'#475569', sub:'6:00 AM'}];
+    if(SCHOOL_BELLS[d]) ev.push({id:'school', title:'School', start:7.92, dur:7, color:'#7c3aed', sub:'7:55 AM - 2:55 PM', fixed:true});
+    meals.forEach(function(m, i){
+      ev.push({id:'meal'+i, title:m.name, start:m.hour, dur:0.5, color:'#ec4899', sub:m.time});
+    });
+    if(SCHOOL_BELLS[d]) ev.push({id:'home', title:'Home', start:16, dur:0.5, color:'#334155', sub:'4:00 PM'});
+    if(SCHEDULE[d]!=='Rest') ev.push({id:'workout', title:'Workout - '+SCHEDULE[d], start:17, dur:1, color:'#14b8a6', sub:'5:00 PM - 6:00 PM'});
+    ev.push({id:'bed', title:'Bed', start:22, dur:0.5, color:'#475569', sub:'10:00 PM'});
+    out[d]=ev;
+  }
+  return out;
+}
+function fmtHour(h){
+  var hh=Math.floor(h), mm=Math.round((h-hh)*60);
+  if(mm===60){hh++; mm=0;}
+  var ap=hh>=12?'PM':'AM'; var h12=hh%12; if(h12===0) h12=12;
+  return h12+':'+String(mm).padStart(2,'0')+' '+ap;
+}
+function renderDragCalendar(){
+  var day = calSelectedDay;
+  var btns = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  document.getElementById('calDayBtns').innerHTML = btns.map(function(d,i){
+    return '<button class="'+(i===day?'on':'')+'" onclick="calSelectedDay='+i+';render();">'+d+'</button>';
+  }).join('');
+  var evs = (state.calEvents && state.calEvents[day]) || [];
+  var html = '';
+  for(var h=6; h<=22; h++){ html += '<div class="calhour" style="top:'+(calTop(h)-6)+'px">'+((h%12===0?12:h%12)+(h<12?' AM':' PM'))+'</div><div class="calline" style="top:'+calTop(h)+'px"></div>'; }
+  var mealsForDay = buildMeals(day, state.customTimes||{});
+  evs.forEach(function(ev){
+    var top=calTop(ev.start), height=Math.max(28, ev.dur*50);
+    var arrows = ev.fixed ? '' : '<span class="mv" onclick="event.stopPropagation();moveCalEvent('+day+',\''+ev.id+'\',-1)">◀</span><span class="mv" onclick="event.stopPropagation();moveCalEvent('+day+',\''+ev.id+'\',1)">▶</span>';
+    var del = ev.id.indexOf('custom')===0 ? '<span class="mv" onclick="event.stopPropagation();deleteCalEvent('+day+',\''+ev.id+'\')">✕</span>' : '';
+    var detail = fmtHour(ev.start)+' - '+fmtHour(ev.start+ev.dur);
+    if(ev.id.indexOf('meal')===0){
+      var mi = parseInt(ev.id.replace('meal',''),10);
+      var mm = mealsForDay[mi];
+      if(mm) detail += ' · about '+Math.round(2900*mm.share)+' cal · '+Math.round(114*mm.share)+'g protein';
+    }
+    if(ev.id==='workout') detail += ev.title.indexOf('Legs')>=0 ? ' · quads, hamstrings, calves' : ' · chest, back, arms';
+    html += '<div class="dragblock" data-day="'+day+'" data-id="'+ev.id+'" style="top:'+top+'px;height:'+height+'px;background:'+ev.color+'"><b>'+ev.title+'</b><small style="display:block;color:#fff;opacity:.85">'+detail+(ev.fixed?'':' — drag to move')+'</small>'+arrows+del+'</div>';
+  });
+  if(day===new Date().getDay()){
+    var nowH = new Date().getHours()+new Date().getMinutes()/60;
+    if(nowH>=6 && nowH<=22) html += '<div style="position:absolute;left:0;right:0;top:'+calTop(nowH)+'px;height:2px;background:#ef4444"></div>';
+  }
+  var detailHtml = '';
+  if(SCHOOL_PERIODS[day]) detailHtml += '<li><div><b>School periods today</b><small>'+SCHOOL_PERIODS[day].join(' · ')+'</small></div></li>';
+  detailHtml += '<li><div><b>Day total</b><small>2,900 cal · 114g protein · Bed 10:00 PM · Wake 6:00 AM</small></div></li>';
+  document.getElementById('calDetailList').innerHTML = detailHtml;
+  document.getElementById('dragCalView').innerHTML = html;
+  // attach drag handlers
+  document.querySelectorAll('#dragCalView .dragblock').forEach(function(el){
+    var startY=0, origStart=0, dragging=false;
+    el.addEventListener('pointerdown', function(e){
+      if(e.target.classList.contains('mv')) return;
+      dragging=true; startY=e.clientY;
+      var ev = state.calEvents[day].find(function(x){return x.id===el.getAttribute('data-id');});
+      if(ev && ev.fixed) { dragging=false; return; }
+      origStart = ev ? ev.start : 0;
+      el.setPointerCapture(e.pointerId);
+    });
+    el.addEventListener('pointermove', function(e){
+      if(!dragging) return;
+      var deltaHours = (e.clientY-startY)/50;
+      var newStart = Math.round((origStart+deltaHours)*2)/2;
+      if(newStart<6) newStart=6; if(newStart>21.5) newStart=21.5;
+      el.style.top = calTop(newStart)+'px';
+      el.querySelector('small').textContent = fmtHour(newStart)+' — drag to move';
+      el._newStart = newStart;
+    });
+    el.addEventListener('pointerup', function(e){
+      if(!dragging) return; dragging=false;
+      if(typeof el._newStart==='number'){
+        var ev = state.calEvents[day].find(function(x){return x.id===el.getAttribute('data-id');});
+        if(ev){ ev.start=el._newStart; ev.sub=fmtHour(el._newStart); save(); render(); }
+      }
+    });
+  });
+}
+function moveCalEvent(day, id, dir){
+  var evs = state.calEvents[day] || [];
+  var idx = evs.findIndex(function(x){return x.id===id;});
+  if(idx<0) return;
+  var ev = evs.splice(idx,1)[0];
+  var nd = (day+dir+7)%7;
+  state.calEvents[nd].push(ev);
+  calSelectedDay = nd;
+  save(); render();
+}
+function resetCalendar(){ state.calEvents = buildDefaultCalEvents(); save(); render(); }
+
+function switchSection(name){
+  document.getElementById('tabTracker').className = name==='tracker' ? 'on' : '';
+  document.getElementById('tabCalendar').className = name==='calendar' ? 'on' : '';
+  document.querySelectorAll('body > .card, body > .alert, body > details').forEach(function(el){
+    if(el.id==='calendarSection'){ el.style.display = name==='calendar' ? 'block' : 'none'; }
+    else { el.style.display = name==='tracker' ? 'block' : 'none'; }
+  });
+}
+var SCHOOL_PERIODS = {
+  3:['Period 2 — 8:00-9:20 AM','Recess — 9:20-9:40 AM','Advisory — 9:45-10:25 AM','Period 4 — 10:30-11:50 AM','Lunch — 11:50 AM-12:20 PM','Period 6 — 12:25-1:45 PM','Action Period — 1:45-2:25 PM','Admin Time — 2:35-2:55 PM'],
+  4:['Period 1 — 8:00-8:45 AM','Period 2 — 8:50-9:35 AM','Recess — 9:35-9:55 AM','Period 3 — 10:00-10:45 AM','Period 4 — 10:50-11:35 AM','Period 5 — 11:40 AM-12:25 PM','Lunch — 12:25-12:55 PM','Period 6 — 1:00-1:45 PM','Period 7 — 1:50-2:35 PM','Admin Time — 2:35-2:55 PM'],
+  5:['Period 1 — 8:00-8:45 AM','Period 2 — 8:50-9:35 AM','Recess — 9:35-9:55 AM','Period 3 — 10:00-10:45 AM','Period 4 — 10:50-11:35 AM','Period 5 — 11:40 AM-12:25 PM','Lunch — 12:25-12:55 PM','Period 6 — 1:00-1:45 PM','Period 7 — 1:50-2:35 PM','Admin Time — 2:35-2:55 PM']
+};
+function addCalEvent(){
+  var title=document.getElementById('newBlockTitle').value.trim();
+  var time=document.getElementById('newBlockTime').value;
+  if(!title || !time){alert('Type a name and a time.'); return;}
+  var start=timeHour(time);
+  var dur=parseFloat(document.getElementById('newBlockDur').value);
+  state.calEvents[calSelectedDay].push({id:'custom'+uid(), title:title, start:start, dur:dur, color:'#2563eb', sub:fmtHour(start)});
+  document.getElementById('newBlockTitle').value='';
+  save(); render();
+}
+function deleteCalEvent(day, id){
+  state.calEvents[day]=state.calEvents[day].filter(function(x){return x.id!==id;});
+  save(); render();
+}
+function saveTimes(){
+  state.customTimes = {
+    breakfast: document.getElementById('ctBreakfast').value||'08:00',
+    schoolBreakfast: document.getElementById('ctSchoolBreakfast').value||'06:30',
+    lunch: document.getElementById('ctLunch').value||'13:00',
+    snack: document.getElementById('ctSnack').value||'16:00',
+    home: document.getElementById('ctSnack').value||'16:00',
+    dinner: document.getElementById('ctDinner').value||'20:30'
+  };
+  save(); render();
 }
 function addMeal(){
   var name=document.getElementById('mealName').value.trim();
@@ -291,6 +529,7 @@ function saveOther(){
   save(); render();
 }
 render();
+switchSection('tracker');
 </script>
 </body>
 </html>
