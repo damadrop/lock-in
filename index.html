@@ -76,6 +76,7 @@
 <body>
 <h1>Lock In</h1>
 <p class="sub" id="todayLabel">Today</p>
+  <p class="sub" id="syncStatus" style="font-size:12px;opacity:.7">Sync: checking...</p>
 <div class="daybtns" id="sectionTabs">
   <button class="on" id="tabTracker" onclick="switchSection('tracker')">Tracker</button>
   <button id="tabCalendar" onclick="switchSection('calendar')">Calendar</button>
@@ -204,7 +205,7 @@
 <details class="card">
   <summary>Past days</summary>
   <ul id="historyList"></ul>
-  <p class="small">Saves on this device only. No lock screen, no coach.</p>
+  <p class="small">Syncs to your online log for Friday summaries. No lock screen, no coach.</p>
 </details>
 
 <script>
@@ -212,6 +213,7 @@ var LS_KEY = 'lockin_homescreen_v1';
 var GOAL_WT = 130, START_WT = 114, HEIGHT_CM = 152.4, AGE = 18;
 var SCHEDULE = ['Legs','Upper Body','Rest','Legs','Upper Body','Rest','Rest'];
 var DAYNAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var SYNC_URL = 'https://api.npoint.io/4416b01def12620146c0';
 var SCHOOL_BELLS = {3:{recess:'9:20 AM', recessHour:9.33, lunch:'11:50 AM', lunchHour:11.83}, 4:{recess:'9:35 AM', recessHour:9.58, lunch:'12:25 PM', lunchHour:12.42}, 5:{recess:'9:35 AM', recessHour:9.58, lunch:'12:25 PM', lunchHour:12.42}};
 function fmtTime(hhmm){var parts=hhmm.split(':'); var h=parseInt(parts[0],10), m=parts[1]; var ap=h>=12?'PM':'AM'; var h12=h%12; if(h12===0) h12=12; return h12+':'+m+' '+ap;}
 function timeHour(hhmm){var parts=hhmm.split(':'); return parseInt(parts[0],10)+parseInt(parts[1],10)/60;}
@@ -266,7 +268,39 @@ try{
     if(!state.mealOverrides || typeof state.mealOverrides!=='object') state.mealOverrides={};
   }}
 }catch(e){}
-function save(){try{localStorage.setItem(LS_KEY, JSON.stringify(state));}catch(e){}}
+var __syncTimer=null, __suppressSync=false;
+function setSyncStatus(s){var el=document.getElementById('syncStatus'); if(el) el.textContent='Sync: '+s;}
+function scheduleSyncPush(){
+  if(__suppressSync) return;
+  if(__syncTimer) clearTimeout(__syncTimer);
+  __syncTimer=setTimeout(function(){
+    setSyncStatus('syncing...');
+    try{fetch(SYNC_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(state)}).then(function(r){setSyncStatus(r.ok?'synced':'offline, saved on phone');}).catch(function(){setSyncStatus('offline, saved on phone');});}
+    catch(e){setSyncStatus('offline, saved on phone');}
+  },800);
+}
+function save(){state.updatedAt=Date.now(); try{localStorage.setItem(LS_KEY, JSON.stringify(state));}catch(e){} scheduleSyncPush();}
+function mergeById(a,b){var seen={},out=[]; (a||[]).concat(b||[]).forEach(function(x){if(x&&x.id&&!seen[x.id]){seen[x.id]=1; out.push(x);}}); return out;}
+function syncPullAndMerge(){
+  try{fetch(SYNC_URL).then(function(r){return r.json();}).then(function(remote){
+    if(!remote||typeof remote!=='object') return;
+    var localHas=(state.meals&&state.meals.length)||(state.workouts&&state.workouts.length)||(state.weights&&state.weights.length);
+    var remoteHas=(remote.meals&&remote.meals.length)||(remote.workouts&&remote.workouts.length)||(remote.weights&&remote.weights.length);
+    if(!remoteHas && localHas){ scheduleSyncPush(); setSyncStatus('synced'); return; }
+    if(!localHas && remoteHas){
+      __suppressSync=true; state=Object.assign(defaultState(), remote); state.targets={cal:2900,protein:114}; state.targets.cal=2900; try{localStorage.setItem(LS_KEY, JSON.stringify(state));}catch(e){} __suppressSync=false; render(); setSyncStatus('synced'); return;
+    }
+    if((remote.updatedAt||0) > (state.updatedAt||0)){
+      __suppressSync=true;
+      state.meals=mergeById(state.meals, remote.meals); state.workouts=mergeById(state.workouts, remote.workouts); state.weights=mergeById(state.weights, remote.weights);
+      state.water=Object.assign({}, state.water||{}, remote.water||{}); state.steps=Object.assign({}, state.steps||{}, remote.steps||{});
+      if(remote.customTimes) state.customTimes=remote.customTimes; if(remote.mealOverrides) state.mealOverrides=remote.mealOverrides; if(remote.calEvents) state.calEvents=remote.calEvents;
+      state.updatedAt=remote.updatedAt||Date.now();
+      try{localStorage.setItem(LS_KEY, JSON.stringify(state));}catch(e){} __suppressSync=false; render();
+    }
+    setSyncStatus('synced');
+  }).catch(function(){setSyncStatus('offline, saved on phone');});}catch(e){setSyncStatus('offline, saved on phone');}
+}
 function num(id){var v=parseFloat(document.getElementById(id).value); return isNaN(v)?0:v;}
 function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function currentWeight(){
@@ -607,6 +641,7 @@ function saveOther(){
 initSwipe();
 render();
 switchSection('tracker');
+syncPullAndMerge();
 </script>
 </body>
 </html>
