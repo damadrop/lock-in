@@ -7,7 +7,7 @@
 <title>Lock In</title>
 <style>
   *{box-sizing:border-box}
-  body{margin:0;background:linear-gradient(180deg,#171233 0%,#0b0620 100%);background-attachment:fixed;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display',system-ui,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;padding:16px 16px calc(40px + env(safe-area-inset-bottom));max-width:560px;margin-left:auto;margin-right:auto}
+  body{margin:0;background:linear-gradient(180deg,#171233 0%,#0b0620 100%);background-attachment:fixed;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display',system-ui,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;padding:calc(16px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));max-width:560px;margin-left:auto;margin-right:auto}
   h1{font-size:34px;margin:4px 0 2px;letter-spacing:-.5px;text-shadow:0 2px 12px rgba(0,0,0,.3)}
   h2{font-size:19px;margin:0 0 10px}
   .sub{color:#c4b5fd;margin:0 0 16px}
@@ -71,6 +71,15 @@
   #sectionTabs{background:#2e2e42;border-radius:14px;padding:4px;display:flex;gap:4px}
   #sectionTabs button{flex:1;background:transparent;box-shadow:none;color:#c4b5fd}
   #sectionTabs button.on{background:#fff;color:#000;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+  .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:280px;margin:0 auto}
+  .keybtn{width:76px;height:76px;border-radius:50%;border:1px solid #5b5b7a;background:#2e2e42;color:#fff;font-size:28px;line-height:1;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto;box-shadow:none}
+  .keybtn small{font-size:10px;color:#a5a5c0;letter-spacing:2px;margin-top:2px}
+  .keybtn:active{transform:scale(.94);background:#3f3f5c}
+  .dots{display:flex;gap:14px;justify-content:center;margin:12px 0 20px}
+  .dot{width:12px;height:12px;border-radius:50%;border:2px solid #c4b5fd;background:transparent}
+  .dot.on{background:#c4b5fd}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  .shake{animation:shake .3s ease}
 </style>
 </head>
 <body>
@@ -115,7 +124,6 @@
 <div class="card" id="scheduleMyPlan">
   <h2>My plan</h2>
   <p style="margin:0" id="planText">Calculating…</p>
-  <p class="small" style="margin:8px 0 0">Your target: 2,900 cal a day. Eat every day, even on rest days.</p>
 </div>
 
 <div class="card" id="scheduleTodayWorkout">
@@ -129,12 +137,10 @@
   <p class="small" style="margin:0 0 8px" id="dayTypeLabel"></p>
   <div class="daybtns" id="dayBtns"></div>
   <div class="cal" id="calView"></div>
-  <p class="small" style="margin:8px 0 0">Tap a day to see that day. Times move when you change them below. School days use bell times for recess and lunch.</p>
 </div>
 
 <details class="card" id="scheduleTimes"><summary>Change times</summary>
   <h2>Change times</h2>
-  <p class="small">School days use your bell times for recess and lunch, so those can't move. Everything else you can change here.</p>
   <label style="font-size:14px;color:#ddd">Breakfast (no-school days)</label><input id="ctBreakfast" type="time">
   <label style="font-size:14px;color:#ddd">School breakfast</label><input id="ctSchoolBreakfast" type="time">
   <label style="font-size:14px;color:#ddd">Lunch (no-school days)</label><input id="ctLunch" type="time">
@@ -147,7 +153,6 @@
   <h2>Calories through the day</h2>
   <ul id="mealPlanList"></ul>
   <button class="secondary" style="margin-top:12px" onclick="enableReminders()">Turn on eat reminders</button>
-  <p class="small" style="margin-bottom:0">Reminders work while this app is open. On your phone, just open the app at meal times and the Time to Eat banner will show if you're behind.</p>
 </div>
 
 <div class="card" id="scheduleWeek">
@@ -157,7 +162,6 @@
 
 <div class="card" id="calendarSection">
   <h2>Calendar</h2>
-  <p class="small" style="margin:0 0 8px">This is your planner, separate from the tracker above. Drag a block up or down to move it. Use the arrows on a block to move it to another day.</p>
   <div class="daybtns" id="calDayBtns"></div>
   <div class="cal" id="dragCalView" style="height:560px"></div>
   <ul id="calDetailList"></ul>
@@ -172,30 +176,35 @@
 </div>
 
 
-<div class="card" id="streaksLock">
-  <h2>Private Goals</h2>
-  <p class="small">This section is locked, and it stays only on this phone. It is not synced to your online log, and it is not in your Friday summary.</p>
-  <p class="small" id="streakLockText">Enter your password to unlock.</p>
-  <input id="streakPw" type="password" placeholder="Password" autocomplete="off">
-  <button class="big" onclick="unlockStreaks()">Unlock</button>
-  <p class="small" id="streakLockMsg" style="margin-bottom:0"></p>
+<p id="streakQuote" style="text-align:center;font-style:italic;color:#e9d5ff;margin:4px 8px 16px;font-size:15px;line-height:1.4"></p>
+
+<div class="card" id="streaksLock" style="background:transparent;border:none;box-shadow:none;padding:0">
+  <p class="small" id="streakLockText" style="text-align:center;margin:0 0 8px"></p>
+  <div class="dots" id="streakDots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+  <div class="keypad" id="streakKeypad"></div>
+  <div id="streakTextFallback" style="display:none;margin-top:16px">
+    <input id="streakPw" type="password" placeholder="Password" autocomplete="off">
+    <button class="big" onclick="unlockStreaks()">Unlock</button>
+  </div>
+  <p class="small" id="streakLockMsg" style="margin-bottom:0;text-align:center"></p>
 </div>
 
 <div class="card" id="streaksMain">
-  <h2>Your streaks</h2>
-  <p class="small">Check in once a day. Miss a day and the streak resets. This stays only on this phone.</p>
   <div id="streakList"></div>
-  <button class="secondary" style="margin-top:12px" onclick="lockStreaks()">Lock this section</button>
+  <div class="row" style="margin-top:12px">
+    <button class="secondary" onclick="lockStreaks()">Lock</button>
+    <button class="secondary" onclick="changeStreakCode()">Change code</button>
+  </div>
 </div>
 
-<div class="card" id="streaksAdd">
-  <h2>Add a goal</h2>
+<details class="card" id="streaksAdd">
+  <summary>Add goal</summary>
   <input id="newStreakName" placeholder="Goal, e.g. No soda" autocomplete="off">
   <div class="row">
-    <input id="newStreakGoal" type="number" inputmode="numeric" placeholder="Goal days, e.g. 30" value="30">
+    <input id="newStreakGoal" type="number" inputmode="numeric" placeholder="Goal days" value="30">
   </div>
   <button class="big" onclick="addStreak()">Add goal</button>
-</div>
+</details>
 
 <div class="card">
   <h2>Food</h2>
@@ -232,7 +241,6 @@
 <details class="card">
   <summary>Past days</summary>
   <ul id="historyList"></ul>
-  <p class="small">Syncs to your online log for Friday summaries. No lock screen, no coach.</p>
 </details>
 
 <script>
@@ -579,6 +587,8 @@ function switchSection(name){
   document.getElementById('tabStreaks').className = name==='streaks' ? 'on' : '';
   var scheduleIds = ['scheduleMyPlan','scheduleTodayWorkout','scheduleMealPlan','scheduleWeek','scheduleCal','scheduleTimes','calendarSection'];
   var streakIds = ['streaksLock','streaksMain','streaksAdd'];
+  document.getElementById('todayLabel').style.display = name==='streaks' ? 'none' : 'block';
+  var syncEl=document.getElementById('syncStatus'); if(syncEl) syncEl.style.display = name==='streaks' ? 'none' : 'block';
   document.querySelectorAll('body > .card, body > .alert, body > details').forEach(function(el){
     var isCalendarPage = el.id==='calendarSection' || el.id==='scheduleTimes';
     var isSchedule = scheduleIds.indexOf(el.id)>=0;
@@ -591,8 +601,9 @@ function switchSection(name){
       el.style.display = (isSchedule || isStreak) ? 'none' : 'block';
     }
   });
+  var q=document.getElementById('streakQuote'); if(q) q.style.display = name==='streaks' ? 'block' : 'none';
   window.__section = name;
-  if(name==='streaks') renderStreaks();
+  if(name==='streaks'){ pickQuote(); renderStreaks(); }
 }
 function initSwipe(){
   var sx=0, sy=0;
@@ -692,11 +703,88 @@ function streakCount(s){
   while(set[dateKeyOf(d)]){count++; d.setDate(d.getDate()-1);}
   return count;
 }
+
+var QUOTES=[
+"I can do all things through Christ. Phil 4:13",
+"God always gives a way out. 1 Cor 10:13",
+"Discipline is choosing what you want most.",
+"One day at a time. One check in at a time.",
+"You are stronger than yesterday.",
+"Small wins every day add up to 130.",
+"Stay locked in. That is the whole plan.",
+"Your future self is watching today.",
+"No contact is not losing. It is choosing you.",
+"Control today, and tomorrow gets easier.",
+"The pilot seat is earned one day at a time.",
+"Eat big, train hard, stay clean.",
+"Be still and know. Psalm 46:10",
+"His strength covers your weakness.",
+"Do not grow weary in doing good. Gal 6:9",
+"Run your race, do not look back.",
+"Guard your heart. Proverbs 4:23",
+"Self-control is strength, not weakness.",
+"30 days starts with today.",
+"You already decided. Just do not quit today.",
+"Strong today, stronger tomorrow.",
+"Keep your eyes forward, not behind you.",
+"One clean day beats a perfect plan.",
+"Finish what you started today."
+];
+function pickQuote(){
+  var el=document.getElementById('streakQuote'); if(!el) return;
+  var last=-1; try{last=parseInt(sessionStorage.getItem('lastQuote')||'-1',10);}catch(e){}
+  var i=Math.floor(Math.random()*QUOTES.length);
+  if(QUOTES.length>1 && i===last) i=(i+1)%QUOTES.length;
+  try{sessionStorage.setItem('lastQuote', String(i));}catch(e){}
+  el.textContent=QUOTES[i];
+}
+var streakPin='', streakFails=0;
+function updateDots(){
+  var dots=document.querySelectorAll('#streakDots .dot');
+  dots.forEach(function(d,idx){d.className = idx<streakPin.length ? 'dot on' : 'dot';});
+}
+function buildKeypad(){
+  var kp=document.getElementById('streakKeypad'); if(!kp || kp.children.length) return;
+  var keys=[['1',''],['2','ABC'],['3','DEF'],['4','GHI'],['5','JKL'],['6','MNO'],['7','PQRS'],['8','TUV'],['9','WXYZ'],['',''],['0',''],['x','']];
+  keys.forEach(function(k){
+    var b=document.createElement('button'); b.className='keybtn'; b.type='button';
+    if(k[0]===''){b.style.visibility='hidden';}
+    else if(k[0]==='x'){b.innerHTML='&#9003;'; b.onclick=function(){streakPin=streakPin.slice(0,-1); updateDots();};}
+    else {b.innerHTML=k[0]+(k[1]?'<small>'+k[1]+'</small>':''); b.onclick=(function(d){return function(){pressDigit(d);};})(k[0]);}
+    kp.appendChild(b);
+  });
+}
+function pressDigit(d){
+  if(streakPin.length>=4) return;
+  streakPin+=d; updateDots();
+  if(streakPin.length===4){
+    var pin=streakPin; streakPin=''; updateDots();
+    var stored=null; try{stored=localStorage.getItem(STREAK_PW_KEY);}catch(e){}
+    if(!stored){
+      try{localStorage.setItem(STREAK_PW_KEY, hashPw(pin)); sessionStorage.setItem('streaks-unlocked','1');}catch(e){}
+      streakFails=0; renderStreaks(); return;
+    }
+    if(hashPw(pin)===stored){
+      try{sessionStorage.setItem('streaks-unlocked','1');}catch(e){}
+      streakFails=0; renderStreaks(); return;
+    }
+    streakFails++;
+    var dotsEl=document.getElementById('streakDots'); if(dotsEl){dotsEl.classList.remove('shake'); void dotsEl.offsetWidth; dotsEl.classList.add('shake');}
+    if(streakFails>=3){document.getElementById('streakTextFallback').style.display='block';}
+  }
+}
+function changeStreakCode(){
+  if(!confirm('Change your code? You will set a new one next time you open Streaks.')) return;
+  try{localStorage.removeItem(STREAK_PW_KEY); sessionStorage.removeItem('streaks-unlocked');}catch(e){}
+  streakPin=''; updateDots(); renderStreaks();
+}
+
 function renderStreaks(){
   if(window.__section!=='streaks') return;
   var unlocked=false; try{unlocked=sessionStorage.getItem('streaks-unlocked')==='1';}catch(e){}
   var hasPw=false; try{hasPw=!!localStorage.getItem(STREAK_PW_KEY);}catch(e){}
-  document.getElementById('streakLockText').textContent = hasPw ? 'Enter your password to unlock.' : 'First time: set a password for this section. It is saved only on this phone.';
+  document.getElementById('streakLockText').textContent = hasPw ? '' : 'Set a 4-digit code';
+  buildKeypad();
   document.getElementById('streaksLock').style.display = unlocked ? 'none' : 'block';
   document.getElementById('streaksMain').style.display = unlocked ? 'block' : 'none';
   document.getElementById('streaksAdd').style.display = unlocked ? 'block' : 'none';
@@ -706,7 +794,7 @@ function renderStreaks(){
     var c=streakCount(s), checked=(s.dates||[]).indexOf(today)>=0, left=Math.max(0, s.goal-c), pct=Math.min(100, Math.round(c/s.goal*100));
     var msg = c>=s.goal ? 'Goal reached. Keep going.' : (checked ? 'Checked today. '+left+' days left to '+s.goal+'.' : 'Not checked today. '+left+' days left to '+s.goal+'.');
     var delBtn = (s.id!=='nocontact' && s.id!=='nolust') ? '<button class="danger" onclick="delStreak(\''+s.id+'\')">Delete</button>' : '';
-    return '<div style="margin-bottom:16px"><b style="font-size:18px">'+esc(s.name)+'</b><p style="margin:4px 0;font-size:28px;font-weight:800">'+c+' <span style="font-size:14px;font-weight:400;color:#c4b5fd">/ '+s.goal+' days</span></p><div class="bar"><i style="width:'+pct+'%"></i></div><p class="small" style="margin:6px 0">'+msg+'</p><div class="row"><button class="big" '+(checked?'disabled':'')+' onclick="checkInStreak(\''+s.id+'\')">'+(checked?'Checked today':'Check in today')+'</button><button class="secondary" onclick="resetStreak(\''+s.id+'\')">Reset</button>'+delBtn+'</div></div>';
+    return '<div style="margin-bottom:12px"><b style="font-size:18px">'+esc(s.name)+'</b><p style="margin:4px 0;font-size:28px;font-weight:800">'+c+' <span style="font-size:14px;font-weight:400;color:#c4b5fd">/ '+s.goal+' days</span></p><div class="bar"><i style="width:'+pct+'%"></i></div><p class="small" style="margin:6px 0">'+msg+'</p><div class="row"><button class="big" '+(checked?'disabled':'')+' onclick="checkInStreak(\''+s.id+'\')">'+(checked?'Checked today':'Check in today')+'</button><button class="secondary" onclick="resetStreak(\''+s.id+'\')">Reset</button>'+delBtn+'</div></div>';
   }).join('');
 }
 function unlockStreaks(){
@@ -726,6 +814,7 @@ function addStreak(){var name=document.getElementById('newStreakName').value.tri
 initSwipe();
 render();
 switchSection('tracker');
+var q0=document.getElementById('streakQuote'); if(q0) q0.style.display='none';
 syncPullAndMerge();
 </script>
 </body>
