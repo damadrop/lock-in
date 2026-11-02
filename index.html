@@ -80,6 +80,7 @@
 <div class="daybtns" id="sectionTabs">
   <button class="on" id="tabTracker" onclick="switchSection('tracker')">Tracker</button>
   <button id="tabCalendar" onclick="switchSection('calendar')">Calendar</button>
+  <button id="tabStreaks" onclick="switchSection('streaks')">Streaks</button>
 </div>
 
 <div class="card" id="rightNowCard">
@@ -168,6 +169,32 @@
   </div>
   <button class="big" onclick="addCalEvent()">Add block to this day</button>
   <button class="secondary" style="margin-top:12px" onclick="resetCalendar()">Reset calendar to schedule</button>
+</div>
+
+
+<div class="card" id="streaksLock">
+  <h2>Private Goals</h2>
+  <p class="small">This section is locked, and it stays only on this phone. It is not synced to your online log, and it is not in your Friday summary.</p>
+  <p class="small" id="streakLockText">Enter your password to unlock.</p>
+  <input id="streakPw" type="password" placeholder="Password" autocomplete="off">
+  <button class="big" onclick="unlockStreaks()">Unlock</button>
+  <p class="small" id="streakLockMsg" style="margin-bottom:0"></p>
+</div>
+
+<div class="card" id="streaksMain">
+  <h2>Your streaks</h2>
+  <p class="small">Check in once a day. Miss a day and the streak resets. This stays only on this phone.</p>
+  <div id="streakList"></div>
+  <button class="secondary" style="margin-top:12px" onclick="lockStreaks()">Lock this section</button>
+</div>
+
+<div class="card" id="streaksAdd">
+  <h2>Add a goal</h2>
+  <input id="newStreakName" placeholder="Goal, e.g. No soda" autocomplete="off">
+  <div class="row">
+    <input id="newStreakGoal" type="number" inputmode="numeric" placeholder="Goal days, e.g. 30" value="30">
+  </div>
+  <button class="big" onclick="addStreak()">Add goal</button>
 </div>
 
 <div class="card">
@@ -549,17 +576,23 @@ function resetCalendar(){ state.calEvents = buildDefaultCalEvents(); save(); ren
 function switchSection(name){
   document.getElementById('tabTracker').className = name==='tracker' ? 'on' : '';
   document.getElementById('tabCalendar').className = name==='calendar' ? 'on' : '';
+  document.getElementById('tabStreaks').className = name==='streaks' ? 'on' : '';
   var scheduleIds = ['scheduleMyPlan','scheduleTodayWorkout','scheduleMealPlan','scheduleWeek','scheduleCal','scheduleTimes','calendarSection'];
+  var streakIds = ['streaksLock','streaksMain','streaksAdd'];
   document.querySelectorAll('body > .card, body > .alert, body > details').forEach(function(el){
     var isCalendarPage = el.id==='calendarSection' || el.id==='scheduleTimes';
     var isSchedule = scheduleIds.indexOf(el.id)>=0;
+    var isStreak = streakIds.indexOf(el.id)>=0;
     if(name==='calendar'){
       el.style.display = isCalendarPage ? 'block' : 'none';
+    } else if(name==='streaks'){
+      el.style.display = isStreak ? 'block' : 'none';
     } else {
-      el.style.display = isSchedule ? 'none' : 'block';
+      el.style.display = (isSchedule || isStreak) ? 'none' : 'block';
     }
   });
   window.__section = name;
+  if(name==='streaks') renderStreaks();
 }
 function initSwipe(){
   var sx=0, sy=0;
@@ -574,8 +607,10 @@ function initSwipe(){
     var tgt=e.target;
     if(tgt && tgt.closest && (tgt.closest('.dragblock') || tgt.closest('input') || tgt.closest('select') || tgt.closest('textarea'))) return;
     if(Math.abs(dx)>70 && Math.abs(dx)>Math.abs(dy)*1.5){
-      if(dx<0 && window.__section!=='calendar') switchSection('calendar');
-      else if(dx>0 && window.__section!=='tracker') switchSection('tracker');
+      var order=['tracker','calendar','streaks'];
+      var i=order.indexOf(window.__section||'tracker');
+      if(dx<0 && i<order.length-1) switchSection(order[i+1]);
+      else if(dx>0 && i>0) switchSection(order[i-1]);
     }
   }, {passive:true});
 }
@@ -638,6 +673,56 @@ function saveOther(){
   document.getElementById('weightVal').value=''; document.getElementById('stepsVal').value='';
   save(); render();
 }
+
+var STREAK_KEY='lockin_streaks_v1', STREAK_PW_KEY='lockin_streaks_pw_v1';
+function hashPw(s){var h=0; for(var i=0;i<s.length;i++){h=((h<<5)-h+s.charCodeAt(i))|0;} return 'h'+h;}
+function dateKeyOf(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function loadStreaks(){
+  try{var raw=localStorage.getItem(STREAK_KEY); if(raw){var arr=JSON.parse(raw); if(Array.isArray(arr) && arr.length) return arr;}}catch(e){}
+  return [{id:'nocontact',name:'No Contact',goal:30,dates:[]},{id:'nolust',name:'No Lust',goal:30,dates:[]}];
+}
+var streaks=loadStreaks();
+function saveStreaks(){try{localStorage.setItem(STREAK_KEY, JSON.stringify(streaks));}catch(e){}}
+function streakCount(s){
+  var set={}; (s.dates||[]).forEach(function(d){set[d]=1;});
+  var today=new Date(), start=null;
+  if(set[dateKeyOf(today)]) start=today;
+  else {var y=new Date(); y.setDate(y.getDate()-1); if(set[dateKeyOf(y)]) start=y; else return 0;}
+  var count=0, d=new Date(start);
+  while(set[dateKeyOf(d)]){count++; d.setDate(d.getDate()-1);}
+  return count;
+}
+function renderStreaks(){
+  if(window.__section!=='streaks') return;
+  var unlocked=false; try{unlocked=sessionStorage.getItem('streaks-unlocked')==='1';}catch(e){}
+  var hasPw=false; try{hasPw=!!localStorage.getItem(STREAK_PW_KEY);}catch(e){}
+  document.getElementById('streakLockText').textContent = hasPw ? 'Enter your password to unlock.' : 'First time: set a password for this section. It is saved only on this phone.';
+  document.getElementById('streaksLock').style.display = unlocked ? 'none' : 'block';
+  document.getElementById('streaksMain').style.display = unlocked ? 'block' : 'none';
+  document.getElementById('streaksAdd').style.display = unlocked ? 'block' : 'none';
+  if(!unlocked) return;
+  var today=todayKey();
+  document.getElementById('streakList').innerHTML = streaks.map(function(s){
+    var c=streakCount(s), checked=(s.dates||[]).indexOf(today)>=0, left=Math.max(0, s.goal-c), pct=Math.min(100, Math.round(c/s.goal*100));
+    var msg = c>=s.goal ? 'Goal reached. Keep going.' : (checked ? 'Checked today. '+left+' days left to '+s.goal+'.' : 'Not checked today. '+left+' days left to '+s.goal+'.');
+    var delBtn = (s.id!=='nocontact' && s.id!=='nolust') ? '<button class="danger" onclick="delStreak(\''+s.id+'\')">Delete</button>' : '';
+    return '<div style="margin-bottom:16px"><b style="font-size:18px">'+esc(s.name)+'</b><p style="margin:4px 0;font-size:28px;font-weight:800">'+c+' <span style="font-size:14px;font-weight:400;color:#c4b5fd">/ '+s.goal+' days</span></p><div class="bar"><i style="width:'+pct+'%"></i></div><p class="small" style="margin:6px 0">'+msg+'</p><div class="row"><button class="big" '+(checked?'disabled':'')+' onclick="checkInStreak(\''+s.id+'\')">'+(checked?'Checked today':'Check in today')+'</button><button class="secondary" onclick="resetStreak(\''+s.id+'\')">Reset</button>'+delBtn+'</div></div>';
+  }).join('');
+}
+function unlockStreaks(){
+  var pw=document.getElementById('streakPw').value||'';
+  if(!pw){document.getElementById('streakLockMsg').textContent='Type a password first.'; return;}
+  var stored=null; try{stored=localStorage.getItem(STREAK_PW_KEY);}catch(e){}
+  if(!stored){try{localStorage.setItem(STREAK_PW_KEY, hashPw(pw)); sessionStorage.setItem('streaks-unlocked','1');}catch(e){} document.getElementById('streakPw').value=''; document.getElementById('streakLockMsg').textContent=''; renderStreaks(); return;}
+  if(hashPw(pw)===stored){try{sessionStorage.setItem('streaks-unlocked','1');}catch(e){} document.getElementById('streakPw').value=''; document.getElementById('streakLockMsg').textContent=''; renderStreaks();}
+  else {document.getElementById('streakLockMsg').textContent='Wrong password, try again.'; document.getElementById('streakPw').value='';}
+}
+function lockStreaks(){try{sessionStorage.removeItem('streaks-unlocked');}catch(e){} renderStreaks();}
+function checkInStreak(id){var s=streaks.find(function(x){return x.id===id;}); if(!s) return; var t=todayKey(); if(s.dates.indexOf(t)<0) s.dates.push(t); saveStreaks(); renderStreaks();}
+function resetStreak(id){if(!confirm('Reset this streak to 0?')) return; var s=streaks.find(function(x){return x.id===id;}); if(s) s.dates=[]; saveStreaks(); renderStreaks();}
+function delStreak(id){if(!confirm('Delete this goal?')) return; streaks=streaks.filter(function(x){return x.id!==id;}); saveStreaks(); renderStreaks();}
+function addStreak(){var name=document.getElementById('newStreakName').value.trim(); var goal=parseInt(document.getElementById('newStreakGoal').value,10)||30; if(!name){alert('Type a goal name.'); return;} streaks.push({id:uid(),name:name,goal:goal,dates:[]}); document.getElementById('newStreakName').value=''; saveStreaks(); renderStreaks();}
+
 initSwipe();
 render();
 switchSection('tracker');
