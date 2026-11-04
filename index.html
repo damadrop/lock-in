@@ -84,8 +84,16 @@
 </style>
 </head>
 <body>
+
+<div id="welcomeOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#171233 0%,#0b0620 100%);z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px">
+  <h1 id="welcomeGreeting" style="font-size:38px;margin:0 0 16px">Good morning, Lonj</h1>
+  <p id="welcomeVerse" style="font-size:18px;line-height:1.5;color:#e9d5ff;margin:0 0 32px"></p>
+  <button class="big" style="min-width:200px" onclick="dismissWelcome()">Enter</button>
+</div>
+
 <h1>Lock In</h1>
 <p class="sub" id="todayLabel">Today</p>
+  <p class="sub" id="greetingLine" style="font-size:18px;color:#fff;margin-top:-8px"></p>
   <p class="sub" id="syncStatus" style="font-size:12px;opacity:.7">Sync: checking...</p>
 <div class="daybtns" id="sectionTabs">
   <button class="on" id="tabTracker" onclick="switchSection('tracker')">Tracker</button>
@@ -120,6 +128,14 @@
     <button class="secondary" onclick="addWater(-1)">- Water</button>
   </div>
   <p class="small" id="lastWeight" style="margin-bottom:0"></p>
+</div>
+
+
+<div class="card" id="sleepCard">
+  <h2>Sleep</h2>
+  <p style="margin:0;font-size:18px" id="sleepStatus">No sleep logged yet.</p>
+  <button class="big" id="sleepBtn" style="margin-top:12px" onclick="toggleSleep()">Go to sleep</button>
+  <ul id="sleepList" style="margin-top:12px"></ul>
 </div>
 
 <div class="card" id="scheduleMyPlan">
@@ -287,7 +303,7 @@ function buildMeals(day, ct){
 var MEALS = buildMeals(new Date().getDay(), {});
 function todayKey(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
-function defaultState(){return {targets:{cal:2900,protein:114},workouts:[],meals:[],water:{},weights:[],steps:{},customTimes:{breakfast:'08:00',lunch:'13:00',snack:'16:00',dinner:'20:30',schoolBreakfast:'06:30',home:'16:00'},calEvents:null,mealOverrides:{}};}
+function defaultState(){return {targets:{cal:2900,protein:114},workouts:[],meals:[],water:{},weights:[],steps:{},customTimes:{breakfast:'08:00',lunch:'13:00',snack:'16:00',dinner:'20:30',schoolBreakfast:'06:30',home:'16:00'},calEvents:null,mealOverrides:{},sleep:[],sleepStart:null};}
 var state = defaultState();
 try{
   var raw = localStorage.getItem(LS_KEY);
@@ -303,6 +319,8 @@ try{
     if(!state.customTimes || typeof state.customTimes!=='object') state.customTimes={breakfast:'08:00',lunch:'13:00',snack:'16:00',dinner:'20:30',schoolBreakfast:'06:30',home:'16:00'};
     if(!state.calEvents) state.calEvents = buildDefaultCalEvents();
     if(!state.mealOverrides || typeof state.mealOverrides!=='object') state.mealOverrides={};
+    if(!Array.isArray(state.sleep)) state.sleep=[];
+    if(state.sleepStart===undefined) state.sleepStart=null;
   }}
 }catch(e){}
 var __syncTimer=null, __suppressSync=false;
@@ -415,6 +433,7 @@ function render(){
   document.getElementById('stepsLabel').textContent=state.steps[today]?('Steps today: '+state.steps[today]):'';
   var isSchool = !!SCHOOL_BELLS[now.getDay()];
   document.getElementById('dayTypeLabel').textContent = isSchool ? 'School day. No school Mon / Tue, so those days use the easier home schedule.' : 'No school today, so you can eat big meals at home, no rush.';
+  renderSleep();
   renderCalendar(plan);
   renderDragCalendar();
   checkEatAlert(cal, plan);
@@ -813,7 +832,74 @@ function resetStreak(id){if(!confirm('Reset this streak to 0?')) return; var s=s
 function delStreak(id){if(!confirm('Delete this goal?')) return; streaks=streaks.filter(function(x){return x.id!==id;}); saveStreaks(); renderStreaks();}
 function addStreak(){var name=document.getElementById('newStreakName').value.trim(); var goal=parseInt(document.getElementById('newStreakGoal').value,10)||30; if(!name){alert('Type a goal name.'); return;} streaks.push({id:uid(),name:name,goal:goal,dates:[]}); document.getElementById('newStreakName').value=''; saveStreaks(); renderStreaks();}
 
+
+var WELCOME_VERSES=[
+"This is the day the Lord has made; let us rejoice and be glad. Psalm 118:24",
+"His mercies are new every morning. Lamentations 3:23",
+"I can do all things through Christ who strengthens me. Philippians 4:13",
+"Commit your work to the Lord, and your plans will be established. Proverbs 16:3",
+"Be strong and courageous, for the Lord your God will be with you. Joshua 1:9",
+"The Lord is my strength and my shield. Psalm 28:7",
+"Do not grow weary in doing good. Galatians 6:9",
+"Be still, and know that I am God. Psalm 46:10",
+"His strength is made perfect in weakness. 2 Corinthians 12:9",
+"Guard your heart, for everything you do flows from it. Proverbs 4:23",
+"Run with endurance the race set before you. Hebrews 12:1",
+"The joy of the Lord is your strength. Nehemiah 8:10",
+"Trust in the Lord with all your heart. Proverbs 3:5",
+"I will give you rest. Matthew 11:28",
+"Let all that you do be done in love. 1 Corinthians 16:14"
+];
+function timeGreeting(){
+  var h=new Date().getHours();
+  if(h>=5 && h<12) return 'Good morning';
+  if(h>=12 && h<18) return 'Good afternoon';
+  return 'Good evening';
+}
+function showWelcome(){
+  var now=new Date(), h=now.getHours();
+  var g=timeGreeting();
+  var gl=document.getElementById('greetingLine'); if(gl) gl.textContent=g+', Lonj';
+  if(h>=5 && h<12){
+    var start=new Date(now.getFullYear(),0,0), doy=Math.floor((now-start)/86400000);
+    document.getElementById('welcomeGreeting').textContent=g+', Lonj';
+    document.getElementById('welcomeVerse').textContent=WELCOME_VERSES[doy % WELCOME_VERSES.length];
+    document.getElementById('welcomeOverlay').style.display='flex';
+  }
+}
+function dismissWelcome(){document.getElementById('welcomeOverlay').style.display='none';}
+function toggleSleep(){
+  var now=new Date();
+  if(state.sleepStart){
+    var start=new Date(state.sleepStart);
+    var hours=Math.round(((now-start)/3600000)*10)/10;
+    if(!state.sleep) state.sleep=[];
+    state.sleep.push({id:uid(),date:todayKey(),start:start.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}),end:now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}),hours:hours});
+    state.sleepStart=null;
+  } else {
+    state.sleepStart=now.toISOString();
+  }
+  save(); render();
+}
+function renderSleep(){
+  var btn=document.getElementById('sleepBtn'), st=document.getElementById('sleepStatus'), list=document.getElementById('sleepList');
+  if(!btn) return;
+  if(state.sleepStart){
+    var s=new Date(state.sleepStart);
+    st.textContent='Sleeping since '+s.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})+'.';
+    btn.textContent='Wake up';
+  } else {
+    var last=(state.sleep||[])[(state.sleep||[]).length-1];
+    st.textContent=last ? ('Last sleep: '+last.hours+' hours.') : 'No sleep logged yet.';
+    btn.textContent='Go to sleep';
+  }
+  list.innerHTML=(state.sleep||[]).slice().reverse().slice(0,5).map(function(s){
+    return '<li><div><b>'+s.hours+' hours</b><small>'+s.date+' · '+s.start+' - '+s.end+'</small></div></li>';
+  }).join('') || '';
+}
+
 initSwipe();
+showWelcome();
 render();
 switchSection('tracker');
 var q0=document.getElementById('streakQuote'); if(q0) q0.style.display='none';
