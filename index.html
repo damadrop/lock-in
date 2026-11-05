@@ -85,8 +85,10 @@
 </head>
 <body>
 
-<div id="welcomeOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#171233 0%,#0b0620 100%);z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px">
-  <h1 id="welcomeGreeting" style="font-size:38px;margin:0 0 16px">Good morning, Lonj</h1>
+<div id="welcomeOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#b45309 0%,#171233 70%,#0b0620 100%);z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px">
+  <p style="font-size:15px;letter-spacing:3px;color:#fde68a;margin:0 0 8px">LOCK IN</p>
+  <h1 id="welcomeGreeting" style="font-size:44px;margin:0 0 8px">Good morning, Lonj</h1>
+  <p id="welcomeSub" style="font-size:17px;color:#fff;margin:0 0 20px">Time to start the day right.</p>
   <p id="welcomeVerse" style="font-size:18px;line-height:1.5;color:#e9d5ff;margin:0 0 32px"></p>
   <button class="big" style="min-width:200px" onclick="dismissWelcome()">Enter</button>
 </div>
@@ -860,12 +862,22 @@ function showWelcome(){
   var now=new Date(), h=now.getHours();
   var g=timeGreeting();
   var gl=document.getElementById('greetingLine'); if(gl) gl.textContent=g+', Lonj';
-  if(h>=5 && h<12){
-    var start=new Date(now.getFullYear(),0,0), doy=Math.floor((now-start)/86400000);
-    document.getElementById('welcomeGreeting').textContent=g+', Lonj';
-    document.getElementById('welcomeVerse').textContent=WELCOME_VERSES[doy % WELCOME_VERSES.length];
-    document.getElementById('welcomeOverlay').style.display='flex';
-  }
+  var ov=document.getElementById('welcomeOverlay');
+  var sub=document.getElementById('welcomeSub');
+  var theme='evening', subText='Finish the day strong.';
+  if(h>=5 && h<12){ theme='morning'; subText='Time to start the day right.'; }
+  else if(h>=12 && h<18){ theme='afternoon'; subText='Keep the day going.'; }
+  var bg={
+    morning:'linear-gradient(180deg,#b45309 0%,#7c2d12 45%,#171233 100%)',
+    afternoon:'linear-gradient(180deg,#0284c7 0%,#075985 45%,#171233 100%)',
+    evening:'linear-gradient(180deg,#6d28d9 0%,#4c1d95 45%,#0b0620 100%)'
+  }[theme];
+  ov.style.background=bg;
+  if(sub) sub.textContent=subText;
+  var start=new Date(now.getFullYear(),0,0), doy=Math.floor((now-start)/86400000);
+  document.getElementById('welcomeGreeting').textContent=g+', Lonj';
+  document.getElementById('welcomeVerse').textContent=WELCOME_VERSES[doy % WELCOME_VERSES.length];
+  ov.style.display='flex';
 }
 function dismissWelcome(){document.getElementById('welcomeOverlay').style.display='none';}
 function toggleSleep(){
