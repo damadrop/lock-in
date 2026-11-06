@@ -865,22 +865,54 @@ function timeGreeting(){
   if(h>=12 && h<18) return 'Good afternoon';
   return 'Good evening';
 }
-function showWelcome(){
-  var now=new Date(), h=now.getHours();
+function dayTheme(){
+  var h=new Date().getHours();
+  if(h>=5 && h<12) return 'morning';
+  if(h>=12 && h<18) return 'afternoon';
+  return 'evening';
+}
+function applyDayTheme(){
+  var theme=dayTheme();
+  var bodyBg={
+    morning:'linear-gradient(180deg,#7c2d12 0%,#3d1a0e 40%,#0b0620 100%)',
+    afternoon:'linear-gradient(180deg,#075985 0%,#0c2a4a 40%,#0b0620 100%)',
+    evening:'linear-gradient(180deg,#4c1d95 0%,#1e1240 40%,#0b0620 100%)'
+  }[theme];
+  document.body.style.background=bodyBg;
+  var subText={morning:'Time to start the day right.',afternoon:'Keep the day going.',evening:'Finish the day strong.'}[theme];
   var g=timeGreeting();
   var gl=document.getElementById('greetingLine'); if(gl) gl.textContent=g+', Lonj';
+  var sub=document.getElementById('welcomeSub'); if(sub) sub.textContent=subText;
   var ov=document.getElementById('welcomeOverlay');
-  var sub=document.getElementById('welcomeSub');
-  var theme='evening', subText='Finish the day strong.';
-  if(h>=5 && h<12){ theme='morning'; subText='Time to start the day right.'; }
-  else if(h>=12 && h<18){ theme='afternoon'; subText='Keep the day going.'; }
-  var bg={
+  if(ov) ov.style.background={
     morning:'linear-gradient(180deg,#b45309 0%,#7c2d12 45%,#171233 100%)',
     afternoon:'linear-gradient(180deg,#0284c7 0%,#075985 45%,#171233 100%)',
     evening:'linear-gradient(180deg,#6d28d9 0%,#4c1d95 45%,#0b0620 100%)'
   }[theme];
-  ov.style.background=bg;
-  if(sub) sub.textContent=subText;
+}
+function refreshTime(){
+  var now=new Date(), today=todayKey(), plan=calcPlan();
+  document.getElementById('todayLabel').textContent=now.toDateString();
+  var cal=state.meals.filter(function(m){return m.date===today;}).reduce(function(a,m){return a+(m.kcal||0);},0);
+  var hourNow=now.getHours()+now.getMinutes()/60;
+  var lastMeal=null, nextMeal=null;
+  for(var mi=0; mi<MEALS.length; mi++){ if(hourNow>=MEALS[mi].hour) lastMeal=MEALS[mi]; else if(!nextMeal) nextMeal=MEALS[mi]; }
+  var shouldByNow=lastMeal ? Math.round(plan.cal*lastMeal.cum) : 0;
+  var diff=cal-shouldByNow;
+  document.getElementById('rightNowTime').textContent='It is '+now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})+'.';
+  document.getElementById('rightNowText').textContent=lastMeal
+    ? ('You should be at about '+shouldByNow+' cal by now. You are at '+cal+' cal. '+(diff>=0 ? 'You are good, '+diff+' ahead.' : 'You are '+(-diff)+' behind. Eat now.'))
+    : ('Breakfast is at 8:00 AM. You are at '+cal+' cal so far.');
+  document.getElementById('nextMealText').textContent=nextMeal
+    ? ('Next: '+nextMeal.name+' at '+nextMeal.time+' — about '+Math.round(plan.cal*nextMeal.share)+' cal, '+Math.round(plan.pro*nextMeal.share)+'g protein.')
+    : ('All meals for today are done. Goal: '+plan.cal+' cal total.');
+  checkEatAlert(cal, plan);
+}
+function showWelcome(){
+  var now=new Date();
+  var g=timeGreeting();
+  applyDayTheme();
+  var ov=document.getElementById('welcomeOverlay');
   var start=new Date(now.getFullYear(),0,0), doy=Math.floor((now-start)/86400000);
   document.getElementById('welcomeGreeting').textContent=g+', Lonj';
   document.getElementById('welcomeVerse').textContent=WELCOME_VERSES[doy % WELCOME_VERSES.length];
@@ -920,6 +952,8 @@ function renderSleep(){
 initSwipe();
 showWelcome();
 render();
+setInterval(function(){ applyDayTheme(); refreshTime(); }, 60000);
+document.addEventListener('visibilitychange', function(){ if(!document.hidden){ applyDayTheme(); refreshTime(); } });
 switchSection('tracker');
 var q0=document.getElementById('streakQuote'); if(q0) q0.style.display='none';
 syncPullAndMerge();
