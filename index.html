@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Lock In">
-<link rel="icon" type="image/png" href="icon.png">
+<link rel="icon" type="image/jpeg" href="icon.jpg">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>Lock In</title>
 <style>
@@ -91,19 +91,33 @@
 </head>
 <body>
 
-<div id="welcomeOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#b45309 0%,#171233 70%,#0b0620 100%);z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px">
-  <img src="icon.png" alt="" style="width:96px;height:96px;border-radius:24px;margin:0 0 16px;box-shadow:0 8px 24px rgba(0,0,0,.4)">
-  <p style="font-size:15px;letter-spacing:3px;color:#fde68a;margin:0 0 8px">LOCK IN</p>
+<div id="welcomeOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0284c7 0%,#075985 45%,#171233 100%);z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px">
+  <p style="font-size:15px;letter-spacing:3px;color:#bae6fd;margin:0 0 8px">LOCK IN</p>
   <h1 id="welcomeGreeting" style="font-size:44px;margin:0 0 8px">Good morning, Lonj</h1>
   <p id="welcomeSub" style="font-size:17px;color:#fff;margin:0 0 20px">Time to start the day right.</p>
   <p id="welcomeVerse" style="font-size:18px;line-height:1.5;color:#e9d5ff;margin:0 0 32px"></p>
   <button class="big" style="min-width:200px" onclick="dismissWelcome()">Enter</button>
+  <p style="font-size:12px;opacity:.55;margin:20px 0 0">v2.1 &middot; Sky Blue Update</p>
+</div>
+
+<div id="updatesOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0c2a4a 0%,#0b0620 100%);z-index:1000;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px">
+  <p style="font-size:15px;letter-spacing:3px;color:#bae6fd;margin:0 0 8px">WHAT'S NEW</p>
+  <h1 style="font-size:30px;margin:0 0 4px">Sky Blue Update</h1>
+  <p style="font-size:14px;opacity:.7;margin:0 0 20px">v2.1</p>
+  <div style="text-align:left;font-size:17px;line-height:1.9;max-width:340px">
+    <p style="margin:0">Theme matches the time of day. Soft blue in the morning, bright blue in the afternoon, purple at night.</p>
+    <p style="margin:0">Faster to open. Smaller app icon, smarter loading.</p>
+    <p style="margin:0">New Thanksgiving app icon.</p>
+    <p style="margin:0">Simpler welcome screen, same daily Bible verse.</p>
+  </div>
+  <button class="big" style="min-width:200px;margin-top:28px" onclick="dismissUpdates()">Let&rsquo;s go</button>
 </div>
 
 <h1>Lock In</h1>
 <p class="sub" id="todayLabel">Today</p>
   <p class="sub" id="greetingLine" style="font-size:18px;color:#fff;margin-top:-8px"></p>
   <p class="sub" id="syncStatus" style="font-size:12px;opacity:.7">Sync: checking...</p>
+  <p class="sub" style="font-size:11px;opacity:.5">v2.1 &middot; Sky Blue Update</p>
 <div class="daybtns" id="sectionTabs">
   <button class="on" id="tabTracker" onclick="switchSection('tracker')">Tracker</button>
   <button id="tabCalendar" onclick="switchSection('calendar')">Calendar</button>
@@ -270,7 +284,9 @@
 </details>
 
 <script>
-if('serviceWorker' in navigator){try{navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}catch(e){} try{if(window.caches){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});});}}catch(e){}}
+var APP_VERSION='2.1';
+var _needClear=true; try{_needClear=localStorage.getItem('lockin_cache_cleared_for')!==APP_VERSION;}catch(e){}
+if(_needClear){try{localStorage.setItem('lockin_cache_cleared_for',APP_VERSION);}catch(e){} if('serviceWorker' in navigator){try{navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}catch(e){} try{if(window.caches){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});});}}catch(e){}}}
 var LS_KEY = 'lockin_homescreen_v1';
 var GOAL_WT = 130, START_WT = 114, HEIGHT_CM = 152.4, AGE = 18;
 var SCHEDULE = ['Legs','Upper Body','Rest','Legs','Upper Body','Rest','Rest'];
@@ -874,7 +890,7 @@ function dayTheme(){
 function applyDayTheme(){
   var theme=dayTheme();
   var bodyBg={
-    morning:'linear-gradient(180deg,#7c2d12 0%,#3d1a0e 40%,#0b0620 100%)',
+    morning:'linear-gradient(180deg,#0e7490 0%,#0c2a4a 45%,#0b0620 100%)',
     afternoon:'linear-gradient(180deg,#075985 0%,#0c2a4a 40%,#0b0620 100%)',
     evening:'linear-gradient(180deg,#4c1d95 0%,#1e1240 40%,#0b0620 100%)'
   }[theme];
@@ -885,8 +901,8 @@ function applyDayTheme(){
   var sub=document.getElementById('welcomeSub'); if(sub) sub.textContent=subText;
   var ov=document.getElementById('welcomeOverlay');
   if(ov) ov.style.background={
-    morning:'linear-gradient(180deg,#b45309 0%,#7c2d12 45%,#171233 100%)',
-    afternoon:'linear-gradient(180deg,#0284c7 0%,#075985 45%,#171233 100%)',
+    morning:'linear-gradient(180deg,#38bdf8 0%,#0284c7 45%,#171233 100%)',
+    afternoon:'linear-gradient(180deg,#0ea5e9 0%,#0284c7 45%,#171233 100%)',
     evening:'linear-gradient(180deg,#6d28d9 0%,#4c1d95 45%,#0b0620 100%)'
   }[theme];
 }
@@ -918,7 +934,15 @@ function showWelcome(){
   document.getElementById('welcomeVerse').textContent=WELCOME_VERSES[doy % WELCOME_VERSES.length];
   ov.style.display='flex';
 }
-function dismissWelcome(){document.getElementById('welcomeOverlay').style.display='none';}
+function dismissWelcome(){
+  document.getElementById('welcomeOverlay').style.display='none';
+  var seen=null; try{seen=localStorage.getItem('lockin_seen_version');}catch(e){}
+  if(seen!==APP_VERSION){document.getElementById('updatesOverlay').style.display='flex';}
+}
+function dismissUpdates(){
+  try{localStorage.setItem('lockin_seen_version',APP_VERSION);}catch(e){}
+  document.getElementById('updatesOverlay').style.display='none';
+}
 function toggleSleep(){
   var now=new Date();
   if(state.sleepStart){
