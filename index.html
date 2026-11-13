@@ -17,20 +17,20 @@
   h1{font-size:34px;margin:4px 0 2px;letter-spacing:-.5px;text-shadow:0 2px 12px rgba(0,0,0,.3)}
   h2{font-size:19px;margin:0 0 10px}
   .sub{color:#c4b5fd;margin:0 0 6px}
-  .card{background:#232330;border:1px solid rgba(255,255,255,.10);border-radius:20px;padding:16px;margin:0 0 16px;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+  .card{background:#1d2f52;border:1px solid rgba(125,211,252,.28);border-radius:20px;padding:16px;margin:0 0 16px;box-shadow:0 12px 30px rgba(0,0,0,.35)}
   .alert{background:#7c2d12;border:1px solid #f97316;border-radius:16px;padding:14px;margin:0 0 14px;display:none}
   .alert b{font-size:18px}
   .totals{display:flex;gap:8px;flex-wrap:wrap}
-  .total{flex:1;min-width:100px;background:#2e2e42;border-radius:14px;padding:12px;text-align:center}
-  .total b{font-size:22px;display:block}
+  .total{flex:1;min-width:100px;background:#16294d;border-radius:14px;padding:12px;text-align:center}
+  .total b{font-size:22px;display:block;color:#7dd3fc}
   .total span{font-size:12px;color:#c4b5fd}
-  input,select{width:100%;padding:13px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:#2e2e42;color:#fff;font-size:16px;margin:0 0 8px}
-  button{padding:13px 16px;border-radius:14px;border:0;background:linear-gradient(90deg,#6366f1,#a855f7);color:#fff;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(168,85,247,.45)}
+  input,select{width:100%;padding:13px;border-radius:12px;border:1px solid rgba(125,211,252,.25);background:#16294d;color:#fff;font-size:16px;margin:0 0 8px}
+  button{padding:13px 16px;border-radius:14px;border:0;background:linear-gradient(90deg,#0284c7,#0ea5e9);color:#fff;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(14,165,233,.45)}
   button.secondary{background:#3b3b52;box-shadow:none}
   button.danger{background:#7f1d1d;padding:6px 10px;font-size:13px}
   button.big{width:100%}
   ul{list-style:none;padding:0;margin:10px 0 0}
-  li{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#2e2e42;border-radius:12px;padding:11px;margin:0 0 8px}
+  li{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#16294d;border-radius:12px;padding:11px;margin:0 0 8px}
   li small{color:#c4b5fd;display:block}
   li.today{background:#3b0764}
   .small{font-size:13px;color:#c4b5fd}
@@ -41,8 +41,8 @@
   .bar{background:#120826;border-radius:99px;height:14px;overflow:hidden;margin:10px 0}
   .daybtns{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
   .daybtns button{padding:8px 10px;font-size:13px;background:#334155}
-  .daybtns button.on{background:#a855f7}
-  .cal{position:relative;margin-left:0;height:560px;background:#171724;border-radius:16px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+  .daybtns button.on{background:#0284c7}
+  .cal{position:relative;margin-left:0;height:560px;background:#0f1e38;border-radius:16px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
   .calhour{position:absolute;left:4px;width:40px;text-align:left;font-size:11px;color:#c4b5fd}
   .calline{position:absolute;left:48px;right:0;height:1px;background:#ffffff22}
   .calblock{position:absolute;left:48px;right:6px;border-radius:12px;padding:8px;font-size:13px;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.35)}
@@ -51,7 +51,7 @@
   .dragblock .mv{float:right;font-size:12px;background:#00000044;border-radius:6px;padding:2px 6px;margin-left:4px}
   .calblock b{display:block}
   .calblock small{color:#fff;opacity:.85}
-  .bar i{display:block;height:100%;background:#a855f7}
+  .bar i{display:block;height:100%;background:#38bdf8}
   #mealList,#workoutList,#weightList{max-height:110px;overflow:auto}
   .card h2{margin-bottom:8px}
   @media(max-width:480px){
@@ -87,6 +87,16 @@
   .dot.on{background:#c4b5fd}
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
   .shake{animation:shake .3s ease}
+  #nextMealText{font-size:18px;font-weight:700;color:#fff}
+  #calDayBtns{justify-content:space-between}
+  #calDayBtns button{width:44px;height:44px;border-radius:50%;padding:0;flex:0 0 auto;background:#16294d}
+  #calDayBtns button.done{background:#38bdf8;color:#082f49}
+  #calDayBtns button.on{outline:2px solid #bae6fd;outline-offset:2px}
+  .pill{float:right;font-size:11px;font-weight:700;background:rgba(255,255,255,.18);color:#fff;border-radius:99px;padding:3px 8px;margin-left:4px}
+  .pill.done{background:#bae6fd;color:#0c4a6e}
+  .weekcircle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;background:#16294d;color:#7dd3fc;border:2px solid transparent}
+  .weekcircle.done{background:#38bdf8;color:#082f49}
+  .weekcircle.today{border-color:#bae6fd}
 </style>
 </head>
 <body>
@@ -97,18 +107,19 @@
   <p id="welcomeSub" style="font-size:17px;color:#fff;margin:0 0 20px">Time to start the day right.</p>
   <p id="welcomeVerse" style="font-size:18px;line-height:1.5;color:#e9d5ff;margin:0 0 32px"></p>
   <button class="big" style="min-width:200px" onclick="dismissWelcome()">Enter</button>
-  <p style="font-size:12px;opacity:.55;margin:20px 0 0">v2.1 &middot; Sky Blue Update</p>
+  <p style="font-size:12px;opacity:.55;margin:20px 0 0">v2.2 &middot; Sky Blue Update</p>
 </div>
 
 <div id="updatesOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0c2a4a 0%,#0b0620 100%);z-index:1000;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px">
   <p style="font-size:15px;letter-spacing:3px;color:#bae6fd;margin:0 0 8px">WHAT'S NEW</p>
   <h1 style="font-size:30px;margin:0 0 4px">Sky Blue Update</h1>
-  <p style="font-size:14px;opacity:.7;margin:0 0 20px">v2.1</p>
+  <p style="font-size:14px;opacity:.7;margin:0 0 20px">v2.2</p>
   <div style="text-align:left;font-size:17px;line-height:1.9;max-width:340px">
-    <p style="margin:0">Theme matches the time of day. Soft blue in the morning, bright blue in the afternoon, purple at night.</p>
-    <p style="margin:0">Faster to open. Smaller app icon, smarter loading.</p>
-    <p style="margin:0">New Thanksgiving app icon.</p>
-    <p style="margin:0">Simpler welcome screen, same daily Bible verse.</p>
+    <p style="margin:0">Tracker and Calendar got a new look</p>
+    <p style="margin:0">Blue theme that changes with the time of day</p>
+    <p style="margin:0">Faster to open</p>
+    <p style="margin:0">Thanksgiving app icon</p>
+    <p style="margin:0">Simpler welcome screen</p>
   </div>
   <button class="big" style="min-width:200px;margin-top:28px" onclick="dismissUpdates()">Let&rsquo;s go</button>
 </div>
@@ -117,7 +128,7 @@
 <p class="sub" id="todayLabel">Today</p>
   <p class="sub" id="greetingLine" style="font-size:18px;color:#fff;margin-top:-8px"></p>
   <p class="sub" id="syncStatus" style="font-size:12px;opacity:.7">Sync: checking...</p>
-  <p class="sub" style="font-size:11px;opacity:.5">v2.1 &middot; Sky Blue Update</p>
+  <p class="sub" style="font-size:11px;opacity:.5">v2.2 &middot; Sky Blue Update</p>
 <div class="daybtns" id="sectionTabs">
   <button class="on" id="tabTracker" onclick="switchSection('tracker')">Tracker</button>
   <button id="tabCalendar" onclick="switchSection('calendar')">Calendar</button>
@@ -151,6 +162,13 @@
     <button class="secondary" onclick="addWater(-1)">- Water</button>
   </div>
   <p class="small" id="lastWeight" style="margin-bottom:0"></p>
+  <div class="bar"><i id="weightBar" style="width:0%"></i></div>
+</div>
+
+<div class="card" id="weekStripCard">
+  <h2>This week</h2>
+  <div id="weekStrip" style="display:flex;gap:8px;justify-content:space-between"></div>
+  <p class="small" id="weekStripLabel" style="margin:8px 0 0"></p>
 </div>
 
 
@@ -284,7 +302,7 @@
 </details>
 
 <script>
-var APP_VERSION='2.1';
+var APP_VERSION='2.2';
 var _needClear=true; try{_needClear=localStorage.getItem('lockin_cache_cleared_for')!==APP_VERSION;}catch(e){}
 if(_needClear){try{localStorage.setItem('lockin_cache_cleared_for',APP_VERSION);}catch(e){} if('serviceWorker' in navigator){try{navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}catch(e){} try{if(window.caches){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});});}}catch(e){}}}
 var LS_KEY = 'lockin_homescreen_v1';
@@ -399,6 +417,23 @@ function calcPlan(){
   var weeks=gain>0 ? Math.round(gain/0.5) : 0;
   return {wt:wt, cal:cal, pro:pro, water:water, gain:gain, weeks:weeks, bmr:Math.round(bmr), tdee:Math.round(tdee)};
 }
+function weekDateKey(dayIdx){
+  var d=new Date(); d.setDate(d.getDate()-d.getDay()+dayIdx);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function renderWeekStrip(){
+  var el=document.getElementById('weekStrip'); if(!el) return;
+  var todayIdx=new Date().getDay(), done=0, html='';
+  var labels=['M','T','W','T','F','S','S'];
+  for(var i=0;i<7;i++){
+    var dayIdx=(i+1)%7;
+    var hasWo=state.workouts.some(function(w){return w.date===weekDateKey(dayIdx);});
+    if(hasWo) done++;
+    html+='<span class="weekcircle'+(hasWo?' done':'')+(dayIdx===todayIdx?' today':'')+'">'+(hasWo?'✓':labels[i])+'</span>';
+  }
+  el.innerHTML=html;
+  document.getElementById('weekStripLabel').textContent=done+' of 7 days with a workout this week.';
+}
 function render(){
   var today=todayKey(), now=new Date(), plan=calcPlan();
   MEALS = buildMeals(now.getDay(), state.customTimes||{});
@@ -452,6 +487,9 @@ function render(){
   }).join('') || '<li class="small">Nothing yet today.</li>';
   var lastW=state.weights[state.weights.length-1];
   document.getElementById('lastWeight').textContent=lastW?('Last weight: '+lastW.lbs+' lb on '+lastW.date+(lastW.time?' at '+lastW.time:'')):'Starting weight: 114 lb';
+  var wBar=document.getElementById('weightBar');
+  if(wBar){var wv=lastW?lastW.lbs:plan.wt; wBar.style.width=Math.max(0,Math.min(100,Math.round((wv-START_WT)/(GOAL_WT-START_WT)*100)))+'%';}
+  renderWeekStrip();
   document.getElementById('weightList').innerHTML=state.weights.slice().reverse().slice(0,10).map(function(w){
     return '<li><div><b>'+w.lbs+' lb</b><small>'+w.date+(w.time?' at '+w.time:'')+'</small></div></li>';
   }).join('') || '<li class="small">No weights logged yet.</li>';
@@ -546,7 +584,8 @@ function renderDragCalendar(){
   var day = calSelectedDay;
   var btns = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   document.getElementById('calDayBtns').innerHTML = btns.map(function(d,i){
-    return '<button class="'+(i===day?'on':'')+'" onclick="calSelectedDay='+i+';render();">'+d+'</button>';
+    var hasWo=state.workouts.some(function(w){return w.date===weekDateKey(i);});
+    return '<button class="'+(i===day?'on':'')+(hasWo?' done':'')+'" onclick="calSelectedDay='+i+';render();">'+d+'</button>';
   }).join('');
   var evs = (state.calEvents && state.calEvents[day]) || [];
   var html = '';
@@ -563,7 +602,12 @@ function renderDragCalendar(){
       if(mm) detail += ' · '+Math.round(2900*mm.share)+' cal';
     }
     var col = ev.color==='#ec4899' ? '#3b82f6' : ev.color;
-    html += '<div class="dragblock" data-day="'+day+'" data-id="'+ev.id+'" style="top:'+top+'px;height:'+height+'px;background:'+col+'"><b>'+ev.title+'</b><small style="display:block;color:#fff;opacity:.85">'+detail+'</small>'+arrows+del+'</div>';
+    var evDate=new Date(); evDate.setDate(evDate.getDate()-evDate.getDay()+day); evDate.setHours(0,0,0,0);
+    var todayDate=new Date(); todayDate.setHours(0,0,0,0);
+    var nowH2=new Date().getHours()+new Date().getMinutes()/60;
+    var isDone = evDate<todayDate || (evDate.getTime()===todayDate.getTime() && ev.start+ev.dur<=nowH2);
+    var pill='<span class="pill'+(isDone?' done':'')+'">'+(isDone?'Done':'Upcoming')+'</span>';
+    html += '<div class="dragblock" data-day="'+day+'" data-id="'+ev.id+'" style="top:'+top+'px;height:'+height+'px;background:'+col+'">'+pill+'<b>'+ev.title+'</b><small style="display:block;color:#fff;opacity:.85">'+detail+'</small>'+arrows+del+'</div>';
   });
   if(day===new Date().getDay()){
     var nowH = new Date().getHours()+new Date().getMinutes()/60;
