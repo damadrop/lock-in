@@ -12,59 +12,42 @@
 <title>Lock In</title>
 <style>
   *{box-sizing:border-box}
-  html{background:#0b0620}
-  body{margin:0;background:linear-gradient(180deg,#171233 0%,#0b0620 100%);color:#fff;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display',system-ui,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;padding:calc(36px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));max-width:560px;margin-left:auto;margin-right:auto}
-  h1{font-size:34px;margin:4px 0 2px;letter-spacing:-.5px;text-shadow:0 2px 12px rgba(0,0,0,.3)}
+  html{background:#0a1128}
+  body{margin:0;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);color:#fff;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display',system-ui,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;padding:calc(26px + env(safe-area-inset-top)) 16px calc(112px + env(safe-area-inset-bottom));max-width:560px;margin-left:auto;margin-right:auto}
+  h1{font-size:30px;margin:0;letter-spacing:-.5px}
   h2{font-size:19px;margin:0 0 10px}
-  .sub{color:#c4b5fd;margin:0 0 6px}
-  .card{background:#1d2f52;border:1px solid rgba(125,211,252,.28);border-radius:20px;padding:16px;margin:0 0 16px;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+  .sub{color:#8ea3c8;margin:0}
+  .card{background:#111c3a;border:1px solid rgba(125,211,252,.14);border-radius:24px;padding:18px;margin:0 0 14px;box-shadow:0 10px 28px rgba(0,0,0,.35)}
   .alert{background:#7c2d12;border:1px solid #f97316;border-radius:16px;padding:14px;margin:0 0 14px;display:none}
   .alert b{font-size:18px}
-  .totals{display:flex;gap:8px;flex-wrap:wrap}
-  .total{flex:1;min-width:100px;background:#16294d;border-radius:14px;padding:12px;text-align:center}
-  .total b{font-size:22px;display:block;color:#7dd3fc}
-  .total span{font-size:12px;color:#c4b5fd}
   input,select{width:100%;padding:13px;border-radius:12px;border:1px solid rgba(125,211,252,.25);background:#16294d;color:#fff;font-size:16px;margin:0 0 8px}
-  button{padding:13px 16px;border-radius:14px;border:0;background:linear-gradient(90deg,#0284c7,#0ea5e9);color:#fff;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(14,165,233,.45)}
-  button.secondary{background:#3b3b52;box-shadow:none}
-  button.danger{background:#7f1d1d;padding:6px 10px;font-size:13px}
+  button{padding:13px 16px;border-radius:14px;border:0;background:#38bdf8;color:#082f49;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(56,189,248,.35)}
+  button.secondary{background:#1c2f55;box-shadow:none;color:#bae6fd}
+  button.danger{background:#7f1d1d;padding:6px 10px;font-size:13px;color:#fff}
   button.big{width:100%}
   ul{list-style:none;padding:0;margin:10px 0 0}
   li{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#16294d;border-radius:12px;padding:11px;margin:0 0 8px}
-  li small{color:#c4b5fd;display:block}
-  li.today{background:#3b0764}
-  .small{font-size:13px;color:#c4b5fd}
+  li small{color:#8ea3c8;display:block}
+  li.today{background:#1e3a5f}
+  .small{font-size:13px;color:#8ea3c8}
   .row{display:flex;gap:8px}
   .row>*{flex:1}
-  details{color:#c4b5fd}
+  details{color:#8ea3c8}
   details summary{color:#fff;cursor:pointer;padding:6px 0}
-  .bar{background:#120826;border-radius:99px;height:14px;overflow:hidden;margin:10px 0}
-  .daybtns{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
-  .daybtns button{padding:8px 10px;font-size:13px;background:#334155}
-  .daybtns button.on{background:#0284c7}
-  .cal{position:relative;margin-left:0;height:560px;background:#0f1e38;border-radius:16px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
-  .calhour{position:absolute;left:4px;width:40px;text-align:left;font-size:11px;color:#c4b5fd}
-  .calline{position:absolute;left:48px;right:0;height:1px;background:#ffffff22}
-  .calblock{position:absolute;left:48px;right:6px;border-radius:12px;padding:8px;font-size:13px;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.35)}
-  .dragblock{position:absolute;left:48px;right:6px;border-radius:12px;padding:8px;font-size:13px;overflow:hidden;touch-action:none;cursor:grab;user-select:none;box-shadow:0 6px 16px rgba(0,0,0,.35)}
-  .dragblock:active{cursor:grabbing;opacity:.9}
-  .dragblock .mv{float:right;font-size:12px;background:#00000044;border-radius:6px;padding:2px 6px;margin-left:4px}
-  .calblock b{display:block}
-  .calblock small{color:#fff;opacity:.85}
+  .bar{background:#0a1128;border-radius:99px;height:10px;overflow:hidden;margin:10px 0}
   .bar i{display:block;height:100%;background:#38bdf8}
+  .bar.slim{height:8px;margin:10px 0 6px}
+  .daybtns{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+  .daybtns button{padding:8px 10px;font-size:13px;background:#334155;color:#fff}
+  .daybtns button.on{background:#0284c7}
   #mealList,#workoutList,#weightList{max-height:110px;overflow:auto}
   .card h2{margin-bottom:8px}
   @media(max-width:480px){
-    body{padding:calc(36px + env(safe-area-inset-top)) 10px 30px}
-    h1{font-size:28px}
-    .card{padding:12px;margin-bottom:12px;border-radius:16px}
-    .total{flex:1 1 42%;min-width:0}
-    .total b{font-size:19px}
+    body{padding:calc(26px + env(safe-area-inset-top)) 12px calc(112px + env(safe-area-inset-bottom))}
+    h1{font-size:26px}
+    .card{padding:14px;margin-bottom:12px;border-radius:20px}
     button{padding:11px 12px;font-size:15px}
     input,select{padding:11px}
-    .cal{margin-left:0}
-    .calhour{width:34px;left:4px}
-    .calblock,.dragblock{padding:6px}
   }
   *{scroll-behavior:smooth}
   .card{animation:fadeIn .25s ease}
@@ -72,12 +55,69 @@
   button{transition:transform .15s ease,background-color .2s ease}
   button:active{transform:scale(.97)}
   button:disabled{opacity:.45;filter:saturate(.5);transform:none}
-  .daybtns button:active{transform:scale(.96)}
-  .dragblock{transition:none}
   ul{-webkit-overflow-scrolling:touch}
-  #sectionTabs{background:#2e2e42;border-radius:14px;padding:4px;display:flex;gap:4px}
-  #sectionTabs button{flex:1;background:transparent;box-shadow:none;color:#c4b5fd}
-  #sectionTabs button.on{background:#fff;color:#000;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+  .apphead{display:flex;gap:16px;align-items:flex-start;margin:0 0 20px}
+  .appicon{width:118px;flex:0 0 118px;background:#111c3a;border:1px solid rgba(125,211,252,.14);border-radius:24px;padding:10px 10px 8px;text-align:center}
+  .appicon img{width:100%;border-radius:14px;display:block}
+  .appicon span{display:block;font-size:18px;font-weight:800;margin-top:6px}
+  .apptitle{flex:1;min-width:0;padding-top:2px}
+  .lbadge{width:44px;height:44px;border:2px solid #38bdf8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#7dd3fc;font-size:20px;margin-bottom:10px}
+  .apptitle h1{font-size:30px}
+  .apptitle .sub{font-size:14px;margin-top:4px}
+  #syncStatus{font-size:12px;color:#64748b;margin:6px 0 0}
+  .dash{display:flex;gap:14px;align-items:flex-start}
+  .dashicon{flex:0 0 44px;width:44px;height:44px;display:flex;align-items:center;justify-content:center}
+  .dashicon svg{width:36px;height:36px}
+  .dashbody{flex:1;min-width:0}
+  .dashlabel{font-size:16px;font-weight:700}
+  .dashbig{font-size:21px;font-weight:800;letter-spacing:-.3px;margin-top:2px;line-height:1.2}
+  .dashsub{font-size:14px;color:#8ea3c8;margin-top:4px;line-height:1.35}
+  .chev{font-size:28px;color:#64748b;line-height:1;padding-top:6px}
+  .pillbtn{flex:0 0 auto;background:#38bdf8;color:#082f49;border-radius:12px;padding:10px 18px;font-size:16px;box-shadow:none}
+  .stepper{display:flex;flex-direction:column;gap:8px}
+  .stepper button{width:38px;height:38px;border-radius:50%;padding:0;font-size:20px;line-height:1;box-shadow:none}
+  .drops{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap}
+  .drop{width:15px;height:19px}
+  .drop path{fill:none;stroke:#475569;stroke-width:1.6}
+  .drop.on path{fill:#38bdf8;stroke:#38bdf8}
+  .weekhead{display:flex;justify-content:space-between;align-items:baseline;margin:6px 2px 12px}
+  .weekhead h2{margin:0;font-size:22px}
+  .weekhead span{font-size:16px;font-weight:700;color:#fbbf24}
+  .weekrow{display:flex;justify-content:space-between}
+  .weekcircle{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;background:transparent;color:#7dd3fc;border:2px solid #475569}
+  .weekcircle.done{background:#38bdf8;border-color:#38bdf8;color:#082f49}
+  .weekcircle.today{border-color:#38bdf8;color:#38bdf8}
+  .weekletters{display:flex;justify-content:space-between;margin-top:6px}
+  .weekletters span{width:56px;text-align:center;font-size:14px;color:#8ea3c8}
+  .calweeknames{display:flex;justify-content:space-between;margin:0 0 8px}
+  .calweeknames span{width:56px;text-align:center;font-size:16px;font-weight:700}
+  .calweekcircles{display:flex;justify-content:space-between}
+  .calweekcircles button{width:56px;height:56px;border-radius:50%;padding:0;font-size:20px;font-weight:800;background:transparent;color:#7dd3fc;border:2px solid #475569;box-shadow:none}
+  .calweekcircles button.done{background:#38bdf8;border-color:#38bdf8;color:#082f49}
+  .calweekcircles button.on{border-color:#38bdf8;color:#38bdf8}
+  .calweekcircles button.on.done{background:#38bdf8;color:#082f49}
+  .schedhead{font-size:22px;margin:22px 0 4px}
+  .schedhead::after{content:'';display:block;width:52px;height:4px;border-radius:99px;background:#38bdf8;margin-top:8px}
+  .tl{position:relative;margin-top:14px}
+  .tl::before{content:'';position:absolute;left:64px;top:10px;bottom:10px;width:2px;background:rgba(125,211,252,.18)}
+  .tlrow{display:flex;gap:12px;margin:0 0 14px;position:relative}
+  .tltime{width:58px;flex:0 0 58px;text-align:right;font-size:13px;color:#8ea3c8;padding-top:16px}
+  .tltime.now{color:#ef4444;font-weight:700}
+  .tlcard{flex:1;min-width:0;background:#111c3a;border:1px solid rgba(125,211,252,.14);border-radius:20px;padding:14px;touch-action:none;cursor:grab;user-select:none}
+  .tlcard:active{cursor:grabbing;opacity:.9}
+  .tlcard b{font-size:18px}
+  .tlcard small{display:block;color:#8ea3c8;font-size:14px;margin-top:4px;line-height:1.35}
+  .tlcard .mv{float:right;font-size:12px;background:#00000044;border-radius:6px;padding:2px 6px;margin-left:4px;color:#fff}
+  .tlicon{float:left;margin:2px 10px 0 0}
+  .tlicon svg{width:22px;height:22px;display:block}
+  .pill{float:right;font-size:12px;font-weight:700;background:rgba(255,255,255,.16);color:#fff;border-radius:99px;padding:4px 10px;margin-left:4px}
+  .pill.done{background:#bae6fd;color:#0c4a6e}
+  .nowline{flex:1;height:2px;background:#ef4444;align-self:center;position:relative}
+  .nowline::before{content:'';position:absolute;left:-6px;top:-5px;width:12px;height:12px;border-radius:50%;background:#ef4444}
+  .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;justify-content:center;background:rgba(10,17,40,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(125,211,252,.15);padding:8px 12px calc(10px + env(safe-area-inset-bottom))}
+  .tabbar button{flex:1;max-width:180px;background:transparent;box-shadow:none;color:#64748b;font-size:13px;font-weight:600;padding:8px 4px;border-radius:16px;display:flex;flex-direction:column;align-items:center;gap:4px}
+  .tabbar button svg{width:24px;height:24px}
+  .tabbar button.on{background:#bae6fd;color:#0c4a6e}
   .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:280px;margin:0 auto}
   .keybtn{width:76px;height:76px;border-radius:50%;border:1px solid #5b5b7a;background:#2e2e42;color:#fff;font-size:28px;line-height:1;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto;box-shadow:none}
   .keybtn small{font-size:10px;color:#a5a5c0;letter-spacing:2px;margin-top:2px}
@@ -87,60 +127,43 @@
   .dot.on{background:#c4b5fd}
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
   .shake{animation:shake .3s ease}
-  #nextMealText{font-size:18px;font-weight:700;color:#fff}
-  #calDayBtns{justify-content:space-between}
-  #calDayBtns button{width:44px;height:44px;border-radius:50%;padding:0;flex:0 0 auto;background:#16294d}
-  #calDayBtns button.done{background:#38bdf8;color:#082f49}
-  #calDayBtns button.on{outline:2px solid #bae6fd;outline-offset:2px}
-  .pill{float:right;font-size:11px;font-weight:700;background:rgba(255,255,255,.18);color:#fff;border-radius:99px;padding:3px 8px;margin-left:4px}
-  .pill.done{background:#bae6fd;color:#0c4a6e}
-  .weekcircle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;background:#16294d;color:#7dd3fc;border:2px solid transparent}
-  .weekcircle.done{background:#38bdf8;color:#082f49}
-  .weekcircle.today{border-color:#bae6fd}
 </style>
 </head>
 <body>
 
-<div id="welcomeOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0284c7 0%,#075985 45%,#171233 100%);z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px">
+<div id="welcomeOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px">
   <p style="font-size:15px;letter-spacing:3px;color:#bae6fd;margin:0 0 8px">LOCK IN</p>
   <h1 id="welcomeGreeting" style="font-size:44px;margin:0 0 8px">Good morning, Lonj</h1>
   <p id="welcomeSub" style="font-size:17px;color:#fff;margin:0 0 20px">Time to start the day right.</p>
   <p id="welcomeVerse" style="font-size:18px;line-height:1.5;color:#e9d5ff;margin:0 0 32px"></p>
   <button class="big" style="min-width:200px" onclick="dismissWelcome()">Enter</button>
-  <p style="font-size:12px;opacity:.55;margin:20px 0 0">v2.2 &middot; Sky Blue Update</p>
+  <p style="font-size:12px;opacity:.55;margin:20px 0 0">v2.3 &middot; Sky Blue Update</p>
 </div>
 
-<div id="updatesOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0c2a4a 0%,#0b0620 100%);z-index:1000;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px">
-  <p style="font-size:15px;letter-spacing:3px;color:#bae6fd;margin:0 0 8px">WHAT'S NEW</p>
-  <h1 style="font-size:30px;margin:0 0 4px">Sky Blue Update</h1>
-  <p style="font-size:14px;opacity:.7;margin:0 0 20px">v2.2</p>
-  <div style="text-align:left;font-size:17px;line-height:1.9;max-width:340px">
-    <p style="margin:0">Tracker and Calendar got a new look</p>
-    <p style="margin:0">Blue theme that changes with the time of day</p>
-    <p style="margin:0">Faster to open</p>
-    <p style="margin:0">Thanksgiving app icon</p>
-    <p style="margin:0">Simpler welcome screen</p>
+<div id="updatesOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);z-index:1000;flex-direction:column;align-items:center;justify-content:center;padding:32px;overflow-y:auto">
+  <img src="icon.jpg" style="width:72px;height:72px;border-radius:18px;margin-bottom:14px" alt="Lock In icon">
+  <h1 style="font-size:26px;margin:0 0 4px">Lock In</h1>
+  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 2.3</p>
+  <p style="font-size:14px;color:#8ea3c8;margin:0 0 24px">November 13, 2026</p>
+  <p style="font-size:15px;letter-spacing:3px;color:#38bdf8;margin:0 0 16px">WHAT'S NEW</p>
+  <div style="text-align:left;max-width:360px;width:100%">
+    <div style="margin-bottom:16px"><b style="font-size:16px">Fresh new design</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Tracker and Calendar have a whole new look with a cleaner layout and sky blue accents.</p></div>
+    <div style="margin-bottom:16px"><b style="font-size:16px">Weekly streak</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Your workout days for the week are now right on the Tracker.</p></div>
+    <div style="margin-bottom:16px"><b style="font-size:16px">Better Calendar</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Your day is a simple timeline now, with Done and Upcoming labels and a Now line.</p></div>
+    <div style="margin-bottom:16px"><b style="font-size:16px">Faster to open</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Quicker loading and a smaller app icon.</p></div>
+    <div style="margin-bottom:4px"><b style="font-size:16px">Thanksgiving icon</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">New app icon for Thanksgiving.</p></div>
   </div>
-  <button class="big" style="min-width:200px;margin-top:28px" onclick="dismissUpdates()">Let&rsquo;s go</button>
+  <button class="big" style="min-width:200px;margin-top:24px" onclick="dismissUpdates()">Continue</button>
 </div>
 
-<h1>Lock In</h1>
-<p class="sub" id="todayLabel">Today</p>
-  <p class="sub" id="greetingLine" style="font-size:18px;color:#fff;margin-top:-8px"></p>
-  <p class="sub" id="syncStatus" style="font-size:12px;opacity:.7">Sync: checking...</p>
-  <p class="sub" style="font-size:11px;opacity:.5">v2.2 &middot; Sky Blue Update</p>
-<div class="daybtns" id="sectionTabs">
-  <button class="on" id="tabTracker" onclick="switchSection('tracker')">Tracker</button>
-  <button id="tabCalendar" onclick="switchSection('calendar')">Calendar</button>
-  <button id="tabStreaks" onclick="switchSection('streaks')">Streaks</button>
-</div>
-
-<div class="card" id="rightNowCard">
-  <h2>Right now</h2>
-  <p style="margin:0;font-size:18px" id="rightNowTime">—</p>
-  <p style="margin:8px 0 0" id="rightNowText">—</p>
-  <div class="bar"><i id="calBar" style="width:0%"></i></div>
-  <p class="small" id="nextMealText" style="margin:0"></p>
+<div class="apphead">
+  <div class="appicon"><img src="jsn-line.jpg" alt="Lock In"><span>Lock In</span></div>
+  <div class="apptitle">
+    <div class="lbadge">L</div>
+    <h1 id="pageTitle">Today, Friday</h1>
+    <p class="sub" id="pageSub">Good afternoon, Lonj</p>
+    <p id="syncStatus" style="font-size:12px;color:#64748b;margin:6px 0 0">Sync: checking...</p>
+  </div>
 </div>
 
 <div class="alert" id="eatAlert">
@@ -149,52 +172,63 @@
   <button onclick="document.getElementById('mealName').scrollIntoView({behavior:'smooth'});document.getElementById('mealName').focus()">Add food</button>
 </div>
 
-<div class="card">
-  <div class="totals">
-    <div class="total"><b id="calTotal">0</b><span>cal / <span id="calTargetLabel">2900</span></span></div>
-    <div class="total"><b id="proTotal">0g</b><span>protein / <span id="proTargetLabel">114g</span></span></div>
-    <div class="total"><b id="waterTotal">0</b><span>water / <span id="waterTargetLabel">10</span></span></div>
-    <div class="total"><b id="workoutTotal">0</b><span>workouts</span></div>
+<div class="card dash" id="nextMealCard">
+  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a2 2 0 0 0 4 0V3"/><path d="M8 3v18"/><path d="M16 3c-2 2-3 4-3 7v3h3v8"/></svg></div>
+  <div class="dashbody">
+    <div class="dashlabel">Next meal</div>
+    <div class="dashbig" id="nextMealTitle">—</div>
+    <div class="dashsub" id="nextMealSub">—</div>
+    <div class="bar slim"><i id="calBar" style="width:0%"></i></div>
+    <div class="dashsub" id="nextMealToday" style="margin-top:2px">—</div>
   </div>
-  <p class="small" id="calLeft" style="margin:12px 0 0"></p>
-  <div class="row" style="margin-top:12px">
-    <button class="secondary" onclick="addWater(1)">+ Water</button>
-    <button class="secondary" onclick="addWater(-1)">- Water</button>
+  <div class="chev">›</div>
+</div>
+
+<div class="card dash" id="workoutCard">
+  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"><path d="M7 8v8M4 10v4M17 8v8M20 10v4M7 12h10"/></svg></div>
+  <div class="dashbody">
+    <div class="dashlabel">Workout today</div>
+    <div class="dashbig" id="workoutPartLabel">—</div>
+    <div class="dashsub" id="workoutSubLabel">—</div>
   </div>
-  <p class="small" id="lastWeight" style="margin-bottom:0"></p>
-  <div class="bar"><i id="weightBar" style="width:0%"></i></div>
+  <button class="pillbtn" id="workoutDoneBtn" onclick="markWorkoutDone()">Start</button>
 </div>
 
-<div class="card" id="weekStripCard">
-  <h2>This week</h2>
-  <div id="weekStrip" style="display:flex;gap:8px;justify-content:space-between"></div>
-  <p class="small" id="weekStripLabel" style="margin:8px 0 0"></p>
+<div class="card dash" id="sleepCard">
+  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13A8 8 0 1 1 11 4a6.5 6.5 0 0 0 9 9z"/></svg></div>
+  <div class="dashbody">
+    <div class="dashlabel">Sleep</div>
+    <div class="dashbig" id="sleepStatus">No sleep logged yet.</div>
+    <div class="dashsub" id="sleepSub">Tap Go to sleep at bedtime.</div>
+  </div>
+  <button class="pillbtn" id="sleepBtn" onclick="toggleSleep()">Go to sleep</button>
+</div>
+<ul id="sleepList" style="margin:-6px 0 14px"></ul>
+
+<div class="card dash" id="waterCard">
+  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg></div>
+  <div class="dashbody">
+    <div class="dashlabel">Water</div>
+    <div class="dashbig" id="waterCount">0 of 10 glasses</div>
+    <div class="drops" id="waterDrops"></div>
+    <div class="dashsub" id="waterOz">0 oz / 80 oz</div>
+  </div>
+  <div class="stepper"><button onclick="addWater(1)">+</button><button onclick="addWater(-1)">−</button></div>
 </div>
 
-
-<div class="card" id="sleepCard">
-  <h2>Sleep</h2>
-  <p style="margin:0;font-size:18px" id="sleepStatus">No sleep logged yet.</p>
-  <button class="big" id="sleepBtn" style="margin-top:12px" onclick="toggleSleep()">Go to sleep</button>
-  <ul id="sleepList" style="margin-top:12px"></ul>
+<div id="weekStripWrap">
+  <div class="weekhead"><h2>Weekly streak</h2><span id="weekStripCount">0/7 days</span></div>
+  <div class="weekrow" id="weekStrip"></div>
+  <div class="weekletters" id="weekLetters"></div>
 </div>
 
-<div class="card" id="scheduleMyPlan">
-  <h2>My plan</h2>
-  <p style="margin:0" id="planText">Calculating…</p>
-</div>
-
-<div class="card" id="scheduleTodayWorkout">
-  <h2>Today's workout</h2>
-  <p style="margin:0" id="todayWorkout">—</p>
-  <button class="big" id="workoutDoneBtn" style="margin-top:12px" onclick="markWorkoutDone()">Mark workout done</button>
-</div>
-
-<div class="card" id="scheduleCal">
-  <h2>Schedule</h2>
-  <p class="small" style="margin:0 0 8px" id="dayTypeLabel"></p>
-  <div class="daybtns" id="dayBtns"></div>
-  <div class="cal" id="calView"></div>
+<div class="card dash" id="weightCard">
+  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7a3 3 0 0 1 6 0"/><path d="M5.5 7h13l1.8 5.2a6.5 6.5 0 0 1-12.6 0z"/><path d="M12 12v3"/><path d="M10 15h4"/></svg></div>
+  <div class="dashbody">
+    <div class="dashbig" id="weightTitle">Weight • 114 lb → 130 lb goal</div>
+    <div class="bar"><i id="weightBar" style="width:0%"></i></div>
+    <div class="dashsub" id="weightSub">—</div>
+  </div>
 </div>
 
 <details class="card" id="scheduleTimes"><summary>Change times</summary>
@@ -205,23 +239,15 @@
   <label style="font-size:14px;color:#ddd">Snack / Home meal</label><input id="ctSnack" type="time">
   <label style="font-size:14px;color:#ddd">Dinner</label><input id="ctDinner" type="time">
   <button class="big" onclick="saveTimes()">Save times</button>
-</div>
-
-<div class="card" id="scheduleMealPlan">
-  <h2>Calories through the day</h2>
-  <ul id="mealPlanList"></ul>
-  <button class="secondary" style="margin-top:12px" onclick="enableReminders()">Turn on eat reminders</button>
-</div>
-
-<div class="card" id="scheduleWeek">
-  <h2>Week schedule</h2>
-  <ul id="scheduleList"></ul>
 </details>
 
 <div class="card" id="calendarSection">
-  <h2>Calendar</h2>
-  <div class="daybtns" id="calDayBtns"></div>
-  <div class="cal" id="dragCalView" style="height:560px"></div>
+  <div class="weekhead"><h2>This Week</h2><span id="calMonth" style="color:#8ea3c8;font-size:16px">—</span></div>
+  <div class="calweeknames"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+  <div class="calweekcircles" id="calWeekCircles"></div>
+  <div class="weekletters"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+  <h2 class="schedhead" id="schedHead">Today's schedule</h2>
+  <div class="tl" id="timelineList"></div>
   <ul id="calDetailList"></ul>
   <h2 style="margin-top:14px">Add a block</h2>
   <input id="newBlockTitle" placeholder="What is it? e.g. Homework">
@@ -232,7 +258,6 @@
   <button class="big" onclick="addCalEvent()">Add block to this day</button>
   <button class="secondary" style="margin-top:12px" onclick="resetCalendar()">Reset calendar to schedule</button>
 </div>
-
 
 <p id="streakQuote" style="text-align:center;font-style:italic;color:#e9d5ff;margin:4px 8px 16px;font-size:15px;line-height:1.4"></p>
 
@@ -264,7 +289,7 @@
   <button class="big" onclick="addStreak()">Add goal</button>
 </details>
 
-<div class="card">
+<div class="card" id="foodCard">
   <h2>Food</h2>
   <input id="mealName" placeholder="What did you eat?" autocomplete="off">
   <div class="row">
@@ -275,7 +300,7 @@
   <ul id="mealList"></ul>
 </div>
 
-<div class="card">
+<div class="card" id="workoutLogCard">
   <h2>Workout log</h2>
   <select id="workoutPart">
     <option>Legs</option><option>Upper Body</option><option>Core</option><option>Cardio</option>
@@ -285,7 +310,7 @@
   <ul id="workoutList"></ul>
 </div>
 
-<div class="card">
+<div class="card" id="weightStepsCard">
   <h2>Weight / Steps</h2>
   <div class="row">
     <input id="weightVal" type="number" inputmode="decimal" placeholder="Weight lb">
@@ -296,13 +321,21 @@
   <p class="small" id="stepsLabel" style="margin-bottom:0"></p>
 </div>
 
-<details class="card">
+<details class="card" id="pastDays">
   <summary>Past days</summary>
   <ul id="historyList"></ul>
 </details>
 
+<p style="text-align:center;font-size:11px;color:#475569;margin:8px 0 0">v2.3 · Sky Blue Update</p>
+
+<div class="tabbar">
+  <button class="on" id="tabTracker" onclick="switchSection('tracker')"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="17" y="3" width="4" height="17" rx="1"/></svg>Tracker</button>
+  <button id="tabCalendar" onclick="switchSection('calendar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendar</button>
+  <button id="tabStreaks" onclick="switchSection('streaks')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 3.5-2 5.5-3.5 7.5C7 11.5 6 13 6 15.5A6 6 0 0 0 18 15.5c0-2.5-1.5-4-2.5-5.5-.4 1.2-1.2 2-2.3 2.4C13.6 9.5 13 5.5 12 2z"/></svg>Streaks</button>
+</div>
+
 <script>
-var APP_VERSION='2.2';
+var APP_VERSION='2.3';
 var _needClear=true; try{_needClear=localStorage.getItem('lockin_cache_cleared_for')!==APP_VERSION;}catch(e){}
 if(_needClear){try{localStorage.setItem('lockin_cache_cleared_for',APP_VERSION);}catch(e){} if('serviceWorker' in navigator){try{navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}catch(e){} try{if(window.caches){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});});}}catch(e){}}}
 var LS_KEY = 'lockin_homescreen_v1';
@@ -423,83 +456,81 @@ function weekDateKey(dayIdx){
 }
 function renderWeekStrip(){
   var el=document.getElementById('weekStrip'); if(!el) return;
-  var todayIdx=new Date().getDay(), done=0, html='';
+  var todayIdx=new Date().getDay(), done=0, html='', letters='';
   var labels=['M','T','W','T','F','S','S'];
   for(var i=0;i<7;i++){
     var dayIdx=(i+1)%7;
     var hasWo=state.workouts.some(function(w){return w.date===weekDateKey(dayIdx);});
     if(hasWo) done++;
-    html+='<span class="weekcircle'+(hasWo?' done':'')+(dayIdx===todayIdx?' today':'')+'">'+(hasWo?'✓':labels[i])+'</span>';
+    html+='<span class="weekcircle'+(hasWo?' done':'')+(dayIdx===todayIdx?' today':'')+'">'+(hasWo?'✓':(dayIdx===todayIdx?labels[i]:''))+'</span>';
+    letters+='<span>'+labels[i]+'</span>';
   }
   el.innerHTML=html;
-  document.getElementById('weekStripLabel').textContent=done+' of 7 days with a workout this week.';
+  var lw=document.getElementById('weekLetters'); if(lw) lw.innerHTML=letters;
+  var wc=document.getElementById('weekStripCount'); if(wc) wc.textContent=done+'/7 days';
+}
+function renderWaterDrops(count){
+  var el=document.getElementById('waterDrops'); if(!el) return;
+  var s='';
+  for(var i=0;i<10;i++){ s+='<svg class="drop'+(i<count?' on':'')+'" viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg>'; }
+  el.innerHTML=s;
+}
+function updateHeader(plan){
+  var sec=window.__section||'tracker';
+  var now=new Date(), g=timeGreeting(), dayName=DAYNAMES[now.getDay()];
+  var t=document.getElementById('pageTitle'), sub=document.getElementById('pageSub');
+  if(!t || !sub) return;
+  if(!plan) plan=calcPlan();
+  if(sec==='tracker'){ t.textContent='Today, '+dayName; sub.textContent=g+', Lonj • Goal: '+plan.cal.toLocaleString()+' cal/day'; }
+  else if(sec==='calendar'){ t.textContent='Calendar'; sub.textContent=dayName+', '+now.toLocaleDateString([], {month:'short', day:'numeric'})+' • '+g+', Lonj'; }
+  else { t.textContent='Streaks'; sub.textContent='One day at a time.'; }
 }
 function render(){
   var today=todayKey(), now=new Date(), plan=calcPlan();
   MEALS = buildMeals(now.getDay(), state.customTimes||{});
-  document.getElementById('todayLabel').textContent = now.toDateString();
   var meals=state.meals.filter(function(m){return m.date===today;});
   var cal=meals.reduce(function(a,m){return a+(m.kcal||0);},0);
-  var pro=meals.reduce(function(a,m){return a+(m.protein||0);},0);
   var wos=state.workouts.filter(function(w){return w.date===today;});
-  document.getElementById('calTotal').textContent=cal;
-  document.getElementById('proTotal').textContent=pro+'g';
-  document.getElementById('waterTotal').textContent=state.water[today]||0;
-  document.getElementById('workoutTotal').textContent=wos.length;
-  document.getElementById('calTargetLabel').textContent=plan.cal;
-  document.getElementById('proTargetLabel').textContent=plan.pro+'g';
-  document.getElementById('waterTargetLabel').textContent=plan.water;
-  document.getElementById('calLeft').textContent = cal>=plan.cal ? 'Goal hit. Nice.' : (plan.cal-cal)+' calories left today.';
-  // Right-now target: what you should have eaten by this hour
   var hourNow=now.getHours()+now.getMinutes()/60;
-  var lastMeal=null, nextMeal=null;
-  for(var mi=0; mi<MEALS.length; mi++){ if(hourNow>=MEALS[mi].hour) lastMeal=MEALS[mi]; else if(!nextMeal) nextMeal=MEALS[mi]; }
-  var shouldByNow=lastMeal ? Math.round(plan.cal*lastMeal.cum) : 0;
-  var diff=cal-shouldByNow;
-  document.getElementById('rightNowTime').textContent = 'It is '+now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})+'.';
-  document.getElementById('rightNowText').textContent = lastMeal
-    ? ('You should be at about '+shouldByNow+' cal by now. You are at '+cal+' cal. '+(diff>=0 ? 'You are good, '+diff+' ahead.' : 'You are '+(-diff)+' behind. Eat now.'))
-    : ('Breakfast is at 8:00 AM. You are at '+cal+' cal so far.');
+  var nextMeal=null;
+  for(var mi=0; mi<MEALS.length; mi++){ if(hourNow<MEALS[mi].hour){ nextMeal=MEALS[mi]; break; } }
+  var nmT=document.getElementById('nextMealTitle'), nmS=document.getElementById('nextMealSub');
+  if(nextMeal){
+    nmT.textContent=nextMeal.name+', '+nextMeal.time+', '+Math.round(plan.cal*nextMeal.share)+' cal';
+    nmS.textContent=Math.round(plan.cal*nextMeal.share)+' cal • '+Math.round(plan.pro*nextMeal.share)+'g protein';
+  } else {
+    nmT.textContent='All meals done';
+    nmS.textContent='Goal: '+plan.cal.toLocaleString()+' cal today';
+  }
+  document.getElementById('nextMealToday').textContent=cal.toLocaleString()+' of '+plan.cal.toLocaleString()+' cal today';
   document.getElementById('calBar').style.width=Math.min(100, Math.round(cal/plan.cal*100))+'%';
-  document.getElementById('nextMealText').textContent = nextMeal
-    ? ('Next: '+nextMeal.name+' at '+nextMeal.time+' — about '+Math.round(plan.cal*nextMeal.share)+' cal, '+Math.round(plan.pro*nextMeal.share)+'g protein.')
-    : ('All meals for today are done. Goal: '+plan.cal+' cal total.');
-  document.getElementById('planText').textContent = 'Now: '+plan.wt+' lb  •  Goal: '+GOAL_WT+' lb  •  To gain: '+plan.gain+' lb  •  Eat '+plan.cal+' cal a day, '+plan.pro+'g protein, '+plan.water+' glasses water.';
   var todayPart=SCHEDULE[now.getDay()];
   var doneToday=wos.length>0;
-  document.getElementById('todayWorkout').textContent = todayPart==='Rest' ? 'Rest day today. Eat, sleep, recover.' : 'Today: '+todayPart+'.';
-  var btn=document.getElementById('workoutDoneBtn');
-  if(todayPart==='Rest'){btn.style.display='none';} else {btn.style.display='block'; btn.textContent=doneToday?'Workout done ✓':'Mark workout done';}
-  document.getElementById('mealPlanList').innerHTML=MEALS.map(function(m){
-    var target=Math.round(plan.cal*m.share), proTarget=Math.round(plan.pro*m.share);
-    var cumTarget=Math.round(plan.cal*m.cum);
-    var hit = cal>=cumTarget;
-    return '<li><div><b>'+(hit?'✓ ':'○ ')+m.name+' — '+m.time+'</b><small>Eat about '+target+' cal · '+proTarget+'g protein · Be at '+cumTarget+' cal total by '+m.time+'</small></div></li>';
-  }).join('');
-  document.getElementById('scheduleList').innerHTML=DAYNAMES.map(function(d,i){
-    return '<li'+(i===now.getDay()?' class="today"':'')+'><div><b>'+d+'</b><small>'+SCHEDULE[i]+'</small></div></li>';
-  }).join('');
+  document.getElementById('workoutPartLabel').textContent=todayPart==='Rest' ? 'Rest day' : todayPart;
+  document.getElementById('workoutSubLabel').textContent=todayPart==='Rest' ? 'Eat, sleep, recover.' : (doneToday ? 'Done ✓' : '45–60 min • Ready to start');
+  var wbtn=document.getElementById('workoutDoneBtn');
+  wbtn.style.display=todayPart==='Rest' ? 'none' : 'block';
+  wbtn.textContent=doneToday ? 'Done ✓' : 'Start';
+  var wcount=state.water[today]||0;
+  document.getElementById('waterCount').textContent=wcount+' of 10 glasses';
+  document.getElementById('waterOz').textContent=(wcount*8)+' oz / 80 oz';
+  renderWaterDrops(wcount);
+  var lastW=state.weights[state.weights.length-1];
+  var wv=lastW?lastW.lbs:plan.wt;
+  document.getElementById('weightSub').textContent=wv+' lb now • +'+(Math.round((wv-START_WT)*10)/10)+' lb • '+(Math.round((GOAL_WT-wv)*10)/10)+' lb to goal';
+  var wBar=document.getElementById('weightBar');
+  if(wBar) wBar.style.width=Math.max(0,Math.min(100,Math.round((wv-START_WT)/(GOAL_WT-START_WT)*100)))+'%';
+  renderWeekStrip();
   document.getElementById('mealList').innerHTML=meals.map(function(m){
     return '<li><div><b>'+esc(m.name)+'</b><small>'+m.kcal+' cal'+(m.protein?' · '+m.protein+'g protein':'')+'</small></div><button class="danger" onclick="delMeal(\''+m.id+'\')">Delete</button></li>';
   }).join('') || '<li class="small">Nothing yet today.</li>';
   document.getElementById('workoutList').innerHTML=wos.map(function(w){
     return '<li><div><b>'+esc(w.part)+(w.title?' — '+esc(w.title):'')+'</b></div><button class="danger" onclick="delWorkout(\''+w.id+'\')">Delete</button></li>';
   }).join('') || '<li class="small">Nothing yet today.</li>';
-  var lastW=state.weights[state.weights.length-1];
-  document.getElementById('lastWeight').textContent=lastW?('Last weight: '+lastW.lbs+' lb on '+lastW.date+(lastW.time?' at '+lastW.time:'')):'Starting weight: 114 lb';
-  var wBar=document.getElementById('weightBar');
-  if(wBar){var wv=lastW?lastW.lbs:plan.wt; wBar.style.width=Math.max(0,Math.min(100,Math.round((wv-START_WT)/(GOAL_WT-START_WT)*100)))+'%';}
-  renderWeekStrip();
   document.getElementById('weightList').innerHTML=state.weights.slice().reverse().slice(0,10).map(function(w){
     return '<li><div><b>'+w.lbs+' lb</b><small>'+w.date+(w.time?' at '+w.time:'')+'</small></div></li>';
   }).join('') || '<li class="small">No weights logged yet.</li>';
   document.getElementById('stepsLabel').textContent=state.steps[today]?('Steps today: '+state.steps[today]):'';
-  var isSchool = !!SCHOOL_BELLS[now.getDay()];
-  document.getElementById('dayTypeLabel').textContent = isSchool ? 'School day. No school Mon / Tue, so those days use the easier home schedule.' : 'No school today, so you can eat big meals at home, no rush.';
-  renderSleep();
-  renderCalendar(plan);
-  renderDragCalendar();
-  checkEatAlert(cal, plan);
   var days=[];
   for(var i=1;i<8;i++){var d=new Date(); d.setDate(d.getDate()-i); var k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); days.push(k);}
   document.getElementById('historyList').innerHTML=days.map(function(k){
@@ -507,12 +538,16 @@ function render(){
     var wc=state.workouts.filter(function(w){return w.date===k;}).length;
     return '<li><div><b>'+k+'</b><small>'+mc+' cal · '+wc+' workout(s) · '+(state.water[k]||0)+' water</small></div></li>';
   }).join('');
+  renderSleep();
+  renderDragCalendar();
+  checkEatAlert(cal, plan);
+  updateHeader(plan);
 }
 function checkEatAlert(cal, plan){
   var now=new Date(), hour=now.getHours()+now.getMinutes()/60, alertBox=document.getElementById('eatAlert');
   var due=null;
   for(var i=0;i<MEALS.length;i++){ if(hour>=MEALS[i].hour && hour<=MEALS[i].hour+1) due=MEALS[i]; }
-  if(due && cal < Math.round(plan.cal*due.cum)-50){
+  if(due && cal < Math.round(plan.cal*due.cum)-50 && (window.__section||'tracker')==='tracker'){
     alertBox.style.display='block';
     document.getElementById('eatAlertText').textContent='It is past '+due.name+' ('+due.time+'). You are at '+cal+' cal, aim for about '+Math.round(plan.cal*due.cum)+' by now.';
     if(window.__notifiedFor!==due.name && 'Notification' in window && Notification.permission==='granted'){
@@ -526,35 +561,6 @@ function enableReminders(){
     if(p==='granted'){alert('Reminders on while the app is open.'); setInterval(function(){render();}, 15*60*1000);}
     else {alert('Reminders need permission. The banner in the app will still show when you open it.');}
   });
-}
-
-var selectedDay = new Date().getDay();
-function calTop(hour){ return (hour-6)*30; }
-function renderCalendar(plan){
-  var day = selectedDay;
-  var meals = buildMeals(day, state.customTimes||{});
-  var isSchool = !!SCHOOL_BELLS[day];
-  var btns = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  document.getElementById('dayBtns').innerHTML = btns.map(function(d,i){
-    return '<button class="'+(i===day?'on':'')+'" onclick="selectedDay='+i+';render();">'+d+'</button>';
-  }).join('');
-  var html = '';
-  for(var h=6; h<=22; h++){ html += '<div class="calhour" style="top:'+(calTop(h)-6)+'px">'+((h%12===0?12:h%12)+(h<12?' AM':' PM'))+'</div><div class="calline" style="top:'+calTop(h)+'px"></div>'; }
-  function block(startHour, endHour, color, title, sub){
-    var top=calTop(startHour), height=Math.max(48,(endHour-startHour)*30);
-    html += '<div class="calblock" style="top:'+top+'px;height:'+height+'px;background:'+color+'"><b>'+title+'</b><small>'+sub+'</small></div>';
-  }
-  block(6, 6.5, '#475569', 'Wake up', '6:00 AM');
-  if(isSchool) block(7.92, 14.92, '#7c3aed88', 'School', '7:55 AM - 2:55 PM');
-  meals.forEach(function(m){
-    var mins = m.name.indexOf('Recess')>=0 ? 20 : 30;
-    block(m.hour, m.hour+mins/60, '#3b82f6', m.name, m.time+' - about '+Math.round(plan.cal*m.share)+' cal');
-  });
-  if(isSchool) block(16, 16.5, '#334155', 'Home', '4:00 PM');
-  var part = SCHEDULE[day];
-  if(part!=='Rest') block(17, 18, '#14b8a6', 'Workout - '+part, '5:00 PM - 6:00 PM');
-  block(22, 22.5, '#475569', 'Bed', '10:00 PM');
-  document.getElementById('calView').innerHTML = html;
 }
 
 var calSelectedDay = new Date().getDay();
@@ -582,44 +588,63 @@ function fmtHour(h){
 }
 function renderDragCalendar(){
   var day = calSelectedDay;
-  var btns = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  document.getElementById('calDayBtns').innerHTML = btns.map(function(d,i){
-    var hasWo=state.workouts.some(function(w){return w.date===weekDateKey(i);});
-    return '<button class="'+(i===day?'on':'')+(hasWo?' done':'')+'" onclick="calSelectedDay='+i+';render();">'+d+'</button>';
-  }).join('');
-  var evs = (state.calEvents && state.calEvents[day]) || [];
-  var html = '';
-  for(var h=6; h<=22; h++){ html += '<div class="calhour" style="top:'+(calTop(h)-6)+'px">'+((h%12===0?12:h%12)+(h<12?' AM':' PM'))+'</div><div class="calline" style="top:'+calTop(h)+'px"></div>'; }
-  var mealsForDay = buildMeals(day, state.customTimes||{});
+  var now=new Date(), todayIdx=now.getDay();
+  var circles=document.getElementById('calWeekCircles');
+  if(circles){
+    var names=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    var ch='';
+    for(var i=0;i<7;i++){
+      var dIdx=(i+1)%7;
+      var hasWo=state.workouts.some(function(w){return w.date===weekDateKey(dIdx);});
+      var isToday=dIdx===todayIdx;
+      ch+='<button class="'+(dIdx===day?'on':'')+(hasWo?' done':'')+'" onclick="calSelectedDay='+dIdx+';render();">'+(hasWo?'✓':(isToday?names[i].charAt(0):''))+'</button>';
+    }
+    circles.innerHTML=ch;
+  }
+  var monthEl=document.getElementById('calMonth');
+  if(monthEl) monthEl.textContent=now.toLocaleDateString([], {month:'short', year:'numeric'});
+  var headEl=document.getElementById('schedHead');
+  if(headEl) headEl.textContent=(day===todayIdx ? "Today's schedule" : "Schedule")+' • '+DAYNAMES[day];
+  var evs=((state.calEvents && state.calEvents[day]) || []).slice().sort(function(a,b){return a.start-b.start;});
+  var nowH=now.getHours()+now.getMinutes()/60;
+  var isTodayView = day===todayIdx;
+  var html='';
+  var nowInserted=false;
+  function evIcon(ev){
+    if(ev.id.indexOf('meal')===0) return '<svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a2 2 0 0 0 4 0V3"/><path d="M8 3v18"/><path d="M16 3c-2 2-3 4-3 7v3h3v8"/></svg>';
+    if(ev.id==='workout') return '<svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"><path d="M7 8v8M4 10v4M17 8v8M20 10v4M7 12h10"/></svg>';
+    return '';
+  }
   evs.forEach(function(ev){
-    var top=calTop(ev.start), height=Math.max(48, ev.dur*30);
+    if(isTodayView && !nowInserted && ev.start>nowH){
+      html+='<div class="tlrow"><div class="tltime now">Now • '+now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})+'</div><div class="nowline"></div></div>';
+      nowInserted=true;
+    }
     var arrows = ev.fixed ? '' : '<span class="mv" onclick="event.stopPropagation();moveCalEvent('+day+',\''+ev.id+'\',-1)">◀</span><span class="mv" onclick="event.stopPropagation();moveCalEvent('+day+',\''+ev.id+'\',1)">▶</span>';
     var del = ev.id.indexOf('custom')===0 ? '<span class="mv" onclick="event.stopPropagation();deleteCalEvent('+day+',\''+ev.id+'\')">✕</span>' : '';
     var detail = fmtHour(ev.start)+' - '+fmtHour(ev.start+ev.dur);
+    var mealsForDay = buildMeals(day, state.customTimes||{});
     if(ev.id.indexOf('meal')===0){
       var mi = parseInt(ev.id.replace('meal',''),10);
       var mm = mealsForDay[mi];
       if(mm) detail += ' · '+Math.round(2900*mm.share)+' cal';
     }
-    var col = ev.color==='#ec4899' ? '#3b82f6' : ev.color;
     var evDate=new Date(); evDate.setDate(evDate.getDate()-evDate.getDay()+day); evDate.setHours(0,0,0,0);
     var todayDate=new Date(); todayDate.setHours(0,0,0,0);
-    var nowH2=new Date().getHours()+new Date().getMinutes()/60;
-    var isDone = evDate<todayDate || (evDate.getTime()===todayDate.getTime() && ev.start+ev.dur<=nowH2);
+    var isDone = evDate<todayDate || (evDate.getTime()===todayDate.getTime() && ev.start+ev.dur<=nowH);
     var pill='<span class="pill'+(isDone?' done':'')+'">'+(isDone?'Done':'Upcoming')+'</span>';
-    html += '<div class="dragblock" data-day="'+day+'" data-id="'+ev.id+'" style="top:'+top+'px;height:'+height+'px;background:'+col+'">'+pill+'<b>'+ev.title+'</b><small style="display:block;color:#fff;opacity:.85">'+detail+'</small>'+arrows+del+'</div>';
+    html += '<div class="tlrow"><div class="tltime">'+fmtHour(ev.start)+'</div><div class="tlcard" data-day="'+day+'" data-id="'+ev.id+'">'+pill+'<span class="tlicon">'+evIcon(ev)+'</span><b>'+ev.title+'</b><small>'+detail+'</small>'+arrows+del+'</div></div>';
   });
-  if(day===new Date().getDay()){
-    var nowH = new Date().getHours()+new Date().getMinutes()/60;
-    if(nowH>=6 && nowH<=22) html += '<div style="position:absolute;left:0;right:0;top:'+calTop(nowH)+'px;height:2px;background:#ef4444"></div>';
+  if(isTodayView && !nowInserted){
+    html+='<div class="tlrow"><div class="tltime now">Now • '+now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})+'</div><div class="nowline"></div></div>';
   }
+  var plan0=calcPlan();
   var detailHtml = '';
   if(SCHOOL_PERIODS[day]) detailHtml += '<li><div><b>School periods today</b><small>'+SCHOOL_PERIODS[day].join(' · ')+'</small></div></li>';
-  detailHtml += '<li><div><b>Day total</b><small>2,900 cal · 114g protein · Bed 10:00 PM · Wake 6:00 AM</small></div></li>';
+  detailHtml += '<li><div><b>Day total</b><small>2,900 cal · '+plan0.pro+'g protein · Bed 10:00 PM · Wake 6:00 AM</small></div></li>';
   document.getElementById('calDetailList').innerHTML = detailHtml;
-  document.getElementById('dragCalView').innerHTML = html;
-  // attach drag handlers
-  document.querySelectorAll('#dragCalView .dragblock').forEach(function(el){
+  document.getElementById('timelineList').innerHTML = html;
+  document.querySelectorAll('#timelineList .tlcard').forEach(function(el){
     var startY=0, origStart=0, dragging=false;
     el.addEventListener('pointerdown', function(e){
       if(e.target.classList.contains('mv')) return;
@@ -631,15 +656,16 @@ function renderDragCalendar(){
     });
     el.addEventListener('pointermove', function(e){
       if(!dragging) return;
-      var deltaHours = (e.clientY-startY)/30;
+      var deltaHours = (e.clientY-startY)/45;
       var newStart = Math.round((origStart+deltaHours)*2)/2;
       if(newStart<6) newStart=6; if(newStart>21.5) newStart=21.5;
-      el.style.top = calTop(newStart)+'px';
+      el.style.transform='translateY('+(e.clientY-startY)+'px)';
       el.querySelector('small').textContent = fmtHour(newStart)+' — drag to move';
       el._newStart = newStart;
     });
     el.addEventListener('pointerup', function(e){
       if(!dragging) return; dragging=false;
+      el.style.transform='';
       if(typeof el._newStart==='number'){
         var ev = state.calEvents[day].find(function(x){return x.id===el.getAttribute('data-id');});
         if(ev){
@@ -675,25 +701,21 @@ function switchSection(name){
   document.getElementById('tabTracker').className = name==='tracker' ? 'on' : '';
   document.getElementById('tabCalendar').className = name==='calendar' ? 'on' : '';
   document.getElementById('tabStreaks').className = name==='streaks' ? 'on' : '';
-  var scheduleIds = ['scheduleMyPlan','scheduleTodayWorkout','scheduleMealPlan','scheduleWeek','scheduleCal','scheduleTimes','calendarSection'];
+  var trackerIds = ['nextMealCard','workoutCard','sleepCard','sleepList','waterCard','weekStripWrap','weightCard','foodCard','workoutLogCard','weightStepsCard','pastDays'];
+  var calendarIds = ['calendarSection','scheduleTimes'];
   var streakIds = ['streaksLock','streaksMain','streaksAdd'];
-  document.getElementById('todayLabel').style.display = name==='streaks' ? 'none' : 'block';
-  var syncEl=document.getElementById('syncStatus'); if(syncEl) syncEl.style.display = name==='streaks' ? 'none' : 'block';
-  document.querySelectorAll('body > .card, body > .alert, body > details').forEach(function(el){
-    var isCalendarPage = el.id==='calendarSection' || el.id==='scheduleTimes';
-    var isSchedule = scheduleIds.indexOf(el.id)>=0;
-    var isStreak = streakIds.indexOf(el.id)>=0;
-    if(name==='calendar'){
-      el.style.display = isCalendarPage ? 'block' : 'none';
-    } else if(name==='streaks'){
-      el.style.display = isStreak ? 'block' : 'none';
-    } else {
-      el.style.display = (isSchedule || isStreak) ? 'none' : 'block';
-    }
+  trackerIds.concat(calendarIds, streakIds).forEach(function(id){
+    var el=document.getElementById(id); if(!el) return;
+    var show = name==='tracker' ? trackerIds.indexOf(id)>=0 : name==='calendar' ? calendarIds.indexOf(id)>=0 : streakIds.indexOf(id)>=0;
+    el.style.display = show ? '' : 'none';
   });
+  var alertEl=document.getElementById('eatAlert');
+  if(alertEl && name!=='tracker') alertEl.style.display='none';
   var q=document.getElementById('streakQuote'); if(q) q.style.display = name==='streaks' ? 'block' : 'none';
   window.__section = name;
+  updateHeader();
   if(name==='streaks'){ pickQuote(); renderStreaks(); }
+  else { render(); }
 }
 function initSwipe(){
   var sx=0, sy=0;
@@ -706,7 +728,7 @@ function initSwipe(){
     var dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
     sx=0;
     var tgt=e.target;
-    if(tgt && tgt.closest && (tgt.closest('.dragblock') || tgt.closest('input') || tgt.closest('select') || tgt.closest('textarea'))) return;
+    if(tgt && tgt.closest && (tgt.closest('.tlcard') || tgt.closest('input') || tgt.closest('select') || tgt.closest('textarea'))) return;
     if(Math.abs(dx)>70 && Math.abs(dx)>Math.abs(dy)*1.5){
       var order=['tracker','calendar','streaks'];
       var i=order.indexOf(window.__section||'tracker');
@@ -933,41 +955,14 @@ function dayTheme(){
 }
 function applyDayTheme(){
   var theme=dayTheme();
-  var bodyBg={
-    morning:'linear-gradient(180deg,#0e7490 0%,#0c2a4a 45%,#0b0620 100%)',
-    afternoon:'linear-gradient(180deg,#075985 0%,#0c2a4a 40%,#0b0620 100%)',
-    evening:'linear-gradient(180deg,#4c1d95 0%,#1e1240 40%,#0b0620 100%)'
-  }[theme];
-  document.body.style.background=bodyBg;
+  document.body.style.background='linear-gradient(180deg,#0d1530 0%,#0a1128 100%)';
   var subText={morning:'Time to start the day right.',afternoon:'Keep the day going.',evening:'Finish the day strong.'}[theme];
-  var g=timeGreeting();
-  var gl=document.getElementById('greetingLine'); if(gl) gl.textContent=g+', Lonj';
   var sub=document.getElementById('welcomeSub'); if(sub) sub.textContent=subText;
   var ov=document.getElementById('welcomeOverlay');
-  if(ov) ov.style.background={
-    morning:'linear-gradient(180deg,#38bdf8 0%,#0284c7 45%,#171233 100%)',
-    afternoon:'linear-gradient(180deg,#0ea5e9 0%,#0284c7 45%,#171233 100%)',
-    evening:'linear-gradient(180deg,#6d28d9 0%,#4c1d95 45%,#0b0620 100%)'
-  }[theme];
+  if(ov) ov.style.background='linear-gradient(180deg,#0d1530 0%,#0a1128 100%)';
+  updateHeader();
 }
-function refreshTime(){
-  var now=new Date(), today=todayKey(), plan=calcPlan();
-  document.getElementById('todayLabel').textContent=now.toDateString();
-  var cal=state.meals.filter(function(m){return m.date===today;}).reduce(function(a,m){return a+(m.kcal||0);},0);
-  var hourNow=now.getHours()+now.getMinutes()/60;
-  var lastMeal=null, nextMeal=null;
-  for(var mi=0; mi<MEALS.length; mi++){ if(hourNow>=MEALS[mi].hour) lastMeal=MEALS[mi]; else if(!nextMeal) nextMeal=MEALS[mi]; }
-  var shouldByNow=lastMeal ? Math.round(plan.cal*lastMeal.cum) : 0;
-  var diff=cal-shouldByNow;
-  document.getElementById('rightNowTime').textContent='It is '+now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})+'.';
-  document.getElementById('rightNowText').textContent=lastMeal
-    ? ('You should be at about '+shouldByNow+' cal by now. You are at '+cal+' cal. '+(diff>=0 ? 'You are good, '+diff+' ahead.' : 'You are '+(-diff)+' behind. Eat now.'))
-    : ('Breakfast is at 8:00 AM. You are at '+cal+' cal so far.');
-  document.getElementById('nextMealText').textContent=nextMeal
-    ? ('Next: '+nextMeal.name+' at '+nextMeal.time+' — about '+Math.round(plan.cal*nextMeal.share)+' cal, '+Math.round(plan.pro*nextMeal.share)+'g protein.')
-    : ('All meals for today are done. Goal: '+plan.cal+' cal total.');
-  checkEatAlert(cal, plan);
-}
+function refreshTime(){ render(); }
 function showWelcome(){
   var now=new Date();
   var g=timeGreeting();
@@ -1001,15 +996,23 @@ function toggleSleep(){
   save(); render();
 }
 function renderSleep(){
-  var btn=document.getElementById('sleepBtn'), st=document.getElementById('sleepStatus'), list=document.getElementById('sleepList');
+  var btn=document.getElementById('sleepBtn'), st=document.getElementById('sleepStatus'), list=document.getElementById('sleepList'), sub=document.getElementById('sleepSub');
   if(!btn) return;
   if(state.sleepStart){
     var s=new Date(state.sleepStart);
-    st.textContent='Sleeping since '+s.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})+'.';
+    st.textContent='Sleeping since '+s.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
     btn.textContent='Wake up';
+    if(sub) sub.textContent='Tap Wake up when you get up.';
   } else {
     var last=(state.sleep||[])[(state.sleep||[]).length-1];
-    st.textContent=last ? ('Last sleep: '+last.hours+' hours.') : 'No sleep logged yet.';
+    if(last){
+      var h=Math.floor(last.hours), m=Math.round((last.hours-h)*60);
+      st.textContent=h+'h '+m+'m last night';
+      if(sub) sub.textContent='Bed 10:00 PM • Wake 6:00 AM';
+    } else {
+      st.textContent='No sleep logged yet.';
+      if(sub) sub.textContent='Tap Go to sleep at bedtime.';
+    }
     btn.textContent='Go to sleep';
   }
   list.innerHTML=(state.sleep||[]).slice().reverse().slice(0,5).map(function(s){
