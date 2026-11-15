@@ -17,18 +17,19 @@
   h1{font-size:30px;margin:0;letter-spacing:-.5px}
   h2{font-size:19px;margin:0 0 10px}
   .sub{color:#8ea3c8;margin:0}
-  .card{background:#111c3a;border:1px solid rgba(125,211,252,.14);border-radius:24px;padding:18px;margin:0 0 14px;box-shadow:0 10px 28px rgba(0,0,0,.35)}
+  .card{background:#111c3a;border:1px solid rgba(255,255,255,.09);border-radius:24px;padding:18px;margin:0 0 14px;box-shadow:none}
   .alert{background:#7c2d12;border:1px solid #f97316;border-radius:16px;padding:14px;margin:0 0 14px;display:none}
   .alert b{font-size:18px}
-  input,select{width:100%;padding:13px;border-radius:12px;border:1px solid rgba(125,211,252,.25);background:#16294d;color:#fff;font-size:16px;margin:0 0 8px}
-  button{padding:13px 16px;border-radius:14px;border:0;background:#38bdf8;color:#082f49;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(56,189,248,.35)}
+  input,select{width:100%;padding:13px;border-radius:12px;border:0;background:#1b2947;color:#fff;font-size:16px;margin:0 0 8px}
+  button{padding:13px 16px;border-radius:14px;border:0;background:#38bdf8;color:#082f49;font-size:16px;font-weight:700;cursor:pointer;box-shadow:none}
   button.secondary{background:#1c2f55;box-shadow:none;color:#bae6fd}
   button.danger{background:#7f1d1d;padding:6px 10px;font-size:13px;color:#fff}
   button.big{width:100%}
   ul{list-style:none;padding:0;margin:10px 0 0}
-  li{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#16294d;border-radius:12px;padding:11px;margin:0 0 8px}
+  li{display:flex;justify-content:space-between;align-items:center;gap:8px;background:transparent;border-radius:0;padding:12px 2px;margin:0;border-bottom:1px solid rgba(255,255,255,.08)}
   li small{color:#8ea3c8;display:block}
-  li.today{background:#1e3a5f}
+  li.today{background:rgba(56,189,248,.12);border-radius:12px}
+  li:last-child{border-bottom:0}
   .small{font-size:13px;color:#8ea3c8}
   .row{display:flex;gap:8px}
   .row>*{flex:1}
@@ -50,18 +51,17 @@
     input,select{padding:11px}
   }
   *{scroll-behavior:smooth}
-  .card{animation:fadeIn .25s ease}
+  .card{animation:fadeIn .18s ease}
   @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-  button{transition:transform .15s ease,background-color .2s ease}
-  button:active{transform:scale(.97)}
+  button{transition:transform .12s ease,background-color .15s ease}
+  button:active{transform:scale(.95)}
   button:disabled{opacity:.45;filter:saturate(.5);transform:none}
   ul{-webkit-overflow-scrolling:touch}
   .apphead{display:flex;gap:16px;align-items:flex-start;margin:0 0 20px}
-  .appicon{width:118px;flex:0 0 118px;background:#111c3a;border:1px solid rgba(125,211,252,.14);border-radius:24px;padding:10px 10px 8px;text-align:center}
+  .appicon{width:118px;flex:0 0 118px;background:#111c3a;border:0;border-radius:24px;padding:10px 10px 8px;text-align:center}
   .appicon img{width:100%;border-radius:14px;display:block}
   .appicon span{display:block;font-size:18px;font-weight:800;margin-top:6px}
   .apptitle{flex:1;min-width:0;padding-top:2px}
-  .lbadge{width:44px;height:44px;border:2px solid #38bdf8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#7dd3fc;font-size:20px;margin-bottom:10px}
   .apptitle h1{font-size:30px}
   .apptitle .sub{font-size:14px;margin-top:4px}
   #syncStatus{font-size:12px;color:#64748b;margin:6px 0 0}
@@ -82,17 +82,17 @@
   .drop.on path{fill:#38bdf8;stroke:#38bdf8}
   .weekhead{display:flex;justify-content:space-between;align-items:baseline;margin:6px 2px 12px}
   .weekhead h2{margin:0;font-size:22px}
-  .weekhead span{font-size:16px;font-weight:700;color:#fbbf24}
+  .weekhead span{font-size:16px;font-weight:700;color:#7dd3fc}
   .weekrow{display:flex;justify-content:space-between}
-  .weekcircle{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;background:transparent;color:#7dd3fc;border:2px solid #475569}
-  .weekcircle.done{background:#38bdf8;border-color:#38bdf8;color:#082f49}
+  .weekcircle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;background:transparent;color:#7dd3fc;border:2px solid rgba(255,255,255,.18)}
+  .weekcircle.done{background:#38bdf8;border-color:#38bdf8;color:#fff}
   .weekcircle.today{border-color:#38bdf8;color:#38bdf8}
   .weekletters{display:flex;justify-content:space-between;margin-top:6px}
-  .weekletters span{width:56px;text-align:center;font-size:14px;color:#8ea3c8}
+  .weekletters span{width:44px;text-align:center;font-size:12px;color:#8ea3c8}
   .calweeknames{display:flex;justify-content:space-between;margin:0 0 8px}
-  .calweeknames span{width:56px;text-align:center;font-size:16px;font-weight:700}
+  .calweeknames span{width:44px;text-align:center;font-size:16px;font-weight:700}
   .calweekcircles{display:flex;justify-content:space-between}
-  .calweekcircles button{width:56px;height:56px;border-radius:50%;padding:0;font-size:20px;font-weight:800;background:transparent;color:#7dd3fc;border:2px solid #475569;box-shadow:none}
+  .calweekcircles button{width:44px;height:44px;border-radius:50%;padding:0;font-size:18px;font-weight:800;background:transparent;color:#7dd3fc;border:2px solid rgba(255,255,255,.18);box-shadow:none}
   .calweekcircles button.done{background:#38bdf8;border-color:#38bdf8;color:#082f49}
   .calweekcircles button.on{border-color:#38bdf8;color:#38bdf8}
   .calweekcircles button.on.done{background:#38bdf8;color:#082f49}
@@ -103,7 +103,7 @@
   .tlrow{display:flex;gap:12px;margin:0 0 14px;position:relative}
   .tltime{width:58px;flex:0 0 58px;text-align:right;font-size:13px;color:#8ea3c8;padding-top:16px}
   .tltime.now{color:#ef4444;font-weight:700}
-  .tlcard{flex:1;min-width:0;background:#111c3a;border:1px solid rgba(125,211,252,.14);border-radius:20px;padding:14px;touch-action:none;cursor:grab;user-select:none}
+  .tlcard{flex:1;min-width:0;background:#111c3a;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:14px;touch-action:none;cursor:grab;user-select:none}
   .tlcard:active{cursor:grabbing;opacity:.9}
   .tlcard b{font-size:18px}
   .tlcard small{display:block;color:#8ea3c8;font-size:14px;margin-top:4px;line-height:1.35}
@@ -127,6 +127,10 @@
   .dot.on{background:#c4b5fd}
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
   .shake{animation:shake .3s ease}
+  .pressable{cursor:pointer;transition:transform .15s ease}
+  .pressable:active{transform:scale(.985)}
+  .ringrow{display:flex;gap:10px;margin-top:16px}
+  .ringcell{flex:1;text-align:center}
 </style>
 </head>
 <body>
@@ -137,36 +141,36 @@
   <p id="welcomeSub" style="font-size:17px;color:#fff;margin:0 0 20px">Time to start the day right.</p>
   <p id="welcomeVerse" style="font-size:18px;line-height:1.5;color:#e9d5ff;margin:0 0 32px"></p>
   <button class="big" style="min-width:200px" onclick="dismissWelcome()">Enter</button>
-  <p style="font-size:12px;opacity:.55;margin:20px 0 0">v2.3.1 &middot; Sky Blue Update</p>
+  <p style="font-size:12px;opacity:.55;margin:20px 0 0">v2.4 &middot; Arc Update</p>
 </div>
 
 <div id="updatesOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);z-index:1000;flex-direction:column;align-items:center;justify-content:center;padding:32px;overflow-y:auto">
   <img src="icon.jpg" style="width:72px;height:72px;border-radius:18px;margin-bottom:14px" alt="Lock In icon">
   <h1 style="font-size:26px;margin:0 0 4px">Lock In</h1>
-  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 2.3.1</p>
+  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 2.4</p>
   <p style="font-size:14px;color:#8ea3c8;margin:0 0 24px">November 14, 2026</p>
   <p style="font-size:15px;letter-spacing:3px;color:#38bdf8;margin:0 0 16px">WHAT'S NEW</p>
   <div style="text-align:left;max-width:360px;width:100%">
-    <div style="margin-bottom:16px"><b style="font-size:16px">Calories to go</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">The Next meal card now shows exactly how many calories are left to hit your goal.</p></div>
-    <div style="margin-bottom:16px"><b style="font-size:16px">Barcode scanner</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Scan a food barcode and log it with servings, no more typing labels by hand.</p></div>
-    <div style="margin-bottom:16px"><b style="font-size:16px">Fresh new design</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Tracker and Calendar have a whole new look with a cleaner layout and sky blue accents.</p></div>
-    <div style="margin-bottom:16px"><b style="font-size:16px">Weekly streak</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Your workout days for the week are now right on the Tracker.</p></div>
-    <div style="margin-bottom:16px"><b style="font-size:16px">Better Calendar</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Your day is a simple timeline now, with Done and Upcoming labels and a Now line.</p></div>
-    <div style="margin-bottom:16px"><b style="font-size:16px">Faster to open</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Quicker loading and a smaller app icon.</p></div>
-    <div style="margin-bottom:4px"><b style="font-size:16px">Thanksgiving icon</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">New app icon for Thanksgiving.</p></div>
+    <div style="margin-bottom:16px"><b style="font-size:16px">Calorie arc</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Your day's calories are now a big arc at the top, with how many are left in the middle. Protein, water and meals show as rings underneath.</p></div>
+    <div style="margin-bottom:16px"><b style="font-size:16px">Next meal card goes somewhere</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Tapping the Next meal card now jumps straight to the food log.</p></div>
+    <div style="margin-bottom:16px"><b style="font-size:16px">Weight detail view</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Tap the Weight card to see your weight chart, average and change over time.</p></div>
+    <div style="margin-bottom:16px"><b style="font-size:16px">Progress at the bottom</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Sleep, weight and your week live at the bottom of the main page, each in its own card.</p></div>
+    <div style="margin-bottom:16px"><b style="font-size:16px">Sleep up top at night</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">After 9pm the sleep card moves to the top of the page until morning.</p></div>
+    <div style="margin-bottom:4px"><b style="font-size:16px">Better barcode scanner</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Scanning now shows the food's photo, brand and serving size, with more accurate numbers.</p></div>
   </div>
-  <button class="big" style="min-width:200px;margin-top:24px" onclick="dismissUpdates()">Continue</button>
+<button class="big" style="min-width:200px;margin-top:24px" onclick="dismissUpdates()">Continue</button>
 </div>
 
 <div class="apphead">
   <div class="appicon"><img src="jsn-line.jpg" alt="Lock In"><span>Lock In</span></div>
   <div class="apptitle">
-    <div class="lbadge">L</div>
     <h1 id="pageTitle">Today, Friday</h1>
     <p class="sub" id="pageSub">Good afternoon, Lonj</p>
     <p id="syncStatus" style="font-size:12px;color:#64748b;margin:6px 0 0">Sync: checking...</p>
   </div>
 </div>
+
+<div id="sleepTopSlot"></div>
 
 <div class="alert" id="eatAlert">
   <b>Time to eat 🍽️</b>
@@ -174,7 +178,47 @@
   <button onclick="document.getElementById('mealName').scrollIntoView({behavior:'smooth'});document.getElementById('mealName').focus()">Add food</button>
 </div>
 
-<div class="card dash" id="nextMealCard">
+<div class="card" id="calArcCard" style="text-align:center">
+  <div style="font-size:16px;font-weight:700;text-align:left">Calories today</div>
+  <div style="position:relative;width:220px;height:122px;margin:10px auto 0">
+    <svg viewBox="0 0 220 122" style="width:220px;height:122px;display:block">
+      <path d="M 15 110 A 95 95 0 0 1 205 110" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="14" stroke-linecap="round"/>
+      <path id="calArcFill" d="M 15 110 A 95 95 0 0 1 205 110" fill="none" stroke="#38bdf8" stroke-width="14" stroke-linecap="round" stroke-dasharray="298.5" stroke-dashoffset="298.5"/>
+    </svg>
+    <div style="position:absolute;left:0;right:0;bottom:0">
+      <div style="font-size:38px;font-weight:800;letter-spacing:-1px;line-height:1"><span id="calArcEaten">0</span><span style="font-size:17px;color:#8ea3c8;font-weight:600"> /2,900</span></div>
+      <div style="font-size:14px;color:#8ea3c8;margin-top:4px" id="calArcLeft">2,900 calories left</div>
+    </div>
+  </div>
+  <div class="ringrow">
+    <div class="ringcell">
+      <div style="position:relative;width:64px;height:64px;margin:0 auto">
+        <svg viewBox="0 0 64 64" style="width:64px;height:64px"><circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="6"/><circle id="ringProFill" cx="32" cy="32" r="26" fill="none" stroke="#38bdf8" stroke-width="6" stroke-linecap="round" stroke-dasharray="163.4" stroke-dashoffset="163.4" transform="rotate(-90 32 32)"/></svg>
+        <div id="ringProVal" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">0g</div>
+      </div>
+      <div style="font-size:12px;color:#8ea3c8;margin-top:6px">Protein</div>
+      <div id="ringProSub" style="font-size:11px;color:#64748b">0g left</div>
+    </div>
+    <div class="ringcell">
+      <div style="position:relative;width:64px;height:64px;margin:0 auto">
+        <svg viewBox="0 0 64 64" style="width:64px;height:64px"><circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="6"/><circle id="ringWaterFill" cx="32" cy="32" r="26" fill="none" stroke="#38bdf8" stroke-width="6" stroke-linecap="round" stroke-dasharray="163.4" stroke-dashoffset="163.4" transform="rotate(-90 32 32)"/></svg>
+        <div id="ringWaterVal" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">0/10</div>
+      </div>
+      <div style="font-size:12px;color:#8ea3c8;margin-top:6px">Water</div>
+      <div id="ringWaterSub" style="font-size:11px;color:#64748b">10 to go</div>
+    </div>
+    <div class="ringcell">
+      <div style="position:relative;width:64px;height:64px;margin:0 auto">
+        <svg viewBox="0 0 64 64" style="width:64px;height:64px"><circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="6"/><circle id="ringMealsFill" cx="32" cy="32" r="26" fill="none" stroke="#38bdf8" stroke-width="6" stroke-linecap="round" stroke-dasharray="163.4" stroke-dashoffset="163.4" transform="rotate(-90 32 32)"/></svg>
+        <div id="ringMealsVal" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">0/4</div>
+      </div>
+      <div style="font-size:12px;color:#8ea3c8;margin-top:6px">Meals</div>
+      <div id="ringMealsSub" style="font-size:11px;color:#64748b">Meals logged</div>
+    </div>
+  </div>
+</div>
+
+<div class="card dash pressable" id="nextMealCard" onclick="goToFood()">
   <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a2 2 0 0 0 4 0V3"/><path d="M8 3v18"/><path d="M16 3c-2 2-3 4-3 7v3h3v8"/></svg></div>
   <div class="dashbody">
     <div class="dashlabel">Next meal</div>
@@ -196,16 +240,7 @@
   <button class="pillbtn" id="workoutDoneBtn" onclick="markWorkoutDone()">Start</button>
 </div>
 
-<div class="card dash" id="sleepCard">
-  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13A8 8 0 1 1 11 4a6.5 6.5 0 0 0 9 9z"/></svg></div>
-  <div class="dashbody">
-    <div class="dashlabel">Sleep</div>
-    <div class="dashbig" id="sleepStatus">No sleep logged yet.</div>
-    <div class="dashsub" id="sleepSub">Tap Go to sleep at bedtime.</div>
-  </div>
-  <button class="pillbtn" id="sleepBtn" onclick="toggleSleep()">Go to sleep</button>
-</div>
-<ul id="sleepList" style="margin:-6px 0 14px"></ul>
+
 
 <div class="card dash" id="waterCard">
   <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg></div>
@@ -222,15 +257,6 @@
   <div class="weekhead"><h2>Weekly streak</h2><span id="weekStripCount">0/7 days</span></div>
   <div class="weekrow" id="weekStrip"></div>
   <div class="weekletters" id="weekLetters"></div>
-</div>
-
-<div class="card dash" id="weightCard">
-  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7a3 3 0 0 1 6 0"/><path d="M5.5 7h13l1.8 5.2a6.5 6.5 0 0 1-12.6 0z"/><path d="M12 12v3"/><path d="M10 15h4"/></svg></div>
-  <div class="dashbody">
-    <div class="dashbig" id="weightTitle">Weight • 114 lb → 130 lb goal</div>
-    <div class="bar"><i id="weightBar" style="width:0%"></i></div>
-    <div class="dashsub" id="weightSub">—</div>
-  </div>
 </div>
 
 <details class="card" id="scheduleTimes"><summary>Change times</summary>
@@ -307,6 +333,7 @@
     <button class="big" style="margin-top:8px" onclick="stopScan()">Cancel</button>
   </div>
   <div id="scanForm" style="display:none;margin-top:12px">
+    <img id="scanImg" src="" alt="" style="display:none;width:72px;height:72px;object-fit:cover;border-radius:12px;margin-bottom:8px">
     <input id="scanFoodName" placeholder="Food name" autocomplete="off">
     <div class="row">
       <input id="scanCal" type="number" inputmode="numeric" placeholder="Cal per serving">
@@ -342,12 +369,58 @@
   <p class="small" id="stepsLabel" style="margin-bottom:0"></p>
 </div>
 
+<div id="sleepSlot">
+<div class="card dash" id="sleepCard">
+  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13A8 8 0 1 1 11 4a6.5 6.5 0 0 0 9 9z"/></svg></div>
+  <div class="dashbody">
+    <div class="dashlabel">Sleep</div>
+    <div class="dashbig" id="sleepStatus">No sleep logged yet.</div>
+    <div class="dashsub" id="sleepSub">Tap Go to sleep at bedtime.</div>
+  </div>
+  <button class="pillbtn" id="sleepBtn" onclick="toggleSleep()">Go to sleep</button>
+</div>
+<ul id="sleepList" style="margin:-6px 0 14px"></ul>
+</div>
+
+<div class="card dash pressable" id="weightCard" onclick="openWeightView()">
+  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7a3 3 0 0 1 6 0"/><path d="M5.5 7h13l1.8 5.2a6.5 6.5 0 0 1-12.6 0z"/><path d="M12 12v3"/><path d="M10 15h4"/></svg></div>
+  <div class="dashbody">
+    <div class="dashbig" id="weightTitle">Weight • 114 lb → 130 lb goal</div>
+    <div class="bar"><i id="weightBar" style="width:0%"></i></div>
+    <div class="dashsub" id="weightSub">—</div>
+  </div>
+  <div class="chev">›</div>
+</div>
+
+<div class="card" id="weekSummaryCard">
+  <h2>This week</h2>
+  <div class="dashsub" id="weekSummaryLine">—</div>
+</div>
+
 <details class="card" id="pastDays">
   <summary>Past days</summary>
   <ul id="historyList"></ul>
 </details>
 
-<p style="text-align:center;font-size:11px;color:#475569;margin:8px 0 0">v2.3.1 · Sky Blue Update</p>
+<p style="text-align:center;font-size:11px;color:#475569;margin:8px 0 0">v2.4 · Arc Update</p>
+
+<div id="weightView" style="display:none;position:fixed;inset:0;z-index:900;background:#0a1128;overflow-y:auto;padding:calc(20px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))">
+  <button class="secondary" onclick="closeWeightView()">‹ Back</button>
+  <h1 style="font-size:36px;margin:18px 0 2px"><span id="wvBig">—</span> <span style="font-size:18px;color:#8ea3c8">lb</span></h1>
+  <p class="sub" id="wvSub">—</p>
+  <div class="row" style="margin-top:16px">
+    <div class="card" style="flex:1;text-align:center;margin:0"><div class="small">Average</div><b id="wvAvg" style="font-size:22px">—</b></div>
+    <div class="card" style="flex:1;text-align:center;margin:0"><div class="small">Change</div><b id="wvChange" style="font-size:22px">—</b></div>
+  </div>
+  <div style="display:flex;gap:6px;margin:16px 0">
+    <button class="secondary" id="wvR1W" onclick="renderWeightChart('1W')">1W</button>
+    <button class="secondary" id="wvR1M" onclick="renderWeightChart('1M')">1M</button>
+    <button class="secondary" id="wvRAll" onclick="renderWeightChart('All')">All</button>
+  </div>
+  <div class="card"><svg id="wvChart" viewBox="0 0 320 160" style="width:100%;height:auto;display:block"></svg></div>
+  <h2 style="margin-top:18px">Entries</h2>
+  <ul id="wvEntries"></ul>
+</div>
 
 <div class="tabbar">
   <button class="on" id="tabTracker" onclick="switchSection('tracker')"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="17" y="3" width="4" height="17" rx="1"/></svg>Tracker</button>
@@ -357,7 +430,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
-var APP_VERSION='2.3.1';
+var APP_VERSION='2.4';
 var _needClear=true; try{_needClear=localStorage.getItem('lockin_cache_cleared_for')!==APP_VERSION;}catch(e){}
 if(_needClear){try{localStorage.setItem('lockin_cache_cleared_for',APP_VERSION);}catch(e){} if('serviceWorker' in navigator){try{navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}catch(e){} try{if(window.caches){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});});}}catch(e){}}}
 var LS_KEY = 'lockin_homescreen_v1';
@@ -543,6 +616,9 @@ function render(){
   document.getElementById('weightSub').textContent=wv+' lb now • +'+(Math.round((wv-START_WT)*10)/10)+' lb • '+(Math.round((GOAL_WT-wv)*10)/10)+' lb to goal';
   var wBar=document.getElementById('weightBar');
   if(wBar) wBar.style.width=Math.max(0,Math.min(100,Math.round((wv-START_WT)/(GOAL_WT-START_WT)*100)))+'%';
+  renderCalArc(cal, plan);
+  renderWeekSummary();
+  placeSleepCard();
   renderWeekStrip();
   document.getElementById('mealList').innerHTML=meals.map(function(m){
     return '<li><div><b>'+esc(m.name)+'</b><small>'+m.kcal+' cal'+(m.protein?' · '+m.protein+'g protein':'')+'</small></div><button class="danger" onclick="delMeal(\''+m.id+'\')">Delete</button></li>';
@@ -721,10 +797,11 @@ function moveCalEvent(day, id, dir){
 function resetCalendar(){ state.calEvents = buildDefaultCalEvents(); save(); render(); }
 
 function switchSection(name){
+  var wv=document.getElementById('weightView'); if(wv) wv.style.display='none';
   document.getElementById('tabTracker').className = name==='tracker' ? 'on' : '';
   document.getElementById('tabCalendar').className = name==='calendar' ? 'on' : '';
   document.getElementById('tabStreaks').className = name==='streaks' ? 'on' : '';
-  var trackerIds = ['nextMealCard','workoutCard','sleepCard','sleepList','waterCard','weekStripWrap','weightCard','foodCard','workoutLogCard','weightStepsCard','pastDays'];
+  var trackerIds = ['sleepTopSlot','nextMealCard','workoutCard','sleepCard','sleepList','waterCard','weekStripWrap','calArcCard','foodCard','workoutLogCard','weightStepsCard','weightCard','weekSummaryCard','pastDays'];
   var calendarIds = ['calendarSection','scheduleTimes'];
   var streakIds = ['streaksLock','streaksMain','streaksAdd'];
   trackerIds.concat(calendarIds, streakIds).forEach(function(id){
@@ -827,6 +904,7 @@ function lookupBarcode(code){
   document.getElementById('scanCal').value='';
   document.getElementById('scanPro').value='';
   document.getElementById('scanServ').value='1';
+  var im0=document.getElementById('scanImg'); if(im0){im0.style.display='none'; im0.src='';}
   document.getElementById('scanNote').textContent='Looking up '+code+'…';
   form.style.display='block';
   form.scrollIntoView({behavior:'smooth'});
@@ -837,9 +915,14 @@ function lookupBarcode(code){
       if(!pr){document.getElementById('scanNote').textContent='Not found. Type the numbers in.'; return;}
       var nut=pr.nutriments||{};
       document.getElementById('scanFoodName').value=pr.product_name||'Scanned food';
+      var im=document.getElementById('scanImg');
+      var imgUrl=pr.image_front_small_url||pr.image_small_url||pr.image_url||'';
+      if(im){if(imgUrl){im.src=imgUrl; im.style.display='block';}else{im.style.display='none'; im.src='';}}
+      var brand=(pr.brands||'').split(',')[0].trim();
       var cal=nut['energy-kcal_serving'], pro=nut.proteins_serving, grams=null, basis='';
       var m=(pr.serving_size||'').match(/([\d.]+)\s*g/i);
       if(m) grams=parseFloat(m[1]);
+      else{var mo=(pr.serving_size||'').match(/([\d.]+)\s*oz/i); if(mo) grams=parseFloat(mo[1])*28.35;}
       if((cal==null||pro==null)&&nut['energy-kcal_100g']!=null&&grams){
         if(cal==null) cal=Math.round(nut['energy-kcal_100g']*grams/100);
         if(pro==null) pro=Math.round(nut.proteins_100g*grams/100*10)/10;
@@ -849,7 +932,11 @@ function lookupBarcode(code){
       if(pro==null&&nut.proteins_100g!=null){pro=nut.proteins_100g;}
       document.getElementById('scanCal').value=(cal==null?'':Math.round(cal));
       document.getElementById('scanPro').value=(pro==null?'':pro);
-      document.getElementById('scanNote').textContent=basis||'Check the numbers, then set servings and add.';
+      var noteBits=[];
+      if(brand) noteBits.push(brand);
+      if(basis) noteBits.push(basis);
+      noteBits.push('Barcode '+code);
+      document.getElementById('scanNote').textContent=noteBits.join(' • ')+'. Check it matches the bag, then set servings and add.';
     })
     .catch(function(){document.getElementById('scanNote').textContent='Lookup failed. Type the numbers in.';});
 }
@@ -861,6 +948,88 @@ function addScanned(){
   state.meals.push({id:uid(),date:todayKey(),name:name,kcal:Math.round(perCal*serv),protein:Math.round(perPro*serv*10)/10});
   document.getElementById('scanForm').style.display='none';
   save(); render();
+}
+function goToFood(){var el=document.getElementById('mealName'); if(!el) return; el.scrollIntoView({behavior:'smooth'}); setTimeout(function(){el.focus();},400);}
+function setRing(id,pct){var el=document.getElementById(id); if(!el) return; var C=163.36; el.style.strokeDashoffset=(C*(1-Math.max(0,Math.min(1,pct)))).toFixed(1);}
+function renderCalArc(cal,plan){
+  var arc=document.getElementById('calArcFill'); if(!arc) return;
+  var pct=Math.max(0,Math.min(1,cal/plan.cal));
+  arc.style.strokeDashoffset=(298.5*(1-pct)).toFixed(1);
+  document.getElementById('calArcEaten').textContent=cal.toLocaleString();
+  var left=plan.cal-cal;
+  document.getElementById('calArcLeft').textContent=left>0?left.toLocaleString()+' calories left':'Goal hit ✓';
+  var proToday=state.meals.filter(function(m){return m.date===todayKey();}).reduce(function(a,m){return a+(m.protein||0);},0);
+  setRing('ringProFill',proToday/plan.pro);
+  document.getElementById('ringProVal').textContent=Math.round(proToday)+'g';
+  document.getElementById('ringProSub').textContent=Math.max(0,plan.pro-Math.round(proToday))+'g left';
+  var w=state.water[todayKey()]||0;
+  setRing('ringWaterFill',w/10);
+  document.getElementById('ringWaterVal').textContent=w+' / 10';
+  document.getElementById('ringWaterSub').textContent=(10-w>0?(10-w)+' to go':'Done ✓');
+  var mealsToday=state.meals.filter(function(m){return m.date===todayKey();}).length;
+  var planned=MEALS.length||4;
+  setRing('ringMealsFill',mealsToday/planned);
+  document.getElementById('ringMealsVal').textContent=mealsToday+'/'+planned;
+  document.getElementById('ringMealsSub').textContent=mealsToday>=planned?'All logged':'Meals logged';
+}
+function renderWeekSummary(){
+  var el=document.getElementById('weekSummaryLine'); if(!el) return;
+  var now=new Date(), monday=new Date(now); monday.setDate(now.getDate()-((now.getDay()+6)%7));
+  function k(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+  var wo=0, cals=0, logged=0;
+  for(var i=0;i<7;i++){var d=new Date(monday); d.setDate(monday.getDate()+i); var kk=k(d);
+    if(state.workouts.some(function(w){return w.date===kk;})) wo++;
+    var c=state.meals.filter(function(m){return m.date===kk;}).reduce(function(a,m){return a+(m.kcal||0);},0);
+    if(c>0){cals+=c; logged++;}
+  }
+  var avg=logged?Math.round(cals/logged):0;
+  el.textContent='Workouts '+wo+' of 4 this week • '+(logged?('Avg '+avg.toLocaleString()+' cal on '+logged+' logged day'+(logged>1?'s':'')):'No food logged yet this week')+' • '+currentWeight()+' lb now';
+}
+function placeSleepCard(){
+  var card=document.getElementById('sleepCard'), list=document.getElementById('sleepList');
+  if(!card) return;
+  var h=new Date().getHours();
+  var night=(h>=21||h<6);
+  var top=document.getElementById('sleepTopSlot'), bottom=document.getElementById('sleepSlot');
+  var dest=night?top:bottom;
+  if(dest && card.parentNode!==dest){dest.appendChild(card); if(list) dest.appendChild(list);}
+}
+var __wvRange='All';
+function openWeightView(){var v=document.getElementById('weightView'); if(!v) return; v.style.display='block'; v.scrollTop=0; renderWeightChart(__wvRange);}
+function closeWeightView(){var v=document.getElementById('weightView'); if(v) v.style.display='none';}
+function renderWeightChart(range){
+  __wvRange=range;
+  var now=new Date(), from=null;
+  if(range==='1W'){from=new Date(now); from.setDate(now.getDate()-7);}
+  if(range==='1M'){from=new Date(now); from.setMonth(now.getMonth()-1);}
+  function kd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+  var pts=state.weights.filter(function(w){return !from || w.date>=kd(from);}).slice().sort(function(a,b){return a.date<b.date?-1:1;});
+  var avgEl=document.getElementById('wvAvg'), chEl=document.getElementById('wvChange'), bigEl=document.getElementById('wvBig'), subEl=document.getElementById('wvSub');
+  var last=state.weights[state.weights.length-1];
+  if(bigEl) bigEl.textContent=last?last.lbs:currentWeight();
+  if(subEl) subEl.textContent=last?('Last weighed '+last.date+(last.time?' at '+last.time:'')):'No weigh-ins yet.';
+  ['wvR1W','wvR1M','wvRAll'].forEach(function(id){var b=document.getElementById(id); if(!b) return; var on=id==='wvR'+range; b.style.background=on?'#38bdf8':''; b.style.color=on?'#082f49':'';});
+  var svg=document.getElementById('wvChart');
+  if(!svg) return;
+  if(pts.length<2){
+    svg.innerHTML='<text x="160" y="80" fill="#8ea3c8" font-size="14" text-anchor="middle">Log more weigh-ins to see a trend.</text>';
+    if(avgEl) avgEl.textContent='—'; if(chEl) chEl.textContent='—';
+  } else {
+    var ws=pts.map(function(p){return p.lbs;});
+    var avg=ws.reduce(function(a,b){return a+b;},0)/ws.length;
+    var ch=ws[ws.length-1]-ws[0];
+    if(avgEl) avgEl.textContent=avg.toFixed(1)+' lb';
+    if(chEl) chEl.textContent=(ch>=0?'+':'')+ch.toFixed(1)+' lb';
+    var mn=Math.min.apply(null,ws), mx=Math.max.apply(null,ws);
+    if(mx-mn<1){mn-=0.5; mx+=0.5;}
+    var W=320,H=160,P=18;
+    var xy=pts.map(function(p,i){var x=P+(W-2*P)*(pts.length===1?0.5:i/(pts.length-1)); var y=H-P-((p.lbs-mn)/(mx-mn))*(H-2*P); return [x,y];});
+    var line=xy.map(function(q){return q[0].toFixed(1)+','+q[1].toFixed(1);}).join(' ');
+    var dots=xy.map(function(q){return '<circle cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="4" fill="#38bdf8"/>';}).join('');
+    svg.innerHTML='<text x="'+P+'" y="14" fill="#8ea3c8" font-size="11">'+mx.toFixed(1)+'</text><text x="'+P+'" y="'+(H-6)+'" fill="#8ea3c8" font-size="11">'+mn.toFixed(1)+'</text><polyline points="'+line+'" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>'+dots;
+  }
+  var ent=document.getElementById('wvEntries');
+  if(ent) ent.innerHTML=state.weights.slice().reverse().map(function(w){return '<li><div><b>'+w.lbs+' lb</b><small>'+w.date+(w.time?' at '+w.time:'')+'</small></div></li>';}).join('')||'<li class="small">No weigh-ins yet.</li>';
 }
 function addWorkout(){
   state.workouts.push({id:uid(),date:todayKey(),title:document.getElementById('workoutName').value.trim(),part:document.getElementById('workoutPart').value,minutes:0,detail:'',exercises:[]});
