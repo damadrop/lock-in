@@ -140,17 +140,17 @@
   <p id="welcomeSub" style="font-size:17px;color:#fff;margin:0 0 20px">Time to start the day right.</p>
   <p id="welcomeVerse" style="font-size:18px;line-height:1.5;color:#e9d5ff;margin:0 0 32px"></p>
   <button class="big" style="min-width:200px" onclick="dismissWelcome()">Enter</button>
-  <p style="font-size:12px;opacity:.55;margin:20px 0 0">v2.5.2 &middot; Progress Update</p>
+  <p style="font-size:12px;opacity:.55;margin:20px 0 0">v2.5.3 &middot; Progress Update</p>
 </div>
 
 <div id="updatesOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);z-index:1000;flex-direction:column;align-items:center;justify-content:center;padding:32px;overflow-y:auto">
   <img src="icon.jpg" style="width:72px;height:72px;border-radius:18px;margin-bottom:14px" alt="Lock In icon">
   <h1 style="font-size:26px;margin:0 0 4px">Lock In</h1>
-  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 2.5.2</p>
+  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 2.5.3</p>
   <p style="font-size:14px;color:#8ea3c8;margin:0 0 24px">November 15, 2026</p>
   <p style="font-size:15px;letter-spacing:3px;color:#38bdf8;margin:0 0 16px">WHAT'S NEW</p>
   <div style="text-align:left;max-width:360px;width:100%">
-    <div style="margin-bottom:4px"><b style="font-size:16px">Barcode scanner rebuilt</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">The back camera opens automatically now, with a clean viewfinder and a frame to aim the barcode inside.</p></div>
+    <div style="margin-bottom:4px"><b style="font-size:16px">Scanner shows its status</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">You'll see if the camera is opening, on, or blocked instead of it failing silently, and it now reads QR codes too.</p></div>
   </div>
 <button class="big" style="min-width:200px;margin-top:24px" onclick="dismissUpdates()">Continue</button>
 </div>
@@ -321,7 +321,7 @@
       <div id="reader" style="width:100%"></div>
       <div style="position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center"><div style="width:240px;height:120px;border:2px solid #38bdf8;border-radius:12px;box-shadow:0 0 0 9999px rgba(2,6,23,.55)"></div></div>
     </div>
-    <p style="font-size:13px;color:#8ea3c8;text-align:center;margin:8px 0 0">Back camera on — hold the barcode inside the frame</p>
+    <p id="scanStatus" style="font-size:13px;color:#8ea3c8;text-align:center;margin:8px 0 0">Opening back camera…</p>
     <input id="manualCode" inputmode="numeric" placeholder="Or type the barcode number" style="margin-top:8px">
     <button class="big" style="margin-top:8px" onclick="lookupBarcode(document.getElementById('manualCode').value)">Look up barcode</button>
     <button class="big" style="margin-top:8px" onclick="stopScan()">Cancel</button>
@@ -396,7 +396,7 @@
   <ul id="historyList"></ul>
 </details>
 
-<p style="text-align:center;font-size:11px;color:#475569;margin:8px 0 0">v2.5.2 · Progress Update</p>
+<p style="text-align:center;font-size:11px;color:#475569;margin:8px 0 0">v2.5.3 · Progress Update</p>
 
 <div class="alert" id="eatAlert">
   <b>Time to eat 🍽️</b>
@@ -431,7 +431,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
-var APP_VERSION='2.5.2';
+var APP_VERSION='2.5.3';
 var _needClear=true; try{_needClear=localStorage.getItem('lockin_cache_cleared_for')!==APP_VERSION;}catch(e){}
 if(_needClear){try{localStorage.setItem('lockin_cache_cleared_for',APP_VERSION);}catch(e){} if('serviceWorker' in navigator){try{navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}catch(e){} try{if(window.caches){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});});}}catch(e){}}}
 var LS_KEY = 'lockin_homescreen_v1';
@@ -897,6 +897,7 @@ function addMeal(){
 }
 function delMeal(id){state.meals=state.meals.filter(function(m){return m.id!==id;}); save(); render();}
 var __scanner=null, __scanned=false, __scanOn=false, __scanGen=0;
+function setScanStatus(t){var el=document.getElementById('scanStatus'); if(el){el.textContent=t;}}
 function startScan(){
   if(typeof Html5Qrcode==='undefined'){alert('Scanner needs internet to load. Check your connection and try again.'); return;}
   if(__scanner){return;}
@@ -907,28 +908,41 @@ function startScan(){
   __scanned=false;
   __scanGen++;
   var gen=__scanGen;
+  setScanStatus('Opening back camera…');
+  setTimeout(function(){if(gen===__scanGen&&!__scanOn){setScanStatus('Still waiting on the camera — if a permission popup appeared, tap Allow. Or type the number below.');}},8000);
   var formats=[];
-  try{formats=[Html5QrcodeSupportedFormats.EAN_13,Html5QrcodeSupportedFormats.EAN_8,Html5QrcodeSupportedFormats.UPC_A,Html5QrcodeSupportedFormats.UPC_E,Html5QrcodeSupportedFormats.CODE_128];}catch(e){}
+  try{formats=[Html5QrcodeSupportedFormats.EAN_13,Html5QrcodeSupportedFormats.EAN_8,Html5QrcodeSupportedFormats.UPC_A,Html5QrcodeSupportedFormats.UPC_E,Html5QrcodeSupportedFormats.CODE_128,Html5QrcodeSupportedFormats.CODE_39,Html5QrcodeSupportedFormats.ITF,Html5QrcodeSupportedFormats.QR_CODE];}catch(e){}
   var cfg={fps:10,qrbox:{width:260,height:140},formatsToSupport:formats};
   __scanner=new Html5Qrcode('reader');
   var sc=__scanner;
-  var ok=function(code){if(__scanned)return; __scanned=true; stopScan(); lookupBarcode(code);};
+  var ok=function(code){
+    if(__scanned)return; __scanned=true; stopScan();
+    if(/^\d+$/.test(code)){lookupBarcode(code); return;}
+    var form=document.getElementById('scanForm');
+    document.getElementById('scanFoodName').value=code.slice(0,60);
+    document.getElementById('scanCal').value=''; document.getElementById('scanPro').value=''; document.getElementById('scanServ').value='1';
+    var im0=document.getElementById('scanImg'); if(im0){im0.style.display='none'; im0.src='';}
+    document.getElementById('scanNote').textContent='That was a QR code, not a food barcode — check the numbers yourself.';
+    form.style.display='block'; form.scrollIntoView({behavior:'smooth'});
+  };
   sc.start({facingMode:'environment'},cfg,ok,function(){}).then(function(){
     if(gen!==__scanGen){try{sc.stop().catch(function(){});}catch(e){} return;}
     __scanOn=true;
+    setScanStatus('Back camera on — hold the barcode inside the frame');
   }).catch(function(){
     if(gen!==__scanGen)return;
     Html5Qrcode.getCameras().then(function(cams){
       if(gen!==__scanGen)return;
-      if(!cams||!cams.length){alert('Could not open the camera. Type the barcode number instead.'); return;}
+      if(!cams||!cams.length){setScanStatus('Camera did not open — type the barcode number below.'); alert('Could not open the camera. Type the barcode number instead.'); return;}
       var back=null;
       for(var i=0;i<cams.length;i++){if(/back|rear|environment/i.test(cams[i].label||'')){back=cams[i];break;}}
       var cam=back||cams[cams.length-1];
       sc.start(cam.id,cfg,ok,function(){}).then(function(){
         if(gen!==__scanGen){try{sc.stop().catch(function(){});}catch(e){} return;}
         __scanOn=true;
-      }).catch(function(){if(gen===__scanGen){alert('Could not open the camera. Type the barcode number instead.');}});
-    }).catch(function(){if(gen===__scanGen){alert('Could not open the camera. Type the barcode number instead.');}});
+        setScanStatus('Back camera on — hold the barcode inside the frame');
+      }).catch(function(){if(gen===__scanGen){setScanStatus('Camera did not open — type the barcode number below.'); alert('Could not open the camera. Type the barcode number instead.');}});
+    }).catch(function(){if(gen===__scanGen){setScanStatus('Camera did not open — type the barcode number below.'); alert('Could not open the camera. Type the barcode number instead.');}});
   });
 }
 function stopScan(){
