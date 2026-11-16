@@ -1989,10 +1989,12 @@ function dismissWelcome(){ setOverlayOpen('welcome', false);
   document.getElementById('welcomeOverlay').style.display='none';
   var seen=null; try{seen=localStorage.getItem('lockin_seen_version');}catch(e){}
   if(seen!==APP_VERSION){document.getElementById('updatesOverlay').style.display='flex'; setOverlayOpen('updates', true);}
+  else if(__tourPending){ __tourPending=false; setTimeout(startTour, 400); }
 }
 function dismissUpdates(){ setOverlayOpen('updates', false);
   try{localStorage.setItem('lockin_seen_version',APP_VERSION);}catch(e){}
   document.getElementById('updatesOverlay').style.display='none';
+  if(__tourPending){ __tourPending=false; setTimeout(startTour, 400); }
 }
 var __sleepClockTimer=null, __wakingUp=false;
 function buildStars(){
@@ -2229,7 +2231,8 @@ function startTour(){ __tourOn=true; __tourIdx=0; var ov=document.getElementById
 function tourShow(){ var st=TOUR_STEPS[__tourIdx]; document.getElementById('tourTitle').textContent=st[0]; document.getElementById('tourText').textContent=st[1]; document.getElementById('tourNextBtn').textContent=(__tourIdx===TOUR_STEPS.length-1?'Done':'Next'); var d=document.getElementById('tourDots'); if(d){ var h=''; for(var i=0;i<TOUR_STEPS.length;i++){ h+='<span class="'+(i===__tourIdx?'on':'')+'"></span>'; } d.innerHTML=h; } }
 function tourNext(){ if(__tourIdx>=TOUR_STEPS.length-1){ tourSkip(); return; } __tourIdx++; tourShow(); }
 function tourSkip(){ __tourOn=false; var ov=document.getElementById('tourOverlay'); if(ov) ov.style.display='none'; }
-function maybeStartTour(){ try{ if(/[?&]tour=1/.test(location.search)){ setTimeout(startTour, 600); } }catch(e){} }
+var __tourPending=false;
+function maybeStartTour(){ try{ if(/[?&]tour=1/.test(location.search)){ __tourPending=true; } }catch(e){} }
 maybeStartTour();
 setTimeout(function(){
   var sp=document.getElementById('splash');
