@@ -131,6 +131,44 @@
   .ringrow{display:flex;gap:10px;margin-top:16px}
   #reader video{border-radius:16px}
   .ringcell{flex:1;text-align:center}
+/* Sleep screen */
+#sleepScreen{position:fixed;inset:0;z-index:9999;display:none;overflow:hidden;background:#050214;animation:sswin .7s ease-out;}
+@keyframes sswin{from{opacity:0}to{opacity:1}}
+#sleepScreen .nightbg{position:absolute;inset:0;background:linear-gradient(180deg,#0b1030 0%,#0b0620 45%,#050214 100%);}
+#sleepScreen .sunrisebg{position:absolute;inset:0;background:linear-gradient(180deg,#2b1055 0%,#7c2d5e 35%,#f97316 65%,#fbbf24 100%);opacity:0;transition:opacity 1.6s ease;}
+#sleepScreen.sunrise .sunrisebg{opacity:1;}
+#sstars{position:absolute;inset:0;transition:opacity 1.2s ease;}
+#sstars .star{position:absolute;border-radius:50%;background:#fff;animation:twinkle 2.8s ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:.25}50%{opacity:1}}
+#sleepScreen.sunrise #sstars{opacity:0;}
+.smoon{position:absolute;top:11%;right:15%;width:84px;height:84px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fffbe8,#fde68a 55%,#f59e0b);box-shadow:0 0 40px 12px rgba(253,230,138,.35),0 0 120px 40px rgba(253,230,138,.12);animation:moonrise 1.2s ease-out both,moonbob 6s ease-in-out 1.2s infinite alternate;transition:opacity 1.2s ease;}
+@keyframes moonrise{from{transform:translateY(60px)}to{transform:translateY(0)}}
+@keyframes moonbob{from{transform:translateY(0)}to{transform:translateY(-10px)}}
+#sleepScreen.sunrise .smoon{opacity:0;}
+.scloud{position:absolute;border-radius:50%;background:rgba(148,163,184,.10);filter:blur(18px);animation:drift 32s linear infinite;transition:opacity 1.2s ease;}
+.scloud.c1{width:220px;height:56px;top:22%;left:-240px;}
+.scloud.c2{width:180px;height:44px;top:48%;left:-200px;animation-duration:44s;animation-delay:-18s;}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(calc(100vw + 260px))}}
+#sleepScreen.sunrise .scloud{opacity:0;}
+.shoot{position:absolute;width:120px;height:2px;background:linear-gradient(90deg,rgba(255,255,255,0),#fff);border-radius:2px;opacity:0;transform:rotate(-32deg);animation:shoot 11s linear infinite;}
+.shoot.s1{top:14%;left:12%;animation-delay:2s;}
+.shoot.s2{top:30%;right:8%;animation-delay:7s;animation-duration:15s;}
+@keyframes shoot{0%{opacity:0;transform:rotate(-32deg) translateX(0)}3%{opacity:1}8%{opacity:0;transform:rotate(-32deg) translateX(-160px)}100%{opacity:0;transform:rotate(-32deg) translateX(-160px)}}
+#sleepScreen.sunrise .shoot{animation:none;opacity:0;}
+.ssun{position:absolute;left:50%;bottom:-90px;width:150px;height:150px;margin-left:-75px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#fff7cc,#fbbf24 55%,#f97316);box-shadow:0 0 60px 20px rgba(251,191,36,.45),0 0 160px 60px rgba(249,115,22,.25);transition:transform 1.8s cubic-bezier(.22,.8,.3,1);}
+#sleepScreen.sunrise .ssun{transform:translateY(-260px);}
+.scontent{position:absolute;left:0;right:0;top:36%;text-align:center;color:#e2e8f0;padding:0 24px;animation:contentin 1s ease-out .3s both;transition:opacity .8s ease;}
+@keyframes contentin{from{transform:translateY(14px)}to{transform:translateY(0)}}
+.sgreet{font-size:34px;font-weight:700;letter-spacing:.5px;}
+.sclock{font-size:64px;font-weight:800;margin-top:10px;font-variant-numeric:tabular-nums;line-height:1;}
+.ssub{font-size:15px;color:#94a3b8;margin-top:10px;}
+.selapsed{font-size:15px;color:#7dd3fc;margin-top:6px;}
+#ssDay{opacity:0;transition:opacity 1s ease .3s;}
+#sleepScreen.sunrise #ssNight{opacity:0;}
+#sleepScreen.sunrise #ssDay{opacity:1;}
+.swake{position:absolute;left:50%;bottom:8%;transform:translateX(-50%);background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:18px;font-weight:700;padding:16px 34px;border-radius:999px;backdrop-filter:blur(6px);transition:opacity .6s ease;}
+.swake:active{transform:translateX(-50%) scale(.96);}
+#sleepScreen.sunrise .swake{opacity:0;pointer-events:none;}
 </style>
 </head>
 <body>
@@ -141,17 +179,17 @@
   <p id="welcomeSub" style="font-size:17px;color:#fff;margin:0 0 20px">Time to start the day right.</p>
   <p id="welcomeVerse" style="font-size:18px;line-height:1.5;color:#e9d5ff;margin:0 0 32px"></p>
   <button class="big" style="min-width:200px" onclick="dismissWelcome()">Enter</button>
-  <p style="font-size:12px;opacity:.55;margin:20px 0 0">v2.6.3 &middot; Barcode Update</p>
+  <p style="font-size:12px;opacity:.55;margin:20px 0 0">v2.7 &middot; Sleep Screen</p>
 </div>
 
 <div id="updatesOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);z-index:1000;flex-direction:column;align-items:center;justify-content:center;padding:32px;overflow-y:auto">
   <img src="icon.jpg" style="width:72px;height:72px;border-radius:18px;margin-bottom:14px" alt="Lock In icon">
   <h1 style="font-size:26px;margin:0 0 4px">Lock In</h1>
-  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 2.6.3</p>
+  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 2.7</p>
   <p style="font-size:14px;color:#8ea3c8;margin:0 0 24px">November 15, 2026</p>
   <p style="font-size:15px;letter-spacing:3px;color:#38bdf8;margin:0 0 16px">WHAT'S NEW</p>
   <div style="text-align:left;max-width:360px;width:100%">
-    <div style="margin-bottom:4px"><b style="font-size:16px">Back camera fixed</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">The scanner was opening the front camera by mistake. It now opens the back camera again, with the stronger reader still on.</p></div>
+    <div style="margin-bottom:4px"><b style="font-size:16px">Sleep screen</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Tapping Go to sleep now opens a full night sky screen with twinkling stars, a moon, drifting clouds and a live clock. Tap Wake up for a sunrise and your sleep gets logged.</p></div>
   </div>
 <button class="big" style="min-width:200px;margin-top:24px" onclick="dismissUpdates()">Continue</button>
 </div>
@@ -400,7 +438,7 @@
   <ul id="historyList"></ul>
 </details>
 
-<p style="text-align:center;font-size:11px;color:#475569;margin:8px 0 0">v2.6.3 · Barcode Update</p>
+<p style="text-align:center;font-size:11px;color:#475569;margin:8px 0 0">v2.7 · Sleep Screen</p>
 
 <div class="alert" id="eatAlert">
   <b>Time to eat 🍽️</b>
@@ -433,10 +471,34 @@
   <button id="tabStreaks" onclick="switchSection('streaks')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 3.5-2 5.5-3.5 7.5C7 11.5 6 13 6 15.5A6 6 0 0 0 18 15.5c0-2.5-1.5-4-2.5-5.5-.4 1.2-1.2 2-2.3 2.4C13.6 9.5 13 5.5 12 2z"/></svg>Streaks</button>
 </div>
 
+<div id="sleepScreen">
+  <div class="nightbg"></div>
+  <div class="sunrisebg"></div>
+  <div id="sstars"></div>
+  <div class="smoon"></div>
+  <div class="scloud c1"></div>
+  <div class="scloud c2"></div>
+  <div class="shoot s1"></div>
+  <div class="shoot s2"></div>
+  <div class="ssun"></div>
+  <div class="scontent" id="ssNight">
+    <div class="sgreet">Good night, Lonj</div>
+    <div class="sclock" id="ssClock">--:--</div>
+    <div class="ssub" id="ssSub">You went to sleep at --</div>
+    <div class="selapsed" id="ssElapsed">Sleeping for 0h 0m</div>
+  </div>
+  <div class="scontent" id="ssDay">
+    <div class="sgreet" id="ssDayGreet">Good morning, Lonj</div>
+    <div class="sclock" style="font-size:28px" id="ssDaySub">You slept 0h 0m</div>
+    <div class="ssub">Nice, you're up.</div>
+  </div>
+  <button class="swake" onclick="wakeUpFromScreen()">☀&nbsp; Wake up</button>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/barcode-detector@3.2.4/dist/iife/ponyfill.min.js"></script>
 <script>
-var APP_VERSION='2.6.3';
+var APP_VERSION='2.7';
 var _needClear=true; try{_needClear=localStorage.getItem('lockin_cache_cleared_for')!==APP_VERSION;}catch(e){}
 if(_needClear){try{localStorage.setItem('lockin_cache_cleared_for',APP_VERSION);}catch(e){} if('serviceWorker' in navigator){try{navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}catch(e){} try{if(window.caches){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});});}}catch(e){}}}
 var LS_KEY = 'lockin_homescreen_v1';
@@ -1418,7 +1480,49 @@ function dismissUpdates(){
   try{localStorage.setItem('lockin_seen_version',APP_VERSION);}catch(e){}
   document.getElementById('updatesOverlay').style.display='none';
 }
-function toggleSleep(){
+var __sleepClockTimer=null, __wakingUp=false;
+function buildStars(){
+  var box=document.getElementById('sstars');
+  if(!box || box.children.length) return;
+  var html='';
+  for(var i=0;i<60;i++){
+    var s=(Math.random()*2+1).toFixed(1);
+    var left=(Math.random()*100).toFixed(1), top=(Math.random()*70).toFixed(1);
+    var d=(Math.random()*2.5+1.5).toFixed(1), dl=(Math.random()*3).toFixed(1);
+    html+='<span class="star" style="left:'+left+'%;top:'+top+'%;width:'+s+'px;height:'+s+'px;animation-duration:'+d+'s;animation-delay:'+dl+'s"></span>';
+  }
+  box.innerHTML=html;
+}
+function updateSleepClock(){
+  var now=new Date();
+  var c=document.getElementById('ssClock'); if(c) c.textContent=now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+  var el=document.getElementById('ssElapsed');
+  if(el && state.sleepStart){
+    var mins=Math.max(0, Math.round((now-new Date(state.sleepStart))/60000));
+    el.textContent='Sleeping for '+Math.floor(mins/60)+'h '+(mins%60)+'m';
+  }
+  var sub=document.getElementById('ssSub');
+  if(sub && state.sleepStart){
+    sub.textContent='You went to sleep at '+new Date(state.sleepStart).toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+  }
+}
+function showSleepScreen(){
+  buildStars();
+  var ov=document.getElementById('sleepScreen');
+  ov.classList.remove('sunrise');
+  ov.style.display='block';
+  updateSleepClock();
+  if(__sleepClockTimer) clearInterval(__sleepClockTimer);
+  __sleepClockTimer=setInterval(updateSleepClock, 1000);
+  __wakingUp=false;
+}
+function hideSleepScreen(){
+  var ov=document.getElementById('sleepScreen');
+  ov.style.display='none';
+  if(__sleepClockTimer){clearInterval(__sleepClockTimer); __sleepClockTimer=null;}
+  __wakingUp=false;
+}
+function finishWakeUp(){
   var now=new Date();
   if(state.sleepStart){
     var start=new Date(state.sleepStart);
@@ -1426,10 +1530,44 @@ function toggleSleep(){
     if(!state.sleep) state.sleep=[];
     state.sleep.push({id:uid(),date:todayKey(),start:start.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}),end:now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}),hours:hours});
     state.sleepStart=null;
-  } else {
-    state.sleepStart=now.toISOString();
   }
   save(); render();
+}
+function wakeUpFromScreen(){
+  if(__wakingUp) return;
+  __wakingUp=true;
+  var now=new Date();
+  var h=now.getHours();
+  var greet=document.getElementById('ssDayGreet');
+  if(greet) greet.textContent=(h<5?'You\'re up':timeGreeting())+', Lonj';
+  if(state.sleepStart){
+    var start=new Date(state.sleepStart);
+    var hours=Math.round(((now-start)/3600000)*10)/10;
+    var hh=Math.floor(hours), mm=Math.round((hours-hh)*60);
+    var ds=document.getElementById('ssDaySub'); if(ds) ds.textContent='You slept '+hh+'h '+mm+'m';
+  }
+  var ov=document.getElementById('sleepScreen');
+  if(ov.style.display!=='block'){
+    ov.classList.remove('sunrise');
+    ov.style.display='block';
+    updateSleepClock();
+    setTimeout(function(){ ov.classList.add('sunrise'); }, 60);
+  } else {
+    ov.classList.add('sunrise');
+  }
+  setTimeout(function(){
+    finishWakeUp();
+    hideSleepScreen();
+  }, 1900);
+}
+function toggleSleep(){
+  if(state.sleepStart){
+    wakeUpFromScreen();
+  } else {
+    state.sleepStart=new Date().toISOString();
+    save(); render();
+    showSleepScreen();
+  }
 }
 function renderSleep(){
   var btn=document.getElementById('sleepBtn'), st=document.getElementById('sleepStatus'), list=document.getElementById('sleepList'), sub=document.getElementById('sleepSub');
@@ -1459,6 +1597,7 @@ function renderSleep(){
 initSwipe();
 showWelcome();
 render();
+if(state.sleepStart){ showSleepScreen(); dismissWelcome(); }
 setInterval(function(){ applyDayTheme(); refreshTime(); }, 60000);
 document.addEventListener('visibilitychange', function(){ if(!document.hidden){ applyDayTheme(); refreshTime(); } });
 switchSection('tracker');
