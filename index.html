@@ -106,6 +106,7 @@
   .tlcard b{font-size:18px}
   .tlcard small{display:block;color:#8ea3c8;font-size:14px;margin-top:4px;line-height:1.35}
   .tlcard .mv{float:right;font-size:12px;background:#00000044;border-radius:6px;padding:2px 6px;margin-left:4px;color:#fff}
+  .tlcard .mv.cancelwo{background:#7f1d1d;border:1px solid #ef4444;color:#fecaca;padding:3px 8px}
   .tlicon{float:left;margin:2px 10px 0 0}
   .tlicon svg{width:22px;height:22px;display:block}
   .pill{float:right;font-size:12px;font-weight:700;background:rgba(255,255,255,.16);color:#fff;border-radius:99px;padding:4px 10px;margin-left:4px}
@@ -140,17 +141,19 @@
   <p id="welcomeSub" style="font-size:17px;color:#fff;margin:0 0 20px">Time to start the day right.</p>
   <p id="welcomeVerse" style="font-size:18px;line-height:1.5;color:#e9d5ff;margin:0 0 32px"></p>
   <button class="big" style="min-width:200px" onclick="dismissWelcome()">Enter</button>
-  <p style="font-size:12px;opacity:.55;margin:20px 0 0">v2.5.8 &middot; Progress Update</p>
+  <p style="font-size:12px;opacity:.55;margin:20px 0 0">v2.6 &middot; Calendar Update</p>
 </div>
 
 <div id="updatesOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);z-index:1000;flex-direction:column;align-items:center;justify-content:center;padding:32px;overflow-y:auto">
   <img src="icon.jpg" style="width:72px;height:72px;border-radius:18px;margin-bottom:14px" alt="Lock In icon">
   <h1 style="font-size:26px;margin:0 0 4px">Lock In</h1>
-  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 2.5.8</p>
+  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 2.6</p>
   <p style="font-size:14px;color:#8ea3c8;margin:0 0 24px">November 15, 2026</p>
   <p style="font-size:15px;letter-spacing:3px;color:#38bdf8;margin:0 0 16px">WHAT'S NEW</p>
   <div style="text-align:left;max-width:360px;width:100%">
-    <div style="margin-bottom:4px"><b style="font-size:16px">Photo barcode scan</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">If the live camera won't read a barcode, tap 'Take a photo of it instead' and snap a close-up of just the barcode.</p></div>
+    <div style="margin-bottom:4px"><b style="font-size:16px">Cancel workout</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Tap Cancel workout on a workout block in the Calendar and it moves to your next rest day.</p></div>
+    <div style="margin-bottom:4px"><b style="font-size:16px">Remove any block</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Every block on the calendar timeline now has a delete ×, not just the ones you add.</p></div>
+    <div style="margin-bottom:4px"><b style="font-size:16px">15-minute blocks</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Adding a block now has a 15-minute option, shorter than the old 30-minute minimum.</p></div>
   </div>
 <button class="big" style="min-width:200px;margin-top:24px" onclick="dismissUpdates()">Continue</button>
 </div>
@@ -268,7 +271,7 @@
   <input id="newBlockTitle" placeholder="What is it? e.g. Homework">
   <div class="row">
     <input id="newBlockTime" type="time" value="15:00">
-    <select id="newBlockDur"><option value="0.5">30 min</option><option value="1" selected>1 hour</option><option value="1.5">1.5 hours</option><option value="2">2 hours</option></select>
+    <select id="newBlockDur"><option value="0.25">15 min</option><option value="0.5">30 min</option><option value="1" selected>1 hour</option><option value="1.5">1.5 hours</option><option value="2">2 hours</option></select>
   </div>
   <button class="big" onclick="addCalEvent()">Add block to this day</button>
   <button class="secondary" style="margin-top:12px" onclick="resetCalendar()">Reset calendar to schedule</button>
@@ -398,7 +401,7 @@
   <ul id="historyList"></ul>
 </details>
 
-<p style="text-align:center;font-size:11px;color:#475569;margin:8px 0 0">v2.5.8 · Progress Update</p>
+<p style="text-align:center;font-size:11px;color:#475569;margin:8px 0 0">v2.6 · Calendar Update</p>
 
 <div class="alert" id="eatAlert">
   <b>Time to eat 🍽️</b>
@@ -433,7 +436,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
-var APP_VERSION='2.5.8';
+var APP_VERSION='2.6';
 var _needClear=true; try{_needClear=localStorage.getItem('lockin_cache_cleared_for')!==APP_VERSION;}catch(e){}
 if(_needClear){try{localStorage.setItem('lockin_cache_cleared_for',APP_VERSION);}catch(e){} if('serviceWorker' in navigator){try{navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}catch(e){} try{if(window.caches){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});});}}catch(e){}}}
 var LS_KEY = 'lockin_homescreen_v1';
@@ -604,7 +607,7 @@ function render(){
   var calLeft=plan.cal-cal;
   document.getElementById('nextMealToday').textContent=cal.toLocaleString()+' of '+plan.cal.toLocaleString()+' cal today • '+(calLeft>0?calLeft.toLocaleString()+' to go':'Goal hit ✓');
   document.getElementById('calBar').style.width=Math.min(100, Math.round(cal/plan.cal*100))+'%';
-  var todayPart=SCHEDULE[now.getDay()];
+  var todayPart=effectiveWorkout(now.getDay());
   var doneToday=wos.length>0;
   document.getElementById('workoutPartLabel').textContent=todayPart==='Rest' ? 'Rest day' : todayPart;
   document.getElementById('workoutSubLabel').textContent=todayPart==='Rest' ? 'Eat, sleep, recover.' : (doneToday ? 'Done ✓' : '45–60 min • Ready to start');
@@ -737,7 +740,8 @@ function renderDragCalendar(){
       nowInserted=true;
     }
     var arrows = ev.fixed ? '' : '<span class="mv" onclick="event.stopPropagation();moveCalEvent('+day+',\''+ev.id+'\',-1)">◀</span><span class="mv" onclick="event.stopPropagation();moveCalEvent('+day+',\''+ev.id+'\',1)">▶</span>';
-    var del = ev.id.indexOf('custom')===0 ? '<span class="mv" onclick="event.stopPropagation();deleteCalEvent('+day+',\''+ev.id+'\')">✕</span>' : '';
+    var del = ev.fixed ? '' : '<span class="mv" onclick="event.stopPropagation();deleteCalEvent('+day+',\''+ev.id+'\')">✕</span>';
+    var cancel = ev.id==='workout' ? '<button class="mv cancelwo" onclick="event.stopPropagation();cancelWorkout('+day+')">Cancel workout</button>' : '';
     var detail = fmtHour(ev.start)+' - '+fmtHour(ev.start+ev.dur);
     var mealsForDay = buildMeals(day, state.customTimes||{});
     if(ev.id.indexOf('meal')===0){
@@ -749,7 +753,7 @@ function renderDragCalendar(){
     var todayDate=new Date(); todayDate.setHours(0,0,0,0);
     var isDone = evDate<todayDate || (evDate.getTime()===todayDate.getTime() && ev.start+ev.dur<=nowH);
     var pill='<span class="pill'+(isDone?' done':'')+'">'+(isDone?'Done':'Upcoming')+'</span>';
-    html += '<div class="tlrow"><div class="tltime">'+fmtHour(ev.start)+'</div><div class="tlcard" data-day="'+day+'" data-id="'+ev.id+'">'+pill+'<span class="tlicon">'+evIcon(ev)+'</span><b>'+ev.title+'</b><small>'+detail+'</small>'+arrows+del+'</div></div>';
+    html += '<div class="tlrow"><div class="tltime">'+fmtHour(ev.start)+'</div><div class="tlcard" data-day="'+day+'" data-id="'+ev.id+'">'+pill+'<span class="tlicon">'+evIcon(ev)+'</span><b>'+ev.title+'</b><small>'+detail+'</small>'+cancel+arrows+del+'</div></div>';
   });
   if(isTodayView && !nowInserted){
     html+='<div class="tlrow"><div class="tltime now">Now • '+now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})+'</div><div class="nowline"></div></div>';
@@ -809,6 +813,34 @@ function moveCalEvent(day, id, dir){
     state.mealOverrides[nd][ev.title]=ev.start;
   }
   calSelectedDay = nd;
+  save(); render();
+}
+function effectiveWorkout(day){
+  if(!state.calEvents || !state.calEvents[day]) return SCHEDULE[day];
+  var evs=state.calEvents[day];
+  for(var i=0;i<evs.length;i++){ if(evs[i].id==='workout'){ return evs[i].title.replace('Workout - ',''); } }
+  return 'Rest';
+}
+function cancelWorkout(day){
+  var evs=state.calEvents[day]||[];
+  var idx=-1;
+  for(var i=0;i<evs.length;i++){ if(evs[i].id==='workout'){ idx=i; break; } }
+  if(idx<0) return;
+  var ev=evs.splice(idx,1)[0];
+  var target=-1;
+  for(var k=1;k<=7;k++){
+    var d=(day+k)%7;
+    if(SCHEDULE[d]!=='Rest') continue;
+    var hasWo=false;
+    var devs=state.calEvents[d]||[];
+    for(var j=0;j<devs.length;j++){ if(devs[j].id==='workout'){ hasWo=true; break; } }
+    if(!hasWo){ target=d; break; }
+  }
+  if(target<0){ for(var k2=1;k2<=7;k2++){ var d2=(day+k2)%7; if(SCHEDULE[d2]==='Rest'){ target=d2; break; } } }
+  if(target<0) return;
+  if(!state.calEvents[target]) state.calEvents[target]=[];
+  state.calEvents[target].push(ev);
+  calSelectedDay=target;
   save(); render();
 }
 function resetCalendar(){ state.calEvents = buildDefaultCalEvents(); save(); render(); }
@@ -874,7 +906,11 @@ function addCalEvent(){
   save(); render();
 }
 function deleteCalEvent(day, id){
-  state.calEvents[day]=state.calEvents[day].filter(function(x){return x.id!==id;});
+  var evs=state.calEvents[day]||[];
+  var ev=null;
+  for(var i=0;i<evs.length;i++){ if(evs[i].id===id){ ev=evs[i]; break; } }
+  if(ev && ev.id.indexOf('meal')===0 && state.mealOverrides && state.mealOverrides[day]) delete state.mealOverrides[day][ev.title];
+  state.calEvents[day]=evs.filter(function(x){return x.id!==id;});
   save(); render();
 }
 function saveTimes(){
