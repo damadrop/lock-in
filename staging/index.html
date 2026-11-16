@@ -2124,6 +2124,28 @@ function renderSleep(){
     if(Math.abs(dx)>70 && Math.abs(dx)>Math.abs(dy)*1.5){ closeWeightView(); }
   }, {passive:true});
 })();
+(function(){
+  var pv=document.getElementById('profileOverlay'); if(pv){
+    var sx=0, sy=0;
+    pv.addEventListener('touchstart', function(e){ if(e.touches.length!==1) return; sx=e.touches[0].clientX; sy=e.touches[0].clientY; }, {passive:true});
+    pv.addEventListener('touchend', function(e){
+      if(!sx && !sy) return;
+      var dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
+      sx=0; sy=0;
+      if(Math.abs(dx)>70 && Math.abs(dx)>Math.abs(dy)*1.5){ closeProfile(); }
+    }, {passive:true});
+  }
+  var sv=document.getElementById('settingsOverlay'); if(sv){
+    var sx2=0, sy2=0;
+    sv.addEventListener('touchstart', function(e){ if(e.touches.length!==1) return; sx2=e.touches[0].clientX; sy2=e.touches[0].clientY; }, {passive:true});
+    sv.addEventListener('touchend', function(e){
+      if(!sx2 && !sy2) return;
+      var dx=e.changedTouches[0].clientX-sx2, dy=e.changedTouches[0].clientY-sy2;
+      sx2=0; sy2=0;
+      if(Math.abs(dx)>70 && Math.abs(dx)>Math.abs(dy)*1.5){ closeSettings(); }
+    }, {passive:true});
+  }
+})();
 var __openOverlays={};
 function setOverlayOpen(name, open){
   __openOverlays[name]=!!open;
