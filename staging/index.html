@@ -18,7 +18,8 @@
   .pager{flex:1;min-height:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
   .pager::-webkit-scrollbar{display:none}
   .page{flex:0 0 100%;scroll-snap-align:start;overflow-y:auto;overflow-x:hidden;padding:0 16px calc(112px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
-  .apphead{margin:0 0 10px;padding:calc(8px + env(safe-area-inset-top)) 16px 0;flex:0 0 auto}
+  .apphead{margin:0 0 10px;padding:calc(8px + env(safe-area-inset-top)) 16px 0;flex:0 0 auto;text-align:center;max-height:140px;overflow:hidden;transition:max-height .35s ease,margin .35s ease,padding .35s ease}
+  .apphead.hidden{max-height:0;margin:0;padding:0}
   .apphead h1{font-size:21px;letter-spacing:-.3px}
   .apphead .sub{font-size:13px}
   .apphead #syncStatus{font-size:11px}
@@ -223,7 +224,6 @@
     <p style="font-size:11px;letter-spacing:3px;color:#38bdf8;margin:0 0 2px;font-weight:700">LOCK IN</p>
     <h1 id="pageTitle">Today, Friday</h1>
     <p class="sub" id="pageSub">Good afternoon, Lonj</p>
-    <p id="syncStatus" style="font-size:11px;color:#64748b;margin:4px 0 0">Sync: checking...</p>
   </div>
 </div>
 <div class="pager" id="pager">
@@ -703,7 +703,7 @@ function updateHeader(plan){
   var t=document.getElementById('pageTitle'), sub=document.getElementById('pageSub');
   if(!t || !sub) return;
   if(!plan) plan=calcPlan();
-  if(sec==='tracker'){ t.textContent='Today, '+dayName; sub.textContent=g+', Lonj • Goal: '+plan.cal.toLocaleString()+' cal/day'; }
+  if(sec==='tracker'){ t.textContent='Today, '+dayName; sub.textContent=g+', Lonj'; }
   else if(sec==='calendar'){ t.textContent='Calendar'; sub.textContent=dayName+', '+now.toLocaleDateString([], {month:'short', day:'numeric'})+' • '+g+', Lonj'; }
   else if(sec==='progress'){ t.textContent='Progress'; sub.textContent='Workouts, weight and sleep.'; }
   else { t.textContent='Streaks'; sub.textContent='One day at a time.'; }
@@ -993,8 +993,28 @@ function switchSection(name){
   if(alertEl && name!=='tracker') alertEl.style.display='none';
   var q=document.getElementById('streakQuote'); if(q) q.style.display = name==='streaks' ? 'block' : 'none';
   updateHeader();
+  syncHeaderToActivePage();
   if(name==='streaks'){ pickQuote(); renderStreaks(); }
   else { render(); }
+}
+var __lastScrollY=0;
+function syncHeaderForPage(p){
+  var head=document.querySelector('.apphead'); if(!head||!p) return;
+  var y=p.scrollTop;
+  if(y>60 && y>__lastScrollY){ head.classList.add('hidden'); }
+  else if(y<__lastScrollY || y<=60){ head.classList.remove('hidden'); }
+  __lastScrollY=y;
+}
+function syncHeaderToActivePage(){
+  var order=['tracker','calendar','progress','streaks'];
+  var i=order.indexOf(window.__section||'tracker'); if(i<0) i=0;
+  var pages=document.querySelectorAll('.page');
+  if(pages[i]) syncHeaderForPage(pages[i]);
+}
+function bindPageScroll(){
+  document.querySelectorAll('.page').forEach(function(p){
+    p.addEventListener('scroll', function(){ syncHeaderForPage(p); }, {passive:true});
+  });
 }
 function initPager(){
   var pg=document.getElementById('pager'); if(!pg) return;
@@ -1009,6 +1029,7 @@ function initPager(){
       window.__section=name;
       setActiveTab(name);
       updateHeader();
+      syncHeaderToActivePage();
       if(name==='streaks'){ pickQuote(); renderStreaks(); }
     }
     if(t) clearTimeout(t);
@@ -1729,6 +1750,7 @@ function renderSleep(){
 }
 
 initPager();
+bindPageScroll();
 showWelcome();
 render();
 if(state.sleepStart){ showSleepScreen(); dismissWelcome(); }
