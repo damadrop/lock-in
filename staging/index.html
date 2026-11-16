@@ -18,7 +18,10 @@
   .pager{flex:1;min-height:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
   .pager::-webkit-scrollbar{display:none}
   .page{flex:0 0 100%;scroll-snap-align:start;overflow-y:auto;overflow-x:hidden;padding:0 16px calc(112px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
-  .apphead{margin:0 0 20px;padding:calc(26px + env(safe-area-inset-top)) 16px 0;flex:0 0 auto}
+  .apphead{margin:0 0 10px;padding:calc(8px + env(safe-area-inset-top)) 16px 0;flex:0 0 auto}
+  .apphead h1{font-size:21px;letter-spacing:-.3px}
+  .apphead .sub{font-size:13px}
+  .apphead #syncStatus{font-size:11px}
   h1{font-size:30px;margin:0;letter-spacing:-.5px}
   h2{font-size:19px;margin:0 0 10px}
   .sub{color:#8ea3c8;margin:0}
@@ -50,7 +53,7 @@
   #mealList,#workoutList,#weightList{max-height:110px;overflow:auto}
   .card h2{margin-bottom:8px}
   @media(max-width:480px){
-    .apphead{padding:calc(26px + env(safe-area-inset-top)) 12px 0}
+    .apphead{padding:calc(8px + env(safe-area-inset-top)) 12px 0}
     .page{padding:0 12px calc(112px + env(safe-area-inset-bottom))}
     h1{font-size:26px}
     .card{padding:14px;margin-bottom:12px;border-radius:20px}
@@ -217,10 +220,10 @@
 
 <div class="apphead">
   <div class="apptitle">
-    <p style="font-size:13px;letter-spacing:3px;color:#38bdf8;margin:0 0 4px;font-weight:700">LOCK IN</p>
+    <p style="font-size:11px;letter-spacing:3px;color:#38bdf8;margin:0 0 2px;font-weight:700">LOCK IN</p>
     <h1 id="pageTitle">Today, Friday</h1>
     <p class="sub" id="pageSub">Good afternoon, Lonj</p>
-    <p id="syncStatus" style="font-size:12px;color:#64748b;margin:6px 0 0">Sync: checking...</p>
+    <p id="syncStatus" style="font-size:11px;color:#64748b;margin:4px 0 0">Sync: checking...</p>
   </div>
 </div>
 <div class="pager" id="pager">
@@ -998,19 +1001,18 @@ function initPager(){
   var order=['tracker','calendar','progress','streaks'];
   var t=null;
   pg.addEventListener('scroll', function(){
+    var w=pg.clientWidth||1;
+    var i=Math.round(pg.scrollLeft/w);
+    i=Math.max(0,Math.min(order.length-1,i));
+    var name=order[i];
+    if(name!==(window.__section||'tracker')){
+      window.__section=name;
+      setActiveTab(name);
+      updateHeader();
+      if(name==='streaks'){ pickQuote(); renderStreaks(); }
+    }
     if(t) clearTimeout(t);
-    t=setTimeout(function(){
-      var w=pg.clientWidth||1;
-      var i=Math.round(pg.scrollLeft/w);
-      i=Math.max(0,Math.min(order.length-1,i));
-      var name=order[i];
-      if(name!==(window.__section||'tracker')){
-        window.__section=name;
-        setActiveTab(name);
-        updateHeader();
-        if(name==='streaks'){ pickQuote(); renderStreaks(); } else { render(); }
-      }
-    },90);
+    t=setTimeout(function(){ render(); },90);
   }, {passive:true});
 }
 var SCHOOL_PERIODS = {
