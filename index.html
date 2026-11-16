@@ -140,17 +140,17 @@
   <p id="welcomeSub" style="font-size:17px;color:#fff;margin:0 0 20px">Time to start the day right.</p>
   <p id="welcomeVerse" style="font-size:18px;line-height:1.5;color:#e9d5ff;margin:0 0 32px"></p>
   <button class="big" style="min-width:200px" onclick="dismissWelcome()">Enter</button>
-  <p style="font-size:12px;opacity:.55;margin:20px 0 0">v2.5.5 &middot; Progress Update</p>
+  <p style="font-size:12px;opacity:.55;margin:20px 0 0">v2.5.6 &middot; Progress Update</p>
 </div>
 
 <div id="updatesOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);z-index:1000;flex-direction:column;align-items:center;justify-content:center;padding:32px;overflow-y:auto">
   <img src="icon.jpg" style="width:72px;height:72px;border-radius:18px;margin-bottom:14px" alt="Lock In icon">
   <h1 style="font-size:26px;margin:0 0 4px">Lock In</h1>
-  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 2.5.5</p>
+  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 2.5.6</p>
   <p style="font-size:14px;color:#8ea3c8;margin:0 0 24px">November 15, 2026</p>
   <p style="font-size:15px;letter-spacing:3px;color:#38bdf8;margin:0 0 16px">WHAT'S NEW</p>
   <div style="text-align:left;max-width:360px;width:100%">
-    <div style="margin-bottom:4px"><b style="font-size:16px">Scanner works every time</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Fixed the bug where it scanned once and then stopped. It now fully resets between scans, so you can scan one thing after another.</p></div>
+    <div style="margin-bottom:4px"><b style="font-size:16px">More barcode types</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">The scanner now reads a few more barcode types it was missing, so more products should scan.</p></div>
   </div>
 <button class="big" style="min-width:200px;margin-top:24px" onclick="dismissUpdates()">Continue</button>
 </div>
@@ -396,7 +396,7 @@
   <ul id="historyList"></ul>
 </details>
 
-<p style="text-align:center;font-size:11px;color:#475569;margin:8px 0 0">v2.5.5 · Progress Update</p>
+<p style="text-align:center;font-size:11px;color:#475569;margin:8px 0 0">v2.5.6 · Progress Update</p>
 
 <div class="alert" id="eatAlert">
   <b>Time to eat 🍽️</b>
@@ -431,7 +431,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
-var APP_VERSION='2.5.5';
+var APP_VERSION='2.5.6';
 var _needClear=true; try{_needClear=localStorage.getItem('lockin_cache_cleared_for')!==APP_VERSION;}catch(e){}
 if(_needClear){try{localStorage.setItem('lockin_cache_cleared_for',APP_VERSION);}catch(e){} if('serviceWorker' in navigator){try{navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}catch(e){} try{if(window.caches){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});});}}catch(e){}}}
 var LS_KEY = 'lockin_homescreen_v1';
@@ -914,7 +914,7 @@ function startScan(){
     setScanStatus('Opening back camera…');
     setTimeout(function(){if(gen===__scanGen&&!__scanOn){setScanStatus('Still waiting on the camera — if a permission popup appeared, tap Allow. Or type the number below.');}},8000);
     var formats=[];
-    try{formats=[Html5QrcodeSupportedFormats.EAN_13,Html5QrcodeSupportedFormats.EAN_8,Html5QrcodeSupportedFormats.UPC_A,Html5QrcodeSupportedFormats.UPC_E,Html5QrcodeSupportedFormats.CODE_128,Html5QrcodeSupportedFormats.CODE_39,Html5QrcodeSupportedFormats.ITF,Html5QrcodeSupportedFormats.QR_CODE];}catch(e){}
+    try{formats=[Html5QrcodeSupportedFormats.EAN_13,Html5QrcodeSupportedFormats.EAN_8,Html5QrcodeSupportedFormats.UPC_A,Html5QrcodeSupportedFormats.UPC_E,Html5QrcodeSupportedFormats.CODE_128,Html5QrcodeSupportedFormats.CODE_39,Html5QrcodeSupportedFormats.CODE_93,Html5QrcodeSupportedFormats.CODABAR,Html5QrcodeSupportedFormats.ITF,Html5QrcodeSupportedFormats.QR_CODE,Html5QrcodeSupportedFormats.DATA_MATRIX,Html5QrcodeSupportedFormats.RSS_14,Html5QrcodeSupportedFormats.RSS_EXPANDED,Html5QrcodeSupportedFormats.UPC_EAN_EXTENSION];}catch(e){}
     var cfg={fps:15,qrbox:function(vw,vh){return {width:Math.floor(vw*0.9),height:Math.floor(vh*0.55)};},formatsToSupport:formats};
     var sc=__scanner;
     var rd=document.getElementById('reader'); if(rd){rd.innerHTML='';}
