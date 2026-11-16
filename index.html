@@ -941,10 +941,10 @@ function render(){
     else{
       var expected=Math.round(plan.cal*lastPassed.cum), behind=expected-cal;
       if(behind>0){
-        var ph=pct<0.25?'Just getting started — ':pct<0.75?"You're halfway there — ":'Almost there — ';
-        paceEl.innerHTML='<div style="font-weight:700">'+ph+left.toLocaleString()+' cal remaining today</div><div style="color:var(--accent);font-weight:700">Catch up with '+(nextM?nextM.name:'a snack')+'</div>';
+        paceEl.innerHTML='<div style="font-weight:700">You are '+behind.toLocaleString()+' cal behind schedule</div><div style="color:var(--accent);font-weight:700">'+left.toLocaleString()+' cal remaining today — catch up with '+(nextM?nextM.name:'a snack')+'</div>';
       }
-      else { paceEl.innerHTML='<div style="font-weight:700">On pace ✓ — you are good for now.</div><div style="color:var(--accent);font-weight:700">Keep it up.</div>'; }
+      else if(behind<0){ paceEl.innerHTML='<div style="font-weight:700">You are '+(-behind).toLocaleString()+' cal ahead ✓</div><div style="color:var(--accent);font-weight:700">'+left.toLocaleString()+' cal remaining today. Keep it up.</div>'; }
+      else { paceEl.innerHTML='<div style="font-weight:700">Right on pace ✓</div><div style="color:var(--accent);font-weight:700">'+left.toLocaleString()+' cal remaining today. Keep it up.</div>'; }
     }
   }
   var proToday=meals.reduce(function(a,m){return a+(m.protein||0);},0);
