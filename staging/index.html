@@ -477,6 +477,7 @@
     <div id="wvTrack" style="margin-top:8px"></div>
     <p class="small" id="wvTrackNext" style="margin:14px 0 0">—</p>
     <p class="small" id="wvTrackPace" style="margin:4px 0 0;color:#7dd3fc">—</p>
+    <div id="wvTrackDates" style="margin-top:10px"></div>
   </div>
   <h2 style="margin-top:18px">Entries</h2>
   <ul id="wvEntries"></ul>
@@ -1330,12 +1331,37 @@ function renderTrack(){
   var next=null; [120,125,130].forEach(function(m){ if(next===null && cur<m) next=m; });
   var nextEl=document.getElementById('wvTrackNext');
   if(nextEl) nextEl.textContent=next?('Next: '+next+' lb — '+(Math.round((next-cur)*10)/10)+' lb away'):'You hit 130 lb. Nice.';
+  // adaptive pace: from your actual weigh-ins, so the dates move as you do.
+  // pace = (last weight - start weight) / weeks from plan start to last weigh-in.
+  // If there is not enough data, or you are not gaining, fall back to the plan pace (0.5 lb/week).
+  var PLAN_START='2026-11-01', PLAN_PACE=0.5;
+  function dateFrom(s){var p=String(s).split('-'); return new Date(+p[0],+p[1]-1,+p[2]);}
+  var lastW=state.weights.length?state.weights[state.weights.length-1]:null;
+  var pace=null, paceKind='plan';
+  if(lastW){
+    var weeks=(dateFrom(lastW.date)-dateFrom(PLAN_START))/86400000/7;
+    if(weeks>=1) pace=(lastW.lbs-START_WT)/weeks;
+  }
+  if(pace!==null && pace>0) paceKind='real';
+  else if(pace!==null && pace<=0) paceKind='nogain';
+  if(paceKind!=='real') pace=PLAN_PACE;
+  var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  function estDate(target){
+    if(cur>=target) return 'reached';
+    var d=new Date(); d.setDate(d.getDate()+Math.round((target-cur)/pace*7));
+    return 'around '+months[d.getMonth()]+' '+d.getFullYear();
+  }
   var paceEl=document.getElementById('wvTrackPace');
   if(paceEl){
-    var weeksLeft=(GOAL_WT-cur)/0.5;
-    var d=new Date(); d.setDate(d.getDate()+Math.round(weeksLeft*7));
-    var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-    paceEl.textContent='At 0.5 lb/week, you\'ll reach 130 around '+months[d.getMonth()]+' '+d.getFullYear()+' — an estimate, not a promise.';
+    if(paceKind==='real') paceEl.textContent='You are gaining '+(Math.round(pace*10)/10)+' lb/week from your weigh-ins. These dates are estimates — they move as you do.';
+    else if(paceKind==='nogain') paceEl.textContent='You are not gaining right now, so these dates use your plan pace (0.5 lb/week). Hit your calories and they will pull closer.';
+    else paceEl.textContent='Plan pace is 0.5 lb/week (from your 2,900 cal target). Weigh in and these dates will follow your real pace.';
+  }
+  var datesEl=document.getElementById('wvTrackDates');
+  if(datesEl){
+    datesEl.innerHTML=[120,125,130].map(function(m){
+      return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-top:1px solid rgba(255,255,255,.08)"><span><b>'+m+' lb</b></span><span style="color:#7dd3fc">'+estDate(m)+'</span></div>';
+    }).join('');
   }
 }
 function addWorkout(){
