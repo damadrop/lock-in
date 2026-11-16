@@ -99,13 +99,17 @@
   .calweeknames{display:flex;justify-content:space-between;margin:0 0 8px}
   .calweeknames span{width:44px;text-align:center;font-size:16px;font-weight:700}
   .calweekcircles{display:flex;justify-content:space-between}
-  .calweekcircles button{width:44px;height:44px;border-radius:50%;padding:0;font-size:18px;font-weight:800;background:transparent;color:#7dd3fc;border:2px solid rgba(255,255,255,.18);box-shadow:none}
-  .calweekcircles button.done{background:#38bdf8;border-color:#38bdf8;color:#082f49}
-  .calweekcircles button.on{border-color:#38bdf8;color:#38bdf8}
-  .calweekcircles button.on.done{background:#38bdf8;color:#082f49}
+  .calweekcircles button{width:46px;height:46px;border-radius:50%;padding:0;font-size:13px;font-weight:800;background:transparent;color:#7dd3fc;border:2px solid rgba(255,255,255,.18);box-shadow:none}
+  .calweekcircles button.done{border-color:#38bdf8;color:#38bdf8}
+  .calweekcircles button.on{background:#38bdf8;border-color:#38bdf8;color:#082f49}
+  .calweekcircles button.on.done{background:#38bdf8;border-color:#38bdf8;color:#082f49}
   .schedhead{font-size:22px;margin:22px 0 4px}
   .schedhead::after{content:'';display:block;width:52px;height:4px;border-radius:99px;background:#38bdf8;margin-top:8px}
-  .tl{position:relative;margin-top:14px}
+  .tl{position:relative;margin-top:14px;padding-left:22px}
+  .tl::before{content:'';position:absolute;left:7px;top:10px;bottom:10px;border-left:2px dotted rgba(125,211,252,.45)}
+  .tlcard .tlt{color:#38bdf8;font-weight:800;font-size:17px;margin-right:8px}
+  .nowrow{align-items:center}
+  .nowlabel{color:#ef4444;font-weight:800;font-size:14px;flex:0 0 auto;margin-right:8px}
   .tl::before{content:'';position:absolute;left:64px;top:10px;bottom:10px;width:2px;background:rgba(125,211,252,.18)}
   .tlrow{display:flex;gap:12px;margin:0 0 14px;position:relative}
   .tltime{width:58px;flex:0 0 58px;text-align:right;font-size:13px;color:#8ea3c8;padding-top:16px}
@@ -122,7 +126,7 @@
   .pill.done{background:#bae6fd;color:#0c4a6e}
   .nowline{flex:1;height:2px;background:#ef4444;align-self:center;position:relative}
   .nowline::before{content:'';position:absolute;left:-6px;top:-5px;width:12px;height:12px;border-radius:50%;background:#ef4444}
-  .tabbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;justify-content:center;background:rgba(10,17,40,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(125,211,252,.15);padding:8px 12px calc(10px + env(safe-area-inset-bottom))}
+  .tabbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:50;justify-content:center;background:rgba(10,17,40,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(125,211,252,.15);padding:8px 12px calc(10px + env(safe-area-inset-bottom))}
   .tabbar button{flex:1;max-width:180px;background:transparent;box-shadow:none;color:#64748b;font-size:13px;font-weight:600;padding:8px 4px;border-radius:16px;display:flex;flex-direction:column;align-items:center;gap:4px}
   .tabbar button svg{width:24px;height:24px}
   .tabbar button.on{background:#bae6fd;color:#0c4a6e}
@@ -145,6 +149,19 @@
   .gbig{font-size:23px;font-weight:800;line-height:1.15;letter-spacing:-.5px}
   .gsub{font-size:13px;color:#8ea3c8;line-height:1.35}
   .gblue{color:#38bdf8;font-size:15px;font-weight:700;line-height:1.3}
+  .pcard{padding:20px}
+  .pcard-top{display:flex;gap:16px;align-items:flex-start}
+  .pcard-icon{flex:0 0 64px;width:64px;height:64px;border-radius:50%;background:#38bdf8;display:flex;align-items:center;justify-content:center}
+  .pcard-icon svg{width:32px;height:32px}
+  .pcard-body{flex:1;min-width:0}
+  .pcard-title{font-size:22px;font-weight:700}
+  .pcard-big{font-size:34px;font-weight:800;letter-spacing:-1px;line-height:1.1;margin-top:2px}
+  .pcard-sub{font-size:15px;color:#8ea3c8;margin-top:6px;line-height:1.4}
+  .pcard-lines{margin-top:10px;font-size:16px;line-height:1.7}
+  .pcard-lines .ok{color:#38bdf8;font-weight:700}
+  .pcard-detail{margin-top:16px;border-top:1px solid rgba(255,255,255,.08);padding-top:16px}
+  .pcard .bar{margin:10px 0 0}
+  .chev{font-size:26px;color:#64748b;align-self:center}
   .gcard .bar{margin:4px 0}
   .gcard .pillbtn{align-self:flex-start;margin-top:2px}
   .gcard .stepper{align-self:flex-start}
@@ -156,6 +173,8 @@
   #foodCard{position:fixed;left:0;right:0;bottom:0;z-index:950;max-height:86dvh;overflow-y:auto;border-radius:24px 24px 0 0;padding:18px 16px calc(24px + env(safe-area-inset-bottom));margin:0;box-shadow:0 -12px 40px rgba(0,0,0,.55);animation:sheetUp .32s cubic-bezier(.22,.8,.3,1)}
   @keyframes sheetUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
   #foodBackdrop{position:fixed;inset:0;background:rgba(2,6,23,.6);z-index:940;display:none}
+  #calEditSheet{position:fixed;left:0;right:0;bottom:0;z-index:950;max-height:86dvh;overflow-y:auto;border-radius:24px 24px 0 0;padding:18px 16px calc(24px + env(safe-area-inset-bottom));margin:0;box-shadow:0 -12px 40px rgba(0,0,0,.55);animation:sheetUp .32s cubic-bezier(.22,.8,.3,1)}
+  #calEditBackdrop{position:fixed;inset:0;background:rgba(2,6,23,.6);z-index:940;display:none}
   .ringwrap{position:relative;height:296px;max-width:360px;margin:4px auto 0}
   .ringwrap .bigring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:220px;height:220px}
   .bigring:active{transform:translate(-50%,-50%) scale(.985)}
@@ -311,6 +330,24 @@
 </div>
 <p id="trackerFoot" style="text-align:center;font-size:13px;color:#64748b;margin:2px 0 4px">—</p>
 <div id="foodBackdrop" onclick="closeFood()"></div>
+<div id="calEditBackdrop" onclick="closeCalEdit()"></div>
+<div class="card" id="calEditSheet" style="display:none">
+  <button onclick="closeCalEdit()" style="position:absolute;top:12px;right:14px;background:rgba(255,255,255,.08);border:none;border-radius:50%;width:32px;height:32px;font-size:18px;color:#e2e8f0;padding:0;box-shadow:none;line-height:1">×</button>
+  <h2>Edit block</h2>
+  <label style="font-size:14px;color:#ddd">Title</label>
+  <input id="calEditTitle" placeholder="What is it?">
+  <div class="row">
+    <div style="flex:1"><label style="font-size:14px;color:#ddd">Start time</label><input id="calEditTime" type="time"></div>
+    <div style="flex:1"><label style="font-size:14px;color:#ddd">Length</label><select id="calEditDur"><option value="0.25">15 min</option><option value="0.5">30 min</option><option value="1">1 hour</option><option value="1.5">1.5 hours</option><option value="2">2 hours</option></select></div>
+  </div>
+  <label style="font-size:14px;color:#ddd">Day</label>
+  <select id="calEditDay"><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option><option value="0">Sunday</option></select>
+  <div class="row" style="margin-top:14px">
+    <button class="big" style="flex:1" onclick="saveCalEdit()">Save</button>
+    <button class="danger" style="flex:1" onclick="deleteCalEdit()">Delete</button>
+  </div>
+  <button class="secondary" id="calEditCancelWo" style="margin-top:10px;display:none" onclick="cancelWorkoutFromEdit()">Cancel workout</button>
+</div>
 <div class="card" id="foodCard" style="display:none">
   <button onclick="closeFood()" style="position:absolute;top:12px;right:14px;background:rgba(255,255,255,.08);border:none;border-radius:50%;width:32px;height:32px;font-size:18px;color:#e2e8f0;padding:0;box-shadow:none;line-height:1">×</button>
   <h2>Add food</h2>
@@ -382,61 +419,77 @@
   <button class="big" onclick="saveTimes()">Save times</button>
 </details>
 <div class="card" id="calendarSection">
-  <div class="weekhead"><h2>This Week</h2><span id="calMonth" style="color:#8ea3c8;font-size:16px">—</span></div>
-  <div class="calweeknames"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+  <div id="calDateLine" style="text-align:center;color:#38bdf8;font-size:18px;font-weight:700;margin-bottom:12px">—</div>
   <div class="calweekcircles" id="calWeekCircles"></div>
-  <div class="weekletters"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
   <h2 class="schedhead" id="schedHead">Today's schedule</h2>
   <div class="tl" id="timelineList"></div>
   <ul id="calDetailList"></ul>
-  <h2 style="margin-top:14px">Add a block</h2>
-  <input id="newBlockTitle" placeholder="What is it? e.g. Homework">
-  <div class="row">
-    <input id="newBlockTime" type="time" value="15:00">
-    <select id="newBlockDur"><option value="0.25">15 min</option><option value="0.5">30 min</option><option value="1" selected>1 hour</option><option value="1.5">1.5 hours</option><option value="2">2 hours</option></select>
+  <div style="text-align:center;margin-top:16px"><button onclick="toggleAddBlock()" style="background:transparent;border:1.5px solid #38bdf8;color:#38bdf8;border-radius:999px;padding:10px 22px;font-size:16px;font-weight:700;box-shadow:none">+ Add a block</button></div>
+  <div id="addBlockForm" style="display:none;margin-top:14px">
+    <input id="newBlockTitle" placeholder="What is it? e.g. Homework">
+    <div class="row">
+      <input id="newBlockTime" type="time" value="15:00">
+      <select id="newBlockDur"><option value="0.25">15 min</option><option value="0.5">30 min</option><option value="1" selected>1 hour</option><option value="1.5">1.5 hours</option><option value="2">2 hours</option></select>
+    </div>
+    <button class="big" onclick="addCalEvent()">Add block to this day</button>
   </div>
-  <button class="big" onclick="addCalEvent()">Add block to this day</button>
   <button class="secondary" style="margin-top:12px" onclick="resetCalendar()">Reset calendar to schedule</button>
 </div>
 </div>
 <div class="page" id="page-progress">
-<div class="card" id="workoutLogCard">
-  <h2>Workout log</h2>
-  <select id="workoutPart">
-    <option>Legs</option><option>Upper Body</option><option>Core</option><option>Cardio</option>
-  </select>
-  <input id="workoutName" placeholder="Exercise (optional)" autocomplete="off">
-  <button class="big" onclick="addWorkout()">Add workout</button>
-  <ul id="workoutList"></ul>
-</div>
-<div class="card" id="weightStepsCard">
-  <h2>Weight / Steps</h2>
-  <div class="row">
-    <input id="weightVal" type="number" inputmode="decimal" placeholder="Weight lb">
-    <input id="stepsVal" type="number" inputmode="numeric" placeholder="Steps">
+<div class="card pcard" id="workoutLogCard">
+  <div class="pcard-top">
+    <div class="pcard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#082f49" stroke-width="2" stroke-linecap="round"><path d="M7 8v8M4 10v4M17 8v8M20 10v4M7 12h10"/></svg></div>
+    <div class="pcard-body">
+      <div class="pcard-title">Workout log</div>
+      <div class="pcard-big" id="workoutWeekCount">0 of 4 this week</div>
+      <div class="pcard-lines" id="workoutWeekLines"></div>
+    </div>
   </div>
-  <button class="big" onclick="saveOther()">Save</button>
-  <ul id="weightList"></ul>
-  <p class="small" id="stepsLabel" style="margin-bottom:0"></p>
-</div>
-<div class="card dash" id="sleepCard">
-  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13A8 8 0 1 1 11 4a6.5 6.5 0 0 0 9 9z"/></svg></div>
-  <div class="dashbody">
-    <div class="dashlabel">Sleep</div>
-    <div class="dashbig" id="sleepStatus">No sleep logged yet.</div>
-    <div class="dashsub" id="sleepSub">Tap Go to sleep at bedtime.</div>
+  <div class="pcard-detail">
+    <select id="workoutPart">
+      <option>Legs</option><option>Upper Body</option><option>Core</option><option>Cardio</option>
+    </select>
+    <input id="workoutName" placeholder="Exercise (optional)" autocomplete="off">
+    <button class="big" onclick="addWorkout()">Add workout</button>
+    <ul id="workoutList"></ul>
   </div>
-  <button class="pillbtn" id="sleepBtn" onclick="toggleSleep()">Go to sleep</button>
 </div>
-<ul id="sleepList" style="margin:-6px 0 14px"></ul>
-<div class="card dash pressable" id="weightCard" onclick="openWeightView()">
-  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7a3 3 0 0 1 6 0"/><path d="M5.5 7h13l1.8 5.2a6.5 6.5 0 0 1-12.6 0z"/><path d="M12 12v3"/><path d="M10 15h4"/></svg></div>
-  <div class="dashbody">
-    <div class="dashbig" id="weightTitle">Weight • 114 lb → 130 lb goal</div>
-    <div class="bar"><i id="weightBar" style="width:0%"></i></div>
-    <div class="dashsub" id="weightSub">—</div>
+<div class="card pcard" id="weightCard">
+  <div class="pcard-top pressable" onclick="openWeightView()">
+    <div class="pcard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#082f49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7a3 3 0 0 1 6 0"/><path d="M5.5 7h13l1.8 5.2a6.5 6.5 0 0 1-12.6 0z"/><path d="M12 12v3"/><path d="M10 15h4"/></svg></div>
+    <div class="pcard-body">
+      <div class="pcard-title">Weight</div>
+      <div class="pcard-big" id="weightTitle">—</div>
+      <div class="pcard-sub" id="weightSub">—</div>
+      <div class="bar"><i id="weightBar" style="width:0%"></i></div>
+    </div>
+    <div class="chev">›</div>
   </div>
-  <div class="chev">›</div>
+  <div class="pcard-detail">
+    <div class="row">
+      <input id="weightVal" type="number" inputmode="decimal" placeholder="Weight lb">
+      <input id="stepsVal" type="number" inputmode="numeric" placeholder="Steps">
+    </div>
+    <button class="big" onclick="saveOther()">Save</button>
+    <ul id="weightList"></ul>
+    <p class="small" id="stepsLabel" style="margin-bottom:0"></p>
+  </div>
+</div>
+<div class="card pcard" id="sleepCard">
+  <div class="pcard-top">
+    <div class="pcard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#082f49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13A8 8 0 1 1 11 4a6.5 6.5 0 0 0 9 9z"/></svg></div>
+    <div class="pcard-body">
+      <div class="pcard-title">Sleep</div>
+      <div class="pcard-big" id="sleepStatus">No sleep logged yet.</div>
+      <div class="pcard-sub" id="sleepSub">Tap Go to sleep at bedtime.</div>
+      <div class="pcard-sub" id="sleepAvg">—</div>
+    </div>
+  </div>
+  <div class="pcard-detail">
+    <button class="pillbtn" id="sleepBtn" onclick="toggleSleep()">Go to sleep</button>
+    <ul id="sleepList"></ul>
+  </div>
 </div>
 <div class="card" id="weekSummaryCard">
   <h2>This week</h2>
@@ -760,7 +813,8 @@ function render(){
   var wPct=document.getElementById('waterPct'); if(wPct) wPct.textContent=Math.min(100,Math.round(wcount/10*100))+'% of daily goal';
   var lastW=state.weights[state.weights.length-1];
   var wv=lastW?lastW.lbs:plan.wt;
-  document.getElementById('weightSub').textContent=wv+' lb now • +'+(Math.round((wv-START_WT)*10)/10)+' lb • '+(Math.round((GOAL_WT-wv)*10)/10)+' lb to goal';
+  var wT=document.getElementById('weightTitle'); if(wT) wT.textContent=wv+' lb';
+  document.getElementById('weightSub').textContent='Goal '+GOAL_WT+' lb • '+(Math.round((GOAL_WT-wv)*10)/10)+' lb to go';
   var wBar=document.getElementById('weightBar');
   if(wBar) wBar.style.width=Math.max(0,Math.min(100,Math.round((wv-START_WT)/(GOAL_WT-START_WT)*100)))+'%';
   var wTF=document.getElementById('weightTitleF');
@@ -770,6 +824,7 @@ function render(){
   var tf=document.getElementById('trackerFoot');
   if(tf){ var dn=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][now.getDay()], mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][now.getMonth()]; tf.textContent=dn+', '+mn+' '+now.getDate()+' • Updated now'; }
   renderCalArc(cal, plan);
+  renderWorkoutWeek();
   var paceEl=document.getElementById('paceLine');
   if(paceEl){
     var left=plan.cal-cal, pct=cal/plan.cal;
@@ -870,14 +925,14 @@ function renderDragCalendar(){
       var dIdx=(i+1)%7;
       var hasWo=state.workouts.some(function(w){return w.date===weekDateKey(dIdx);});
       var isToday=dIdx===todayIdx;
-      ch+='<button class="'+(dIdx===day?'on':'')+(hasWo?' done':'')+'" onclick="calSelectedDay='+dIdx+';render();">'+(hasWo?'✓':(isToday?names[i].charAt(0):''))+'</button>';
+      ch+='<button class="'+(dIdx===day?'on':'')+(hasWo?' done':'')+'" onclick="calSelectedDay='+dIdx+';render();">'+names[i]+'</button>';
     }
     circles.innerHTML=ch;
   }
-  var monthEl=document.getElementById('calMonth');
-  if(monthEl) monthEl.textContent=now.toLocaleDateString([], {month:'short', year:'numeric'});
+  var dl=document.getElementById('calDateLine');
+  if(dl) dl.textContent=DAYNAMES[todayIdx]+', '+now.toLocaleDateString([], {month:'short', day:'numeric'});
   var headEl=document.getElementById('schedHead');
-  if(headEl) headEl.textContent=(day===todayIdx ? "Today's schedule" : "Schedule")+' • '+DAYNAMES[day];
+  if(headEl) headEl.textContent=(day===todayIdx ? "Today's schedule" : DAYNAMES[day]+"'s schedule");
   var evs=((state.calEvents && state.calEvents[day]) || []).slice().sort(function(a,b){return a.start-b.start;});
   var nowH=now.getHours()+now.getMinutes()/60;
   var isTodayView = day===todayIdx;
@@ -890,12 +945,9 @@ function renderDragCalendar(){
   }
   evs.forEach(function(ev){
     if(isTodayView && !nowInserted && ev.start>nowH){
-      html+='<div class="tlrow"><div class="tltime now">Now • '+now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})+'</div><div class="nowline"></div></div>';
+      html+='<div class="tlrow nowrow"><span class="nowlabel">now</span><div class="nowline"></div></div>';
       nowInserted=true;
     }
-    var arrows = ev.fixed ? '' : '<span class="mv" onclick="event.stopPropagation();moveCalEvent('+day+',\''+ev.id+'\',-1)">◀</span><span class="mv" onclick="event.stopPropagation();moveCalEvent('+day+',\''+ev.id+'\',1)">▶</span>';
-    var del = ev.fixed ? '' : '<span class="mv" onclick="event.stopPropagation();deleteCalEvent('+day+',\''+ev.id+'\')">✕</span>';
-    var cancel = ev.id==='workout' ? '<button class="mv cancelwo" onclick="event.stopPropagation();cancelWorkout('+day+')">Cancel workout</button>' : '';
     var detail = fmtHour(ev.start)+' - '+fmtHour(ev.start+ev.dur);
     var mealsForDay = buildMeals(day, state.customTimes||{});
     if(ev.id.indexOf('meal')===0){
@@ -907,10 +959,10 @@ function renderDragCalendar(){
     var todayDate=new Date(); todayDate.setHours(0,0,0,0);
     var isDone = evDate<todayDate || (evDate.getTime()===todayDate.getTime() && ev.start+ev.dur<=nowH);
     var pill='<span class="pill'+(isDone?' done':'')+'">'+(isDone?'Done':'Upcoming')+'</span>';
-    html += '<div class="tlrow"><div class="tltime">'+fmtHour(ev.start)+'</div><div class="tlcard" data-day="'+day+'" data-id="'+ev.id+'">'+pill+'<span class="tlicon">'+evIcon(ev)+'</span><b>'+ev.title+'</b><small>'+detail+'</small>'+cancel+arrows+del+'</div></div>';
+    html += '<div class="tlrow"><div class="tlcard" data-day="'+day+'" data-id="'+ev.id+'"><span class="tlt">'+fmtHour(ev.start)+'</span><b>'+ev.title+'</b><small>'+detail+'</small></div></div>';
   });
   if(isTodayView && !nowInserted){
-    html+='<div class="tlrow"><div class="tltime now">Now • '+now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})+'</div><div class="nowline"></div></div>';
+    html+='<div class="tlrow nowrow"><span class="nowlabel">now</span><div class="nowline"></div></div>';
   }
   var plan0=calcPlan();
   var detailHtml = '';
@@ -919,10 +971,9 @@ function renderDragCalendar(){
   document.getElementById('calDetailList').innerHTML = detailHtml;
   document.getElementById('timelineList').innerHTML = html;
   document.querySelectorAll('#timelineList .tlcard').forEach(function(el){
-    var startY=0, origStart=0, dragging=false;
+    var startX=0, startY=0, origStart=0, dragging=false, mode=null;
     el.addEventListener('pointerdown', function(e){
-      if(e.target.classList.contains('mv')) return;
-      dragging=true; startY=e.clientY;
+      dragging=true; mode=null; startX=e.clientX; startY=e.clientY;
       var ev = state.calEvents[day].find(function(x){return x.id===el.getAttribute('data-id');});
       if(ev && ev.fixed) { dragging=false; return; }
       origStart = ev ? ev.start : 0;
@@ -930,29 +981,105 @@ function renderDragCalendar(){
     });
     el.addEventListener('pointermove', function(e){
       if(!dragging) return;
-      var deltaHours = (e.clientY-startY)/45;
-      var newStart = Math.round((origStart+deltaHours)*2)/2;
-      if(newStart<6) newStart=6; if(newStart>21.5) newStart=21.5;
-      el.style.transform='translateY('+(e.clientY-startY)+'px)';
-      el.querySelector('small').textContent = fmtHour(newStart)+' — drag to move';
-      el._newStart = newStart;
+      var dx=e.clientX-startX, dy=e.clientY-startY;
+      if(!mode){
+        if(Math.abs(dx)>10 || Math.abs(dy)>10){ mode = Math.abs(dx)>Math.abs(dy) ? 'x' : 'y'; }
+        else return;
+      }
+      if(mode==='x'){
+        if(dx>0) dx=0;
+        el.style.transform='translateX('+dx+'px)';
+        el.style.opacity = dx<-40 ? '0.55' : '1';
+        el._swipeX = dx;
+      } else {
+        var deltaHours = dy/45;
+        var newStart = Math.round((origStart+deltaHours)*2)/2;
+        if(newStart<6) newStart=6; if(newStart>21.5) newStart=21.5;
+        el.style.transform='translateY('+dy+'px)';
+        el.querySelector('small').textContent = fmtHour(newStart)+' — drag to move';
+        el._newStart = newStart;
+      }
     });
     el.addEventListener('pointerup', function(e){
       if(!dragging) return; dragging=false;
-      el.style.transform='';
-      if(typeof el._newStart==='number'){
-        var ev = state.calEvents[day].find(function(x){return x.id===el.getAttribute('data-id');});
-        if(ev){
-          ev.start=el._newStart; ev.sub=fmtHour(el._newStart);
-          if(ev.id.indexOf('meal')===0){
-            if(!state.mealOverrides[day]) state.mealOverrides[day]={};
-            state.mealOverrides[day][ev.title]=el._newStart;
-          }
-          save(); render();
-        }
+      var dx=e.clientX-startX, dy=e.clientY-startY;
+      el.style.transform=''; el.style.opacity='';
+      var ev = state.calEvents[day].find(function(x){return x.id===el.getAttribute('data-id');});
+      if(mode==='x' && el._swipeX<-80 && ev && !ev.fixed){
+        deleteCalEvent(day, ev.id);
+        return;
       }
+      if(mode==='y' && typeof el._newStart==='number' && ev){
+        ev.start=el._newStart; ev.sub=fmtHour(el._newStart);
+        if(ev.id.indexOf('meal')===0){
+          if(!state.mealOverrides[day]) state.mealOverrides[day]={};
+          state.mealOverrides[day][ev.title]=el._newStart;
+        }
+        save(); render();
+        return;
+      }
+      if(Math.abs(dx)<10 && Math.abs(dy)<10 && ev){
+        openCalEdit(day, ev.id);
+      }
+      el._newStart=undefined; el._swipeX=undefined;
     });
   });
+}
+function fmtTime24(h){ var hh=Math.floor(h), mm=Math.round((h-hh)*60); if(mm===60){hh++;mm=0;} return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0'); }
+var __calEditDay=null, __calEditId=null;
+function openCalEdit(day, id){
+  var ev=(state.calEvents[day]||[]).find(function(x){return x.id===id;});
+  if(!ev) return;
+  __calEditDay=day; __calEditId=id;
+  document.getElementById('calEditTitle').value=ev.title||'';
+  document.getElementById('calEditTime').value=fmtTime24(ev.start);
+  document.getElementById('calEditDur').value=String(ev.dur);
+  document.getElementById('calEditDay').value=String(day);
+  var cw=document.getElementById('calEditCancelWo');
+  if(cw) cw.style.display = ev.id==='workout' ? '' : 'none';
+  document.getElementById('calEditSheet').style.display='';
+  document.getElementById('calEditBackdrop').style.display='block';
+}
+function closeCalEdit(){
+  var sh=document.getElementById('calEditSheet'), bd=document.getElementById('calEditBackdrop');
+  if(sh) sh.style.display='none';
+  if(bd) bd.style.display='none';
+}
+function saveCalEdit(){
+  var ev=(state.calEvents[__calEditDay]||[]).find(function(x){return x.id===__calEditId;});
+  if(!ev){ closeCalEdit(); return; }
+  var t=document.getElementById('calEditTitle').value.trim();
+  if(t) ev.title=t;
+  var tv=document.getElementById('calEditTime').value;
+  if(tv){ ev.start=timeHour(tv); ev.sub=fmtHour(ev.start); }
+  ev.dur=parseFloat(document.getElementById('calEditDur').value)||ev.dur;
+  var nd=parseInt(document.getElementById('calEditDay').value,10);
+  if(nd!==__calEditDay){
+    var arr=state.calEvents[__calEditDay];
+    var ix=arr.findIndex(function(x){return x.id===__calEditId;});
+    if(ix>=0){ arr.splice(ix,1); state.calEvents[nd].push(ev); calSelectedDay=nd; }
+  }
+  if(ev.id.indexOf('meal')===0){
+    if(!state.mealOverrides[__calEditDay]) state.mealOverrides[__calEditDay]={};
+    state.mealOverrides[__calEditDay][ev.title]=ev.start;
+  }
+  save(); render(); closeCalEdit();
+}
+function deleteCalEdit(){
+  if(__calEditDay===null || !__calEditId){ closeCalEdit(); return; }
+  deleteCalEvent(__calEditDay, __calEditId);
+  closeCalEdit();
+}
+function cancelWorkoutFromEdit(){
+  if(__calEditDay===null) return;
+  var d=__calEditDay;
+  closeCalEdit();
+  cancelWorkout(d);
+}
+function toggleAddBlock(){
+  var f=document.getElementById('addBlockForm');
+  if(!f) return;
+  f.style.display = f.style.display==='none' ? '' : 'none';
 }
 function moveCalEvent(day, id, dir){
   var evs = state.calEvents[day] || [];
@@ -1308,7 +1435,7 @@ function addScanned(){
   save(); render(); closeFood();
 }
 window.__foodOpen=false;
-function applyFoodToggle(){var fc=document.getElementById('foodCard'), bd=document.getElementById('foodBackdrop'); if(fc) fc.style.display=window.__foodOpen?'':'none'; if(bd) bd.style.display=window.__foodOpen?'':'none';}
+function applyFoodToggle(){var fc=document.getElementById('foodCard'), bd=document.getElementById('foodBackdrop'); if(fc) fc.style.display=window.__foodOpen?'':'none'; if(bd) bd.style.display=window.__foodOpen?'block':'none';}
 function toggleFood(){window.__foodOpen=!window.__foodOpen; applyFoodToggle();}
 function openFood(){if(!window.__foodOpen){window.__foodOpen=true; applyFoodToggle();}}
 function closeFood(){window.__foodOpen=false; applyFoodToggle();}
@@ -1334,6 +1461,27 @@ function renderCalArc(cal,plan){
   var planned=MEALS.length||4;
   setRing('ringMealsFill',mealsToday/planned);
   document.getElementById('ringMealsVal').textContent=mealsToday+'/'+planned;
+}
+function renderWorkoutWeek(){
+  var cEl=document.getElementById('workoutWeekCount'), lEl=document.getElementById('workoutWeekLines');
+  if(!cEl || !lEl) return;
+  var now=new Date(), todayIdx=now.getDay();
+  var dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var done=0, total=0, lines=[];
+  [0,1,3,4].forEach(function(d){
+    var part=SCHEDULE[d];
+    if(!part || part==='Rest') return;
+    total++;
+    var dk=weekDateKey(d);
+    var isDone=state.workouts.some(function(w){return w.date===dk;});
+    if(isDone) done++;
+    var status='';
+    if(isDone) status=' — <span class="ok">done</span>';
+    else if(d===todayIdx) status=' — <span class="ok">today</span>';
+    lines.push((isDone?'✓ ':'• ')+dayNames[d]+' '+part+status);
+  });
+  cEl.textContent=done+' of '+total+' this week';
+  lEl.innerHTML=lines.map(function(l){return '<div>'+l+'</div>';}).join('');
 }
 function renderWeekSummary(){
   var el=document.getElementById('weekSummaryLine'); if(!el) return;
@@ -1759,8 +1907,8 @@ function renderSleep(){
     var last=(state.sleep||[])[(state.sleep||[]).length-1];
     if(last){
       var h=Math.floor(last.hours), m=Math.round((last.hours-h)*60);
-      st.textContent=h+'h '+m+'m last night';
-      if(sub) sub.textContent='Bed 10:00 PM • Wake 6:00 AM';
+      st.textContent=h+'h'+(m?' '+m+'m':'')+' last night';
+      if(sub) sub.textContent=(last.start||'')+' – '+(last.end||'');
     } else {
       st.textContent='No sleep logged yet.';
       if(sub) sub.textContent='Tap Go to sleep at bedtime.';
@@ -1770,8 +1918,25 @@ function renderSleep(){
   list.innerHTML=(state.sleep||[]).slice().reverse().slice(0,5).map(function(s){
     return '<li><div><b>'+s.hours+' hours</b><small>'+s.date+' · '+s.start+' - '+s.end+'</small></div></li>';
   }).join('') || '';
+  var avgEl=document.getElementById('sleepAvg');
+  if(avgEl){
+    var recent=(state.sleep||[]).slice(-7);
+    if(recent.length){ var avg=recent.reduce(function(a,s){return a+s.hours;},0)/recent.length; avgEl.textContent='avg '+avg.toFixed(1)+'h this week'; }
+    else avgEl.textContent='';
+  }
 }
 
+(function(){
+  var wv=document.getElementById('weightView'); if(!wv) return;
+  var sx=0, sy=0;
+  wv.addEventListener('touchstart', function(e){ if(e.touches.length!==1) return; sx=e.touches[0].clientX; sy=e.touches[0].clientY; }, {passive:true});
+  wv.addEventListener('touchend', function(e){
+    if(!sx && !sy) return;
+    var dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
+    sx=0; sy=0;
+    if(Math.abs(dx)>70 && Math.abs(dx)>Math.abs(dy)*1.5){ closeWeightView(); }
+  }, {passive:true});
+})();
 initPager();
 bindPageScroll();
 showWelcome();
