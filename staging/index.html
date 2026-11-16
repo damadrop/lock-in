@@ -128,6 +128,19 @@
   .shake{animation:shake .3s ease}
   .pressable{cursor:pointer;transition:transform .15s ease}
   .pressable:active{transform:scale(.985)}
+  .dashgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+  .dashgrid .card{margin-bottom:0}
+  .gcard{display:flex;flex-direction:column;gap:6px}
+  .glabel{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700}
+  .glabel svg{width:22px;height:22px;flex:0 0 22px}
+  .gbig{font-size:20px;font-weight:800;line-height:1.2;letter-spacing:-.3px}
+  .gsub{font-size:13px;color:#8ea3c8;line-height:1.35}
+  .gcard .bar{margin:4px 0}
+  .gcard .pillbtn{align-self:flex-start;margin-top:2px}
+  .gcard .stepper{align-self:flex-start}
+  #paceLine{background:rgba(255,255,255,.06);border-radius:999px;padding:10px 14px;text-align:center}
+  #foodCard{animation:foodIn .35s cubic-bezier(.22,.8,.3,1)}
+  @keyframes foodIn{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
   .ringrow{display:flex;gap:10px;margin-top:16px}
   #reader video{border-radius:16px}
   .ringcell{flex:1;text-align:center}
@@ -207,16 +220,17 @@
 
 <div class="card" id="calArcCard" style="text-align:center">
   <div style="font-size:16px;font-weight:700;text-align:left">Calories today</div>
-  <div style="position:relative;width:220px;height:122px;margin:10px auto 0">
-    <svg viewBox="0 0 220 122" style="width:220px;height:122px;display:block">
-      <path d="M 15 110 A 95 95 0 0 1 205 110" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="14" stroke-linecap="round"/>
-      <path id="calArcFill" d="M 15 110 A 95 95 0 0 1 205 110" fill="none" stroke="#38bdf8" stroke-width="14" stroke-linecap="round" stroke-dasharray="298.5" stroke-dashoffset="298.5"/>
+  <div class="pressable" onclick="openFood()" style="position:relative;width:220px;height:220px;margin:10px auto 0">
+    <svg viewBox="0 0 220 220" style="width:220px;height:220px;display:block">
+      <circle cx="110" cy="110" r="95" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="14"/>
+      <circle id="calArcFill" cx="110" cy="110" r="95" fill="none" stroke="#38bdf8" stroke-width="14" stroke-linecap="round" stroke-dasharray="596.9" stroke-dashoffset="596.9" transform="rotate(-90 110 110)"/>
     </svg>
-    <div style="position:absolute;left:0;right:0;bottom:0">
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
       <div style="font-size:38px;font-weight:800;letter-spacing:-1px;line-height:1"><span id="calArcEaten">0</span><span style="font-size:17px;color:#8ea3c8;font-weight:600"> /2,900</span></div>
       <div style="font-size:14px;color:#8ea3c8;margin-top:4px" id="calArcLeft">2,900 calories left</div>
     </div>
   </div>
+  <div style="font-size:12px;color:#64748b;margin-top:8px">Tap the ring to log food</div>
   <div style="font-size:15px;margin-top:10px" id="paceLine"></div>
   <div class="ringrow">
     <div class="ringcell">
@@ -246,39 +260,36 @@
   </div>
 </div>
 
-<div class="card dash pressable" id="nextMealCard" onclick="goToFood()">
-  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a2 2 0 0 0 4 0V3"/><path d="M8 3v18"/><path d="M16 3c-2 2-3 4-3 7v3h3v8"/></svg></div>
-  <div class="dashbody">
-    <div class="dashlabel">Next meal</div>
-    <div class="dashbig" id="nextMealTitle">—</div>
-    <div class="dashsub" id="nextMealSub">—</div>
-    <div class="bar slim"><i id="calBar" style="width:0%"></i></div>
-    <div class="dashsub" id="nextMealToday" style="margin-top:2px">—</div>
-  </div>
-  <div class="chev">›</div>
+<div id="dashGrid" class="dashgrid">
+<div class="card gcard pressable" id="nextMealCard" onclick="goToFood()">
+  <div class="glabel"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a2 2 0 0 0 4 0V3"/><path d="M8 3v18"/><path d="M16 3c-2 2-3 4-3 7v3h3v8"/></svg>Next meal</div>
+  <div class="gbig" id="nextMealTitle">—</div>
+  <div class="gsub" id="nextMealSub">—</div>
+  <div class="bar slim"><i id="calBar" style="width:0%"></i></div>
+  <div class="gsub" id="nextMealToday" style="margin-top:2px">—</div>
 </div>
 
-<div class="card dash" id="workoutCard">
-  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"><path d="M7 8v8M4 10v4M17 8v8M20 10v4M7 12h10"/></svg></div>
-  <div class="dashbody">
-    <div class="dashlabel">Workout today</div>
-    <div class="dashbig" id="workoutPartLabel">—</div>
-    <div class="dashsub" id="workoutSubLabel">—</div>
-  </div>
+<div class="card gcard" id="workoutCard">
+  <div class="glabel"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"><path d="M7 8v8M4 10v4M17 8v8M20 10v4M7 12h10"/></svg>Workout today</div>
+  <div class="gbig" id="workoutPartLabel">—</div>
+  <div class="gsub" id="workoutSubLabel">—</div>
   <button class="pillbtn" id="workoutDoneBtn" onclick="markWorkoutDone()">Start</button>
 </div>
 
-
-
-<div class="card dash" id="waterCard">
-  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg></div>
-  <div class="dashbody">
-    <div class="dashlabel">Water</div>
-    <div class="dashbig" id="waterCount">0 of 10 glasses</div>
-    <div class="drops" id="waterDrops"></div>
-    <div class="dashsub" id="waterOz">0 oz / 80 oz</div>
-  </div>
+<div class="card gcard" id="waterCard">
+  <div class="glabel"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg>Water</div>
+  <div class="gbig" id="waterCount">0 of 10 glasses</div>
+  <div class="drops" id="waterDrops"></div>
+  <div class="gsub" id="waterOz">0 oz / 80 oz</div>
   <div class="stepper"><button onclick="addWater(1)">+</button><button onclick="addWater(-1)">−</button></div>
+</div>
+
+<div class="card gcard pressable" id="weightCardFront" onclick="openWeightView()">
+  <div class="glabel"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7a3 3 0 0 1 6 0"/><path d="M5.5 7h13l1.8 5.2a6.5 6.5 0 0 1-12.6 0z"/><path d="M12 12v3"/><path d="M10 15h4"/></svg>Weight</div>
+  <div class="gbig" id="weightTitleF">—</div>
+  <div class="bar slim"><i id="weightBarF" style="width:0%"></i></div>
+  <div class="gsub" id="weightSubF">—</div>
+</div>
 </div>
 
 <div id="weekStripWrap">
@@ -681,8 +692,8 @@ function render(){
   for(var mi=0; mi<MEALS.length; mi++){ if(hourNow<MEALS[mi].hour){ nextMeal=MEALS[mi]; break; } }
   var nmT=document.getElementById('nextMealTitle'), nmS=document.getElementById('nextMealSub');
   if(nextMeal){
-    nmT.textContent=nextMeal.name+', '+nextMeal.time+', '+Math.round(plan.cal*nextMeal.share)+' cal';
-    nmS.textContent=Math.round(plan.cal*nextMeal.share)+' cal • '+Math.round(plan.pro*nextMeal.share)+'g protein';
+    nmT.textContent=nextMeal.name+' • '+nextMeal.time;
+    nmS.textContent=Math.round(plan.cal*nextMeal.share)+' cal';
   } else {
     nmT.textContent='All meals done';
     nmS.textContent='Goal: '+plan.cal.toLocaleString()+' cal today';
@@ -706,6 +717,12 @@ function render(){
   document.getElementById('weightSub').textContent=wv+' lb now • +'+(Math.round((wv-START_WT)*10)/10)+' lb • '+(Math.round((GOAL_WT-wv)*10)/10)+' lb to goal';
   var wBar=document.getElementById('weightBar');
   if(wBar) wBar.style.width=Math.max(0,Math.min(100,Math.round((wv-START_WT)/(GOAL_WT-START_WT)*100)))+'%';
+  var wTF=document.getElementById('weightTitleF');
+  if(wTF) wTF.textContent=wv+' lb';
+  var wBarF=document.getElementById('weightBarF');
+  if(wBarF) wBarF.style.width=Math.max(0,Math.min(100,Math.round((wv-START_WT)/(GOAL_WT-START_WT)*100)))+'%';
+  var wSF=document.getElementById('weightSubF');
+  if(wSF) wSF.textContent='Goal: '+GOAL_WT+' lb • '+(Math.round((GOAL_WT-wv)*10)/10)+' lb to go';
   renderCalArc(cal, plan);
   var paceEl=document.getElementById('paceLine');
   if(paceEl){
@@ -934,7 +951,7 @@ function switchSection(name){
   document.getElementById('tabCalendar').className = name==='calendar' ? 'on' : '';
   document.getElementById('tabProgress').className = name==='progress' ? 'on' : '';
   document.getElementById('tabStreaks').className = name==='streaks' ? 'on' : '';
-  var trackerIds = ['nextMealCard','workoutCard','waterCard','weekStripWrap','calArcCard','logFoodBtn','pastDays'];
+  var trackerIds = ['dashGrid','weekStripWrap','calArcCard','logFoodBtn','pastDays'];
   var calendarIds = ['calendarSection','scheduleTimes'];
   var progressIds = ['workoutLogCard','weightStepsCard','sleepCard','sleepList','weightCard','weekSummaryCard'];
   var streakIds = ['streaksLock','streaksMain','streaksAdd'];
@@ -1228,7 +1245,7 @@ function setRing(id,pct){var el=document.getElementById(id); if(!el) return; var
 function renderCalArc(cal,plan){
   var arc=document.getElementById('calArcFill'); if(!arc) return;
   var pct=Math.max(0,Math.min(1,cal/plan.cal));
-  arc.style.strokeDashoffset=(298.5*(1-pct)).toFixed(1);
+  arc.style.strokeDashoffset=(596.9*(1-pct)).toFixed(1);
   document.getElementById('calArcEaten').textContent=cal.toLocaleString();
   var left=plan.cal-cal;
   document.getElementById('calArcLeft').textContent=left>0?left.toLocaleString()+' calories left':'Goal hit ✓';
