@@ -449,19 +449,35 @@
 </div>
 
 <div id="weightView" style="display:none;position:fixed;inset:0;z-index:900;background:#0a1128;overflow-y:auto;padding:calc(20px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))">
-  <button class="secondary" onclick="closeWeightView()">‹ Back</button>
-  <h1 style="font-size:36px;margin:18px 0 2px"><span id="wvBig">—</span> <span style="font-size:18px;color:#8ea3c8">lb</span></h1>
-  <p class="sub" id="wvSub">—</p>
-  <div class="row" style="margin-top:16px">
-    <div class="card" style="flex:1;text-align:center;margin:0"><div class="small">Average</div><b id="wvAvg" style="font-size:22px">—</b></div>
-    <div class="card" style="flex:1;text-align:center;margin:0"><div class="small">Change</div><b id="wvChange" style="font-size:22px">—</b></div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <button class="secondary" onclick="closeWeightView()">‹ Back</button>
+    <h1 style="font-size:22px;margin:0">Weight</h1>
   </div>
-  <div style="display:flex;gap:6px;margin:16px 0">
-    <button class="secondary" id="wvR1W" onclick="renderWeightChart('1W')">1W</button>
-    <button class="secondary" id="wvR1M" onclick="renderWeightChart('1M')">1M</button>
-    <button class="secondary" id="wvRAll" onclick="renderWeightChart('All')">All</button>
+  <h1 style="font-size:84px;line-height:1;text-align:center;margin:28px 0 6px"><span id="wvBig">—</span> <span style="font-size:30px;color:#38bdf8">lb</span></h1>
+  <p class="sub" id="wvSub" style="text-align:center">—</p>
+  <div class="card" style="margin-top:22px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <b style="font-size:18px">Goal 130 lb</b>
+      <span id="wvToGo" style="color:#38bdf8;font-size:17px;font-weight:700">—</span>
+    </div>
+    <div style="height:10px;border-radius:999px;background:rgba(255,255,255,.12);margin:12px 0 8px;overflow:hidden"><div id="wvGoalBar" style="height:100%;background:#38bdf8;border-radius:999px;width:0%"></div></div>
+    <div class="small" id="wvGoalPct">—</div>
   </div>
-  <div class="card"><svg id="wvChart" viewBox="0 0 320 160" style="width:100%;height:auto;display:block"></svg></div>
+  <div class="row" style="margin-top:14px">
+    <div class="card" style="flex:1;text-align:center;margin:0"><div class="small">Average</div><b id="wvAvg" style="font-size:20px">—</b></div>
+    <div class="card" style="flex:1;text-align:center;margin:0"><div class="small">Change</div><b id="wvChange" style="font-size:20px">—</b></div>
+    <div class="card" style="flex:1;text-align:center;margin:0"><div class="small">Start</div><b id="wvStart" style="font-size:20px">—</b></div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px"><b style="font-size:18px">Trend</b><span class="small" id="wvTrendRange">—</span></div>
+    <svg id="wvChart" viewBox="0 0 320 190" style="width:100%;height:auto;display:block"></svg>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <b style="font-size:18px">Track to 130</b>
+    <div id="wvTrack" style="margin-top:8px"></div>
+    <p class="small" id="wvTrackNext" style="margin:14px 0 0">—</p>
+    <p class="small" id="wvTrackPace" style="margin:4px 0 0;color:#7dd3fc">—</p>
+  </div>
   <h2 style="margin-top:18px">Entries</h2>
   <ul id="wvEntries"></ul>
 </div>
@@ -1242,42 +1258,85 @@ function renderWeekSummary(){
   var avg=logged?Math.round(cals/logged):0;
   el.textContent='Workouts '+wo+' of 4 this week • '+(logged?('Avg '+avg.toLocaleString()+' cal on '+logged+' logged day'+(logged>1?'s':'')):'No food logged yet this week')+' • '+currentWeight()+' lb now';
 }
-var __wvRange='All';
-function openWeightView(){var v=document.getElementById('weightView'); if(!v) return; v.style.display='block'; v.scrollTop=0; renderWeightChart(__wvRange);}
+function fmtMonDay(ds){
+  var parts=String(ds||'').split('-'); if(parts.length<3) return ds;
+  var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return months[parseInt(parts[1],10)-1]+' '+parseInt(parts[2],10);
+}
+function openWeightView(){var v=document.getElementById('weightView'); if(!v) return; v.style.display='block'; v.scrollTop=0; renderWeightChart();}
 function closeWeightView(){var v=document.getElementById('weightView'); if(v) v.style.display='none';}
-function renderWeightChart(range){
-  __wvRange=range;
-  var now=new Date(), from=null;
-  if(range==='1W'){from=new Date(now); from.setDate(now.getDate()-7);}
-  if(range==='1M'){from=new Date(now); from.setMonth(now.getMonth()-1);}
-  function kd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-  var pts=state.weights.filter(function(w){return !from || w.date>=kd(from);}).slice().sort(function(a,b){return a.date<b.date?-1:1;});
-  var avgEl=document.getElementById('wvAvg'), chEl=document.getElementById('wvChange'), bigEl=document.getElementById('wvBig'), subEl=document.getElementById('wvSub');
+function renderWeightChart(){
+  var pts=state.weights.slice().sort(function(a,b){return a.date<b.date?-1:1;});
+  var avgEl=document.getElementById('wvAvg'), chEl=document.getElementById('wvChange'), stEl=document.getElementById('wvStart'), bigEl=document.getElementById('wvBig'), subEl=document.getElementById('wvSub');
   var last=state.weights[state.weights.length-1];
-  if(bigEl) bigEl.textContent=last?last.lbs:currentWeight();
-  if(subEl) subEl.textContent=last?('Last weighed '+last.date+(last.time?' at '+last.time:'')):'No weigh-ins yet.';
-  ['wvR1W','wvR1M','wvRAll'].forEach(function(id){var b=document.getElementById(id); if(!b) return; var on=id==='wvR'+range; b.style.background=on?'#38bdf8':''; b.style.color=on?'#082f49':'';});
+  var cur=last?last.lbs:currentWeight();
+  if(bigEl) bigEl.textContent=cur;
+  if(subEl) subEl.textContent=last?('Updated '+fmtMonDay(last.date)+(last.time?' • '+last.time:'')):'No weigh-ins yet.';
+  var first=pts.length?pts[0].lbs:START_WT;
+  if(stEl) stEl.textContent=START_WT.toFixed(1)+' lb';
+  var pct=Math.max(0,Math.min(100,Math.round((cur-START_WT)/(GOAL_WT-START_WT)*100)));
+  var toGoEl=document.getElementById('wvToGo'); if(toGoEl) toGoEl.textContent=(Math.round((GOAL_WT-cur)*10)/10)+' lb to go';
+  var bar=document.getElementById('wvGoalBar'); if(bar) bar.style.width=pct+'%';
+  var pctEl=document.getElementById('wvGoalPct'); if(pctEl) pctEl.textContent=pct+'% to goal';
+  var rangeEl=document.getElementById('wvTrendRange');
+  if(rangeEl) rangeEl.textContent=pts.length?(fmtMonDay(pts[0].date)+' – '+fmtMonDay(pts[pts.length-1].date)):'';
   var svg=document.getElementById('wvChart');
   if(!svg) return;
   if(pts.length<2){
-    svg.innerHTML='<text x="160" y="80" fill="#8ea3c8" font-size="14" text-anchor="middle">Log more weigh-ins to see a trend.</text>';
+    svg.innerHTML='<text x="160" y="95" fill="#8ea3c8" font-size="14" text-anchor="middle">Log more weigh-ins to see a trend.</text>';
     if(avgEl) avgEl.textContent='—'; if(chEl) chEl.textContent='—';
   } else {
     var ws=pts.map(function(p){return p.lbs;});
     var avg=ws.reduce(function(a,b){return a+b;},0)/ws.length;
-    var ch=ws[ws.length-1]-ws[0];
+    var ch=cur-START_WT;
     if(avgEl) avgEl.textContent=avg.toFixed(1)+' lb';
     if(chEl) chEl.textContent=(ch>=0?'+':'')+ch.toFixed(1)+' lb';
     var mn=Math.min.apply(null,ws), mx=Math.max.apply(null,ws);
     if(mx-mn<1){mn-=0.5; mx+=0.5;}
-    var W=320,H=160,P=18;
-    var xy=pts.map(function(p,i){var x=P+(W-2*P)*(pts.length===1?0.5:i/(pts.length-1)); var y=H-P-((p.lbs-mn)/(mx-mn))*(H-2*P); return [x,y];});
+    var W=320,H=190,P=18,topPad=26,botPad=30;
+    var xy=pts.map(function(p,i){var x=P+(W-2*P)*(pts.length===1?0.5:i/(pts.length-1)); var y=topPad+((mx-p.lbs)/(mx-mn))*(H-topPad-botPad); return [x,y];});
     var line=xy.map(function(q){return q[0].toFixed(1)+','+q[1].toFixed(1);}).join(' ');
     var dots=xy.map(function(q){return '<circle cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="4" fill="#38bdf8"/>';}).join('');
-    svg.innerHTML='<text x="'+P+'" y="14" fill="#8ea3c8" font-size="11">'+mx.toFixed(1)+'</text><text x="'+P+'" y="'+(H-6)+'" fill="#8ea3c8" font-size="11">'+mn.toFixed(1)+'</text><polyline points="'+line+'" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>'+dots;
+    var vlabels=xy.map(function(q,i){return '<text x="'+q[0].toFixed(1)+'" y="'+(q[1]-10).toFixed(1)+'" fill="#e2e8f0" font-size="10" text-anchor="middle">'+pts[i].lbs+' lb</text>';}).join('');
+    var dlabels=xy.map(function(q,i){return '<text x="'+q[0].toFixed(1)+'" y="'+(H-8)+'" fill="#8ea3c8" font-size="9" text-anchor="middle">'+fmtMonDay(pts[i].date)+'</text>';}).join('');
+    svg.innerHTML='<polyline points="'+line+'" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>'+dots+vlabels+dlabels;
   }
+  renderTrack();
   var ent=document.getElementById('wvEntries');
   if(ent) ent.innerHTML=state.weights.slice().reverse().map(function(w){return '<li><div><b>'+w.lbs+' lb</b><small>'+w.date+(w.time?' at '+w.time:'')+'</small></div></li>';}).join('')||'<li class="small">No weigh-ins yet.</li>';
+}
+function renderTrack(){
+  var cur=state.weights.length?state.weights[state.weights.length-1].lbs:currentWeight();
+  var box=document.getElementById('wvTrack'); if(!box) return;
+  var span=GOAL_WT-START_WT;
+  function pct(v){return Math.max(0,Math.min(100,(v-START_WT)/span*100));}
+  var youPct=pct(cur);
+  var labelPct=Math.max(13,Math.min(87,youPct));
+  var html='<div style="position:relative;margin-top:30px">';
+  html+='<div style="height:10px;border-radius:999px;background:rgba(255,255,255,.12)"><div style="height:100%;width:'+youPct+'%;background:#38bdf8;border-radius:999px"></div></div>';
+  html+='<div style="position:absolute;left:0%;top:5px;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:#38bdf8"></div>';
+  html+='<div style="position:absolute;left:'+pct(120)+'%;top:5px;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:#1b2947;border:2px solid #38bdf8"></div>';
+  html+='<div style="position:absolute;left:'+pct(125)+'%;top:5px;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:#1b2947;border:2px solid #38bdf8"></div>';
+  html+='<div style="position:absolute;left:100%;top:5px;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:#38bdf8"></div>';
+  html+='<div style="position:absolute;left:'+youPct+'%;top:5px;transform:translate(-50%,-50%);width:18px;height:18px;border-radius:50%;background:#38bdf8;border:3px solid #0a1128;box-shadow:0 0 0 2px #38bdf8"></div>';
+  html+='<div style="position:absolute;left:'+labelPct+'%;top:-24px;transform:translateX(-50%);font-size:12px;font-weight:700;color:#38bdf8;white-space:nowrap">You • '+cur+' lb</div>';
+  html+='</div>';
+  html+='<div style="position:relative;height:18px;margin-top:10px">';
+  [[114,'114'],[120,'120'],[125,'125'],[130,'130']].forEach(function(l){
+    html+='<span style="position:absolute;left:'+pct(l[0])+'%;transform:translateX(-50%);font-size:12px;color:#8ea3c8">'+l[1]+'</span>';
+  });
+  html+='</div>';
+  box.innerHTML=html;
+  var next=null; [120,125,130].forEach(function(m){ if(next===null && cur<m) next=m; });
+  var nextEl=document.getElementById('wvTrackNext');
+  if(nextEl) nextEl.textContent=next?('Next: '+next+' lb — '+(Math.round((next-cur)*10)/10)+' lb away'):'You hit 130 lb. Nice.';
+  var paceEl=document.getElementById('wvTrackPace');
+  if(paceEl){
+    var weeksLeft=(GOAL_WT-cur)/0.5;
+    var d=new Date(); d.setDate(d.getDate()+Math.round(weeksLeft*7));
+    var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    paceEl.textContent='At 0.5 lb/week, you\'ll reach 130 around '+months[d.getMonth()]+' '+d.getFullYear()+' — an estimate, not a promise.';
+  }
 }
 function addWorkout(){
   state.workouts.push({id:uid(),date:todayKey(),title:document.getElementById('workoutName').value.trim(),part:document.getElementById('workoutPart').value,minutes:0,detail:'',exercises:[]});
