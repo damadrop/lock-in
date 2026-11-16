@@ -1,0 +1,1612 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0620">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Lock In">
+<link rel="icon" type="image/jpeg" href="icon.jpg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Lock In</title>
+<style>
+  *{box-sizing:border-box}
+  html{background:#0a1128}
+  body{margin:0;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);color:#fff;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display',system-ui,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;padding:calc(26px + env(safe-area-inset-top)) 16px calc(112px + env(safe-area-inset-bottom));max-width:560px;margin-left:auto;margin-right:auto}
+  h1{font-size:30px;margin:0;letter-spacing:-.5px}
+  h2{font-size:19px;margin:0 0 10px}
+  .sub{color:#8ea3c8;margin:0}
+  .card{background:#111c3a;border:1px solid rgba(255,255,255,.09);border-radius:24px;padding:18px;margin:0 0 14px;box-shadow:none}
+  .alert{background:#111c3a;border:1px solid rgba(125,211,252,.3);border-radius:16px;padding:14px;margin:0 0 14px;display:none}
+  .alert b{font-size:18px}
+  input,select{width:100%;padding:13px;border-radius:12px;border:0;background:#1b2947;color:#fff;font-size:16px;margin:0 0 8px}
+  button{padding:13px 16px;border-radius:14px;border:0;background:#38bdf8;color:#082f49;font-size:16px;font-weight:700;cursor:pointer;box-shadow:none}
+  button.secondary{background:#1c2f55;box-shadow:none;color:#bae6fd}
+  button.danger{background:#7f1d1d;padding:6px 10px;font-size:13px;color:#fff}
+  button.big{width:100%}
+  ul{list-style:none;padding:0;margin:10px 0 0}
+  li{display:flex;justify-content:space-between;align-items:center;gap:8px;background:transparent;border-radius:0;padding:12px 2px;margin:0;border-bottom:1px solid rgba(255,255,255,.08)}
+  li small{color:#8ea3c8;display:block}
+  li>div{flex:1;min-width:0}
+  li.today{background:rgba(56,189,248,.12);border-radius:12px}
+  li:last-child{border-bottom:0}
+  .small{font-size:13px;color:#8ea3c8}
+  .row{display:flex;gap:8px}
+  .row>*{flex:1}
+  details{color:#8ea3c8}
+  details summary{color:#fff;cursor:pointer;padding:6px 0}
+  .bar{background:#0a1128;border-radius:99px;height:10px;overflow:hidden;margin:10px 0}
+  .bar i{display:block;height:100%;background:#38bdf8}
+  .bar.slim{height:8px;margin:10px 0 6px}
+  .daybtns{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+  .daybtns button{padding:8px 10px;font-size:13px;background:#334155;color:#fff}
+  .daybtns button.on{background:#0284c7}
+  #mealList,#workoutList,#weightList{max-height:110px;overflow:auto}
+  .card h2{margin-bottom:8px}
+  @media(max-width:480px){
+    body{padding:calc(26px + env(safe-area-inset-top)) 12px calc(112px + env(safe-area-inset-bottom))}
+    h1{font-size:26px}
+    .card{padding:14px;margin-bottom:12px;border-radius:20px}
+    button{padding:11px 12px;font-size:15px}
+    input,select{padding:11px}
+  }
+  *{scroll-behavior:smooth}
+  .card{animation:fadeIn .18s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  button{transition:transform .12s ease,background-color .15s ease}
+  button:active{transform:scale(.95)}
+  button:disabled{opacity:.45;filter:saturate(.5);transform:none}
+  ul{-webkit-overflow-scrolling:touch}
+  .apphead{margin:0 0 20px}
+  .apptitle{padding-top:2px}
+  .apptitle h1{font-size:30px}
+  .apptitle .sub{font-size:14px;margin-top:4px}
+  #syncStatus{font-size:12px;color:#64748b;margin:6px 0 0}
+  .dash{display:flex;gap:14px;align-items:flex-start}
+  .dashicon{flex:0 0 44px;width:44px;height:44px;display:flex;align-items:center;justify-content:center}
+  .dashicon svg{width:36px;height:36px}
+  .dashbody{flex:1;min-width:0}
+  .dashlabel{font-size:16px;font-weight:700}
+  .dashbig{font-size:21px;font-weight:800;letter-spacing:-.3px;margin-top:2px;line-height:1.2}
+  .dashsub{font-size:14px;color:#8ea3c8;margin-top:4px;line-height:1.35}
+  .chev{font-size:28px;color:#64748b;line-height:1;padding-top:6px}
+  .pillbtn{flex:0 0 auto;background:#38bdf8;color:#082f49;border-radius:12px;padding:10px 18px;font-size:16px;box-shadow:none}
+  .stepper{display:flex;flex-direction:column;gap:8px}
+  .stepper button{width:38px;height:38px;border-radius:50%;padding:0;font-size:20px;line-height:1;box-shadow:none}
+  .drops{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap}
+  .drop{width:15px;height:19px}
+  .drop path{fill:none;stroke:#475569;stroke-width:1.6}
+  .drop.on path{fill:#38bdf8;stroke:#38bdf8}
+  .weekhead{display:flex;justify-content:space-between;align-items:baseline;margin:6px 2px 12px}
+  .weekhead h2{margin:0;font-size:22px}
+  .weekhead span{font-size:16px;font-weight:700;color:#7dd3fc}
+  .weekrow{display:flex;justify-content:space-between}
+  .weekcircle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;background:transparent;color:#7dd3fc;border:2px solid rgba(255,255,255,.18)}
+  .weekcircle.done{background:#38bdf8;border-color:#38bdf8;color:#fff}
+  .weekcircle.today{border-color:#38bdf8;color:#38bdf8}
+  .weekletters{display:flex;justify-content:space-between;margin-top:6px}
+  .weekletters span{width:44px;text-align:center;font-size:12px;color:#8ea3c8}
+  .calweeknames{display:flex;justify-content:space-between;margin:0 0 8px}
+  .calweeknames span{width:44px;text-align:center;font-size:16px;font-weight:700}
+  .calweekcircles{display:flex;justify-content:space-between}
+  .calweekcircles button{width:44px;height:44px;border-radius:50%;padding:0;font-size:18px;font-weight:800;background:transparent;color:#7dd3fc;border:2px solid rgba(255,255,255,.18);box-shadow:none}
+  .calweekcircles button.done{background:#38bdf8;border-color:#38bdf8;color:#082f49}
+  .calweekcircles button.on{border-color:#38bdf8;color:#38bdf8}
+  .calweekcircles button.on.done{background:#38bdf8;color:#082f49}
+  .schedhead{font-size:22px;margin:22px 0 4px}
+  .schedhead::after{content:'';display:block;width:52px;height:4px;border-radius:99px;background:#38bdf8;margin-top:8px}
+  .tl{position:relative;margin-top:14px}
+  .tl::before{content:'';position:absolute;left:64px;top:10px;bottom:10px;width:2px;background:rgba(125,211,252,.18)}
+  .tlrow{display:flex;gap:12px;margin:0 0 14px;position:relative}
+  .tltime{width:58px;flex:0 0 58px;text-align:right;font-size:13px;color:#8ea3c8;padding-top:16px}
+  .tltime.now{color:#ef4444;font-weight:700}
+  .tlcard{flex:1;min-width:0;background:#111c3a;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:14px;touch-action:none;cursor:grab;user-select:none}
+  .tlcard:active{cursor:grabbing;opacity:.9}
+  .tlcard b{font-size:18px}
+  .tlcard small{display:block;color:#8ea3c8;font-size:14px;margin-top:4px;line-height:1.35}
+  .tlcard .mv{float:right;font-size:12px;background:#00000044;border-radius:6px;padding:2px 6px;margin-left:4px;color:#fff}
+  .tlcard .mv.cancelwo{background:#7f1d1d;border:1px solid #ef4444;color:#fecaca;padding:3px 8px}
+  .tlicon{float:left;margin:2px 10px 0 0}
+  .tlicon svg{width:22px;height:22px;display:block}
+  .pill{float:right;font-size:12px;font-weight:700;background:rgba(255,255,255,.16);color:#fff;border-radius:99px;padding:4px 10px;margin-left:4px}
+  .pill.done{background:#bae6fd;color:#0c4a6e}
+  .nowline{flex:1;height:2px;background:#ef4444;align-self:center;position:relative}
+  .nowline::before{content:'';position:absolute;left:-6px;top:-5px;width:12px;height:12px;border-radius:50%;background:#ef4444}
+  .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;justify-content:center;background:rgba(10,17,40,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(125,211,252,.15);padding:8px 12px calc(10px + env(safe-area-inset-bottom))}
+  .tabbar button{flex:1;max-width:180px;background:transparent;box-shadow:none;color:#64748b;font-size:13px;font-weight:600;padding:8px 4px;border-radius:16px;display:flex;flex-direction:column;align-items:center;gap:4px}
+  .tabbar button svg{width:24px;height:24px}
+  .tabbar button.on{background:#bae6fd;color:#0c4a6e}
+  .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:280px;margin:0 auto}
+  .keybtn{width:76px;height:76px;border-radius:50%;border:1px solid #5b5b7a;background:#2e2e42;color:#fff;font-size:28px;line-height:1;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto;box-shadow:none}
+  .keybtn small{font-size:10px;color:#a5a5c0;letter-spacing:2px;margin-top:2px}
+  .keybtn:active{transform:scale(.94);background:#3f3f5c}
+  .dots{display:flex;gap:14px;justify-content:center;margin:12px 0 20px}
+  .dot{width:12px;height:12px;border-radius:50%;border:2px solid #c4b5fd;background:transparent}
+  .dot.on{background:#c4b5fd}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  .shake{animation:shake .3s ease}
+  .pressable{cursor:pointer;transition:transform .15s ease}
+  .pressable:active{transform:scale(.985)}
+  .ringrow{display:flex;gap:10px;margin-top:16px}
+  #reader video{border-radius:16px}
+  .ringcell{flex:1;text-align:center}
+/* Sleep screen */
+#sleepScreen{position:fixed;inset:0;z-index:9999;display:none;overflow:hidden;background:#050214;animation:sswin .7s ease-out;}
+@keyframes sswin{from{opacity:0}to{opacity:1}}
+#sleepScreen .nightbg{position:absolute;inset:0;background:linear-gradient(180deg,#0b1030 0%,#0b0620 45%,#050214 100%);}
+#sleepScreen .sunrisebg{position:absolute;inset:0;background:linear-gradient(180deg,#2b1055 0%,#7c2d5e 35%,#f97316 65%,#fbbf24 100%);opacity:0;transition:opacity 1.6s ease;}
+#sleepScreen.sunrise .sunrisebg{opacity:1;}
+#sstars{position:absolute;inset:0;transition:opacity 1.2s ease;}
+#sstars .star{position:absolute;border-radius:50%;background:#fff;animation:twinkle 2.8s ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:.25}50%{opacity:1}}
+#sleepScreen.sunrise #sstars{opacity:0;}
+.smoon{position:absolute;top:11%;right:15%;width:84px;height:84px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fffbe8,#fde68a 55%,#f59e0b);box-shadow:0 0 40px 12px rgba(253,230,138,.35),0 0 120px 40px rgba(253,230,138,.12);animation:moonrise 1.2s ease-out both,moonbob 6s ease-in-out 1.2s infinite alternate;transition:opacity 1.2s ease;}
+@keyframes moonrise{from{transform:translateY(60px)}to{transform:translateY(0)}}
+@keyframes moonbob{from{transform:translateY(0)}to{transform:translateY(-10px)}}
+#sleepScreen.sunrise .smoon{opacity:0;}
+.scloud{position:absolute;border-radius:50%;background:rgba(148,163,184,.10);filter:blur(18px);animation:drift 32s linear infinite;transition:opacity 1.2s ease;}
+.scloud.c1{width:220px;height:56px;top:22%;left:-240px;}
+.scloud.c2{width:180px;height:44px;top:48%;left:-200px;animation-duration:44s;animation-delay:-18s;}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(calc(100vw + 260px))}}
+#sleepScreen.sunrise .scloud{opacity:0;}
+.shoot{position:absolute;width:120px;height:2px;background:linear-gradient(90deg,rgba(255,255,255,0),#fff);border-radius:2px;opacity:0;transform:rotate(-32deg);animation:shoot 11s linear infinite;}
+.shoot.s1{top:14%;left:12%;animation-delay:2s;}
+.shoot.s2{top:30%;right:8%;animation-delay:7s;animation-duration:15s;}
+@keyframes shoot{0%{opacity:0;transform:rotate(-32deg) translateX(0)}3%{opacity:1}8%{opacity:0;transform:rotate(-32deg) translateX(-160px)}100%{opacity:0;transform:rotate(-32deg) translateX(-160px)}}
+#sleepScreen.sunrise .shoot{animation:none;opacity:0;}
+.ssun{position:absolute;left:50%;bottom:-90px;width:150px;height:150px;margin-left:-75px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#fff7cc,#fbbf24 55%,#f97316);box-shadow:0 0 60px 20px rgba(251,191,36,.45),0 0 160px 60px rgba(249,115,22,.25);transition:transform 1.8s cubic-bezier(.22,.8,.3,1);}
+#sleepScreen.sunrise .ssun{transform:translateY(-260px);}
+.scontent{position:absolute;left:0;right:0;top:36%;text-align:center;color:#e2e8f0;padding:0 24px;animation:contentin 1s ease-out .3s both;transition:opacity .8s ease;}
+@keyframes contentin{from{transform:translateY(14px)}to{transform:translateY(0)}}
+.sgreet{font-size:34px;font-weight:700;letter-spacing:.5px;}
+.sclock{font-size:64px;font-weight:800;margin-top:10px;font-variant-numeric:tabular-nums;line-height:1;}
+.ssub{font-size:15px;color:#94a3b8;margin-top:10px;}
+.selapsed{font-size:15px;color:#7dd3fc;margin-top:6px;}
+#ssDay{opacity:0;transition:opacity 1s ease .3s;}
+#sleepScreen.sunrise #ssNight{opacity:0;}
+#sleepScreen.sunrise #ssDay{opacity:1;}
+.swake{position:absolute;left:50%;bottom:8%;transform:translateX(-50%);background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:18px;font-weight:700;padding:16px 34px;border-radius:999px;backdrop-filter:blur(6px);transition:opacity .6s ease;}
+.swake:active{transform:translateX(-50%) scale(.96);}
+#sleepScreen.sunrise .swake{opacity:0;pointer-events:none;}
+.stagingbadge{position:fixed;top:calc(10px + env(safe-area-inset-top));right:12px;z-index:10000;background:#f97316;color:#fff;font-size:11px;font-weight:800;letter-spacing:1px;padding:5px 11px;border-radius:999px;box-shadow:0 2px 10px rgba(0,0,0,.35);}
+</style>
+</head>
+<body>
+<div class="stagingbadge">STAGING</div>
+
+<div id="welcomeOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px">
+  <p style="font-size:15px;letter-spacing:3px;color:#bae6fd;margin:0 0 8px">LOCK IN</p>
+  <h1 id="welcomeGreeting" style="font-size:44px;margin:0 0 8px">Good morning, Lonj</h1>
+  <p id="welcomeSub" style="font-size:17px;color:#fff;margin:0 0 20px">Time to start the day right.</p>
+  <p id="welcomeVerse" style="font-size:18px;line-height:1.5;color:#e9d5ff;margin:0 0 32px"></p>
+  <button class="big" style="min-width:200px" onclick="dismissWelcome()">Enter</button>
+  <p style="font-size:12px;opacity:.55;margin:20px 0 0">v2.7-staging &middot; Sleep Screen</p>
+</div>
+
+<div id="updatesOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);z-index:1000;flex-direction:column;align-items:center;justify-content:center;padding:32px;overflow-y:auto">
+  <img src="icon.jpg" style="width:72px;height:72px;border-radius:18px;margin-bottom:14px" alt="Lock In icon">
+  <h1 style="font-size:26px;margin:0 0 4px">Lock In</h1>
+  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 2.7-staging</p>
+  <p style="font-size:14px;color:#8ea3c8;margin:0 0 24px">November 15, 2026</p>
+  <p style="font-size:15px;letter-spacing:3px;color:#38bdf8;margin:0 0 16px">WHAT'S NEW</p>
+  <div style="text-align:left;max-width:360px;width:100%">
+    <div style="margin-bottom:4px"><b style="font-size:16px">Sleep screen</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Tapping Go to sleep now opens a full night sky screen with twinkling stars, a moon, drifting clouds and a live clock. Tap Wake up for a sunrise and your sleep gets logged.</p></div>
+  </div>
+<button class="big" style="min-width:200px;margin-top:24px" onclick="dismissUpdates()">Continue</button>
+</div>
+
+<div class="apphead">
+  <div class="apptitle">
+    <p style="font-size:13px;letter-spacing:3px;color:#38bdf8;margin:0 0 4px;font-weight:700">LOCK IN</p>
+    <h1 id="pageTitle">Today, Friday</h1>
+    <p class="sub" id="pageSub">Good afternoon, Lonj</p>
+    <p id="syncStatus" style="font-size:12px;color:#64748b;margin:6px 0 0">Sync: checking...</p>
+  </div>
+</div>
+
+<div class="card" id="calArcCard" style="text-align:center">
+  <div style="font-size:16px;font-weight:700;text-align:left">Calories today</div>
+  <div style="position:relative;width:220px;height:122px;margin:10px auto 0">
+    <svg viewBox="0 0 220 122" style="width:220px;height:122px;display:block">
+      <path d="M 15 110 A 95 95 0 0 1 205 110" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="14" stroke-linecap="round"/>
+      <path id="calArcFill" d="M 15 110 A 95 95 0 0 1 205 110" fill="none" stroke="#38bdf8" stroke-width="14" stroke-linecap="round" stroke-dasharray="298.5" stroke-dashoffset="298.5"/>
+    </svg>
+    <div style="position:absolute;left:0;right:0;bottom:0">
+      <div style="font-size:38px;font-weight:800;letter-spacing:-1px;line-height:1"><span id="calArcEaten">0</span><span style="font-size:17px;color:#8ea3c8;font-weight:600"> /2,900</span></div>
+      <div style="font-size:14px;color:#8ea3c8;margin-top:4px" id="calArcLeft">2,900 calories left</div>
+    </div>
+  </div>
+  <div style="font-size:15px;margin-top:10px" id="paceLine"></div>
+  <div class="ringrow">
+    <div class="ringcell">
+      <div style="position:relative;width:64px;height:64px;margin:0 auto">
+        <svg viewBox="0 0 64 64" style="width:64px;height:64px"><circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="6"/><circle id="ringProFill" cx="32" cy="32" r="26" fill="none" stroke="#38bdf8" stroke-width="6" stroke-linecap="round" stroke-dasharray="163.4" stroke-dashoffset="163.4" transform="rotate(-90 32 32)"/></svg>
+        <div id="ringProVal" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">0g</div>
+      </div>
+      <div style="font-size:12px;color:#8ea3c8;margin-top:6px">Protein</div>
+      <div id="ringProSub" style="font-size:11px;color:#64748b">0g left</div>
+    </div>
+    <div class="ringcell">
+      <div style="position:relative;width:64px;height:64px;margin:0 auto">
+        <svg viewBox="0 0 64 64" style="width:64px;height:64px"><circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="6"/><circle id="ringWaterFill" cx="32" cy="32" r="26" fill="none" stroke="#38bdf8" stroke-width="6" stroke-linecap="round" stroke-dasharray="163.4" stroke-dashoffset="163.4" transform="rotate(-90 32 32)"/></svg>
+        <div id="ringWaterVal" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">0/10</div>
+      </div>
+      <div style="font-size:12px;color:#8ea3c8;margin-top:6px">Water</div>
+      <div id="ringWaterSub" style="font-size:11px;color:#64748b">10 to go</div>
+    </div>
+    <div class="ringcell">
+      <div style="position:relative;width:64px;height:64px;margin:0 auto">
+        <svg viewBox="0 0 64 64" style="width:64px;height:64px"><circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="6"/><circle id="ringMealsFill" cx="32" cy="32" r="26" fill="none" stroke="#38bdf8" stroke-width="6" stroke-linecap="round" stroke-dasharray="163.4" stroke-dashoffset="163.4" transform="rotate(-90 32 32)"/></svg>
+        <div id="ringMealsVal" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">0/4</div>
+      </div>
+      <div style="font-size:12px;color:#8ea3c8;margin-top:6px">Meals</div>
+      <div id="ringMealsSub" style="font-size:11px;color:#64748b">Meals logged</div>
+    </div>
+  </div>
+</div>
+
+<div class="card dash pressable" id="nextMealCard" onclick="goToFood()">
+  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a2 2 0 0 0 4 0V3"/><path d="M8 3v18"/><path d="M16 3c-2 2-3 4-3 7v3h3v8"/></svg></div>
+  <div class="dashbody">
+    <div class="dashlabel">Next meal</div>
+    <div class="dashbig" id="nextMealTitle">—</div>
+    <div class="dashsub" id="nextMealSub">—</div>
+    <div class="bar slim"><i id="calBar" style="width:0%"></i></div>
+    <div class="dashsub" id="nextMealToday" style="margin-top:2px">—</div>
+  </div>
+  <div class="chev">›</div>
+</div>
+
+<div class="card dash" id="workoutCard">
+  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"><path d="M7 8v8M4 10v4M17 8v8M20 10v4M7 12h10"/></svg></div>
+  <div class="dashbody">
+    <div class="dashlabel">Workout today</div>
+    <div class="dashbig" id="workoutPartLabel">—</div>
+    <div class="dashsub" id="workoutSubLabel">—</div>
+  </div>
+  <button class="pillbtn" id="workoutDoneBtn" onclick="markWorkoutDone()">Start</button>
+</div>
+
+
+
+<div class="card dash" id="waterCard">
+  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg></div>
+  <div class="dashbody">
+    <div class="dashlabel">Water</div>
+    <div class="dashbig" id="waterCount">0 of 10 glasses</div>
+    <div class="drops" id="waterDrops"></div>
+    <div class="dashsub" id="waterOz">0 oz / 80 oz</div>
+  </div>
+  <div class="stepper"><button onclick="addWater(1)">+</button><button onclick="addWater(-1)">−</button></div>
+</div>
+
+<div id="weekStripWrap">
+  <div class="weekhead"><h2>Weekly streak</h2><span id="weekStripCount">0/7 days</span></div>
+  <div class="weekrow" id="weekStrip"></div>
+  <div class="weekletters" id="weekLetters"></div>
+</div>
+
+<details class="card" id="scheduleTimes"><summary>Change times</summary>
+  <h2>Change times</h2>
+  <label style="font-size:14px;color:#ddd">Breakfast (no-school days)</label><input id="ctBreakfast" type="time">
+  <label style="font-size:14px;color:#ddd">School breakfast</label><input id="ctSchoolBreakfast" type="time">
+  <label style="font-size:14px;color:#ddd">Lunch (no-school days)</label><input id="ctLunch" type="time">
+  <label style="font-size:14px;color:#ddd">Snack / Home meal</label><input id="ctSnack" type="time">
+  <label style="font-size:14px;color:#ddd">Dinner</label><input id="ctDinner" type="time">
+  <button class="big" onclick="saveTimes()">Save times</button>
+</details>
+
+<div class="card" id="calendarSection">
+  <div class="weekhead"><h2>This Week</h2><span id="calMonth" style="color:#8ea3c8;font-size:16px">—</span></div>
+  <div class="calweeknames"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+  <div class="calweekcircles" id="calWeekCircles"></div>
+  <div class="weekletters"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+  <h2 class="schedhead" id="schedHead">Today's schedule</h2>
+  <div class="tl" id="timelineList"></div>
+  <ul id="calDetailList"></ul>
+  <h2 style="margin-top:14px">Add a block</h2>
+  <input id="newBlockTitle" placeholder="What is it? e.g. Homework">
+  <div class="row">
+    <input id="newBlockTime" type="time" value="15:00">
+    <select id="newBlockDur"><option value="0.25">15 min</option><option value="0.5">30 min</option><option value="1" selected>1 hour</option><option value="1.5">1.5 hours</option><option value="2">2 hours</option></select>
+  </div>
+  <button class="big" onclick="addCalEvent()">Add block to this day</button>
+  <button class="secondary" style="margin-top:12px" onclick="resetCalendar()">Reset calendar to schedule</button>
+</div>
+
+<p id="streakQuote" style="text-align:center;font-style:italic;color:#e9d5ff;margin:4px 8px 16px;font-size:15px;line-height:1.4"></p>
+
+<div class="card" id="streaksLock" style="background:transparent;border:none;box-shadow:none;padding:0">
+  <p class="small" id="streakLockText" style="text-align:center;margin:0 0 8px"></p>
+  <div class="dots" id="streakDots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+  <div class="keypad" id="streakKeypad"></div>
+  <div id="streakTextFallback" style="display:none;margin-top:16px">
+    <input id="streakPw" type="password" placeholder="Password" autocomplete="off">
+    <button class="big" onclick="unlockStreaks()">Unlock</button>
+  </div>
+  <p class="small" id="streakLockMsg" style="margin-bottom:0;text-align:center"></p>
+</div>
+
+<div class="card" id="streaksMain">
+  <div id="streakList"></div>
+  <div class="row" style="margin-top:12px">
+    <button class="secondary" onclick="lockStreaks()">Lock</button>
+    <button class="secondary" onclick="changeStreakCode()">Change code</button>
+  </div>
+</div>
+
+<details class="card" id="streaksAdd">
+  <summary>Add goal</summary>
+  <input id="newStreakName" placeholder="Goal, e.g. No soda" autocomplete="off">
+  <div class="row">
+    <input id="newStreakGoal" type="number" inputmode="numeric" placeholder="Goal days" value="30">
+  </div>
+  <button class="big" onclick="addStreak()">Add goal</button>
+</details>
+
+<button class="big" id="logFoodBtn" onclick="toggleFood()" style="margin-bottom:14px">+ Log food</button>
+
+<div class="card" id="foodCard" style="display:none">
+  <h2>Food</h2>
+  <p class="small" id="foodSummary" style="margin:0 0 10px"></p>
+  <input id="mealName" placeholder="What did you eat?" autocomplete="off">
+  <div class="row">
+    <input id="mealKcal" type="number" inputmode="numeric" placeholder="Calories">
+    <input id="mealPro" type="number" inputmode="numeric" placeholder="Protein g">
+  </div>
+  <button class="big" onclick="addMeal()">Add food</button>
+  <button class="big" style="margin-top:8px;background:#0ea5e9" onclick="startScan()">Scan barcode</button>
+  <div id="scanBox" style="display:none;margin-top:12px">
+    <div style="position:relative;border-radius:16px;overflow:hidden;background:#000">
+      <div id="reader" style="width:100%"></div>
+      <div style="position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center"><div style="width:88%;height:55%;border:2px solid #38bdf8;border-radius:12px;box-shadow:0 0 0 9999px rgba(2,6,23,.55)"></div></div>
+    </div>
+    <p id="scanStatus" style="font-size:13px;color:#8ea3c8;text-align:center;margin:8px 0 0">Opening back camera…</p>
+    <input id="manualCode" inputmode="numeric" placeholder="Or type the barcode number" style="margin-top:8px">
+    <button class="big" style="margin-top:8px" onclick="lookupBarcode(document.getElementById('manualCode').value)">Look up barcode</button>
+    <button class="big" style="margin-top:8px" onclick="stopScan()">Cancel</button>
+    <button class="big" style="margin-top:8px;background:#334155" onclick="document.getElementById('scanPhotoInput').click()">Take a photo of it instead</button>
+    <input type="file" id="scanPhotoInput" accept="image/*" capture="environment" style="display:none" onchange="scanPhotoFile(this.files[0]); this.value='';">
+    <p style="font-size:12px;color:#8ea3c8;text-align:center;margin:6px 0 0">For pouches and tiny barcodes, use this — get close so just the barcode fills the picture.</p>
+  </div>
+  <div id="scanForm" style="display:none;margin-top:12px">
+    <img id="scanImg" src="" alt="" style="display:none;width:72px;height:72px;object-fit:cover;border-radius:12px;margin-bottom:8px">
+    <input id="scanFoodName" placeholder="Food name" autocomplete="off">
+    <div class="row">
+      <input id="scanCal" type="number" inputmode="numeric" placeholder="Cal per serving">
+      <input id="scanPro" type="number" inputmode="numeric" placeholder="Protein g">
+    </div>
+    <div class="row">
+      <input id="scanServ" type="number" inputmode="decimal" step="0.5" value="1" placeholder="Servings">
+    </div>
+    <p id="scanNote" style="font-size:13px;color:#8ea3c8;margin:4px 0 8px"></p>
+    <button class="big" onclick="addScanned()">Add to today</button>
+  </div>
+  <ul id="mealList"></ul>
+</div>
+
+<div class="card" id="workoutLogCard">
+  <h2>Workout log</h2>
+  <select id="workoutPart">
+    <option>Legs</option><option>Upper Body</option><option>Core</option><option>Cardio</option>
+  </select>
+  <input id="workoutName" placeholder="Exercise (optional)" autocomplete="off">
+  <button class="big" onclick="addWorkout()">Add workout</button>
+  <ul id="workoutList"></ul>
+</div>
+
+<div class="card" id="weightStepsCard">
+  <h2>Weight / Steps</h2>
+  <div class="row">
+    <input id="weightVal" type="number" inputmode="decimal" placeholder="Weight lb">
+    <input id="stepsVal" type="number" inputmode="numeric" placeholder="Steps">
+  </div>
+  <button class="big" onclick="saveOther()">Save</button>
+  <ul id="weightList"></ul>
+  <p class="small" id="stepsLabel" style="margin-bottom:0"></p>
+</div>
+
+<div id="sleepSlot">
+<div class="card dash" id="sleepCard">
+  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13A8 8 0 1 1 11 4a6.5 6.5 0 0 0 9 9z"/></svg></div>
+  <div class="dashbody">
+    <div class="dashlabel">Sleep</div>
+    <div class="dashbig" id="sleepStatus">No sleep logged yet.</div>
+    <div class="dashsub" id="sleepSub">Tap Go to sleep at bedtime.</div>
+  </div>
+  <button class="pillbtn" id="sleepBtn" onclick="toggleSleep()">Go to sleep</button>
+</div>
+<ul id="sleepList" style="margin:-6px 0 14px"></ul>
+</div>
+
+<div class="card dash pressable" id="weightCard" onclick="openWeightView()">
+  <div class="dashicon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7a3 3 0 0 1 6 0"/><path d="M5.5 7h13l1.8 5.2a6.5 6.5 0 0 1-12.6 0z"/><path d="M12 12v3"/><path d="M10 15h4"/></svg></div>
+  <div class="dashbody">
+    <div class="dashbig" id="weightTitle">Weight • 114 lb → 130 lb goal</div>
+    <div class="bar"><i id="weightBar" style="width:0%"></i></div>
+    <div class="dashsub" id="weightSub">—</div>
+  </div>
+  <div class="chev">›</div>
+</div>
+
+<div class="card" id="weekSummaryCard">
+  <h2>This week</h2>
+  <div class="dashsub" id="weekSummaryLine">—</div>
+</div>
+
+<details class="card" id="pastDays">
+  <summary>Past days</summary>
+  <ul id="historyList"></ul>
+</details>
+
+<p style="text-align:center;font-size:11px;color:#475569;margin:8px 0 0">v2.7-staging · Sleep Screen</p>
+
+<div class="alert" id="eatAlert">
+  <b>Time to eat 🍽️</b>
+  <p style="margin:8px 0" id="eatAlertText"></p>
+  <button onclick="openFood()">Add food</button>
+</div>
+
+<div id="weightView" style="display:none;position:fixed;inset:0;z-index:900;background:#0a1128;overflow-y:auto;padding:calc(20px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))">
+  <button class="secondary" onclick="closeWeightView()">‹ Back</button>
+  <h1 style="font-size:36px;margin:18px 0 2px"><span id="wvBig">—</span> <span style="font-size:18px;color:#8ea3c8">lb</span></h1>
+  <p class="sub" id="wvSub">—</p>
+  <div class="row" style="margin-top:16px">
+    <div class="card" style="flex:1;text-align:center;margin:0"><div class="small">Average</div><b id="wvAvg" style="font-size:22px">—</b></div>
+    <div class="card" style="flex:1;text-align:center;margin:0"><div class="small">Change</div><b id="wvChange" style="font-size:22px">—</b></div>
+  </div>
+  <div style="display:flex;gap:6px;margin:16px 0">
+    <button class="secondary" id="wvR1W" onclick="renderWeightChart('1W')">1W</button>
+    <button class="secondary" id="wvR1M" onclick="renderWeightChart('1M')">1M</button>
+    <button class="secondary" id="wvRAll" onclick="renderWeightChart('All')">All</button>
+  </div>
+  <div class="card"><svg id="wvChart" viewBox="0 0 320 160" style="width:100%;height:auto;display:block"></svg></div>
+  <h2 style="margin-top:18px">Entries</h2>
+  <ul id="wvEntries"></ul>
+</div>
+
+<div class="tabbar">
+  <button class="on" id="tabTracker" onclick="switchSection('tracker')"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="17" y="3" width="4" height="17" rx="1"/></svg>Tracker</button>
+  <button id="tabCalendar" onclick="switchSection('calendar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendar</button>
+  <button id="tabProgress" onclick="switchSection('progress')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>Progress</button>
+  <button id="tabStreaks" onclick="switchSection('streaks')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 3.5-2 5.5-3.5 7.5C7 11.5 6 13 6 15.5A6 6 0 0 0 18 15.5c0-2.5-1.5-4-2.5-5.5-.4 1.2-1.2 2-2.3 2.4C13.6 9.5 13 5.5 12 2z"/></svg>Streaks</button>
+</div>
+
+<div id="sleepScreen">
+  <div class="nightbg"></div>
+  <div class="sunrisebg"></div>
+  <div id="sstars"></div>
+  <div class="smoon"></div>
+  <div class="scloud c1"></div>
+  <div class="scloud c2"></div>
+  <div class="shoot s1"></div>
+  <div class="shoot s2"></div>
+  <div class="ssun"></div>
+  <div class="scontent" id="ssNight">
+    <div class="sgreet">Good night, Lonj</div>
+    <div class="sclock" id="ssClock">--:--</div>
+    <div class="ssub" id="ssSub">You went to sleep at --</div>
+    <div class="selapsed" id="ssElapsed">Sleeping for 0h 0m</div>
+  </div>
+  <div class="scontent" id="ssDay">
+    <div class="sgreet" id="ssDayGreet">Good morning, Lonj</div>
+    <div class="sclock" style="font-size:28px" id="ssDaySub">You slept 0h 0m</div>
+    <div class="ssub">Nice, you're up.</div>
+  </div>
+  <button class="swake" onclick="wakeUpFromScreen()">☀&nbsp; Wake up</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/barcode-detector@3.2.4/dist/iife/ponyfill.min.js"></script>
+<script>
+var APP_VERSION='2.7-staging';
+var _needClear=true; try{_needClear=localStorage.getItem('lockin_staging_cache_cleared_for')!==APP_VERSION;}catch(e){}
+if(_needClear){try{localStorage.setItem('lockin_staging_cache_cleared_for',APP_VERSION);}catch(e){} if('serviceWorker' in navigator){try{navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}catch(e){} try{if(window.caches){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});});}}catch(e){}}}
+var LS_KEY = 'lockin_staging_v1';
+var GOAL_WT = 130, START_WT = 114, HEIGHT_CM = 152.4, AGE = 18;
+var SCHEDULE = ['Legs','Upper Body','Rest','Legs','Upper Body','Rest','Rest'];
+var DAYNAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var SYNC_URL = null; // staging: disconnected, never touches the live log
+var SCHOOL_BELLS = {3:{recess:'9:20 AM', recessHour:9.33, lunch:'11:50 AM', lunchHour:11.83}, 4:{recess:'9:35 AM', recessHour:9.58, lunch:'12:25 PM', lunchHour:12.42}, 5:{recess:'9:35 AM', recessHour:9.58, lunch:'12:25 PM', lunchHour:12.42}};
+function fmtTime(hhmm){var parts=hhmm.split(':'); var h=parseInt(parts[0],10), m=parts[1]; var ap=h>=12?'PM':'AM'; var h12=h%12; if(h12===0) h12=12; return h12+':'+m+' '+ap;}
+function timeHour(hhmm){var parts=hhmm.split(':'); return parseInt(parts[0],10)+parseInt(parts[1],10)/60;}
+function buildMealsBase(day, ct){
+  if(SCHOOL_BELLS[day]){
+    var b=SCHOOL_BELLS[day];
+    return [
+      {name:'Breakfast', time:fmtTime(ct.schoolBreakfast||'06:30'), hour:timeHour(ct.schoolBreakfast||'06:30'), share:650/2900, cum:650/2900},
+      {name:'Recess snack', time:b.recess, hour:b.recessHour, share:400/2900, cum:1050/2900},
+      {name:'Lunch', time:b.lunch, hour:b.lunchHour, share:550/2900, cum:1600/2900},
+      {name:'Home meal', time:fmtTime(ct.home||'16:00'), hour:timeHour(ct.home||'16:00'), share:800/2900, cum:2400/2900},
+      {name:'Dinner', time:fmtTime(ct.dinner||'20:30'), hour:timeHour(ct.dinner||'20:30'), share:500/2900, cum:1.00}
+    ];
+  }
+  return [
+    {name:'Breakfast', time:fmtTime(ct.breakfast||'08:00'), hour:timeHour(ct.breakfast||'08:00'), share:0.25, cum:0.25},
+    {name:'Lunch', time:fmtTime(ct.lunch||'13:00'), hour:timeHour(ct.lunch||'13:00'), share:0.30, cum:0.55},
+    {name:'Snack', time:fmtTime(ct.snack||'16:00'), hour:timeHour(ct.snack||'16:00'), share:0.20, cum:0.75},
+    {name:'Dinner', time:fmtTime(ct.dinner||'20:30'), hour:timeHour(ct.dinner||'20:30'), share:0.25, cum:1.00}
+  ];
+}
+
+function buildMeals(day, ct){
+  var meals = buildMealsBase(day, ct);
+  var ov = (typeof state!=='undefined' && state && state.mealOverrides && state.mealOverrides[day]) || {};
+  meals.forEach(function(m){
+    if(ov[m.name]!==undefined && ov[m.name]!==null){
+      m.hour = ov[m.name];
+      m.time = fmtHour(ov[m.name]);
+    }
+  });
+  return meals;
+}
+var MEALS = buildMeals(new Date().getDay(), {});
+function todayKey(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function defaultState(){return {targets:{cal:2900,protein:114},workouts:[],meals:[],water:{},weights:[],steps:{},customTimes:{breakfast:'08:00',lunch:'13:00',snack:'16:00',dinner:'20:30',schoolBreakfast:'06:30',home:'16:00'},calEvents:null,mealOverrides:{},sleep:[],sleepStart:null};}
+var state = defaultState();
+try{
+  var raw = localStorage.getItem(LS_KEY);
+  if(raw){var p=JSON.parse(raw); if(p && typeof p==='object'){
+    state = Object.assign(defaultState(), p);
+    state.targets = Object.assign({cal:2900,protein:114}, p.targets||{});
+    state.targets.cal = 2900; /* Jacob's chosen target, 2026-11-01, overrides the calculated 2650 */
+    if(!Array.isArray(state.workouts)) state.workouts=[];
+    if(!Array.isArray(state.meals)) state.meals=[];
+    if(!state.water || typeof state.water!=='object') state.water={};
+    if(!Array.isArray(state.weights)) state.weights=[];
+    if(!state.steps || typeof state.steps!=='object') state.steps={};
+    if(!state.customTimes || typeof state.customTimes!=='object') state.customTimes={breakfast:'08:00',lunch:'13:00',snack:'16:00',dinner:'20:30',schoolBreakfast:'06:30',home:'16:00'};
+    if(!state.calEvents) state.calEvents = buildDefaultCalEvents();
+    if(!state.mealOverrides || typeof state.mealOverrides!=='object') state.mealOverrides={};
+    if(!Array.isArray(state.sleep)) state.sleep=[];
+    if(state.sleepStart===undefined) state.sleepStart=null;
+  }}
+}catch(e){}
+var __syncTimer=null, __suppressSync=false;
+function setSyncStatus(s){var el=document.getElementById('syncStatus'); if(el) el.textContent='Sync: '+s;}
+function scheduleSyncPush(){
+  if(!SYNC_URL) return;
+  if(__suppressSync) return;
+  if(__syncTimer) clearTimeout(__syncTimer);
+  __syncTimer=setTimeout(function(){
+    setSyncStatus('syncing...');
+    try{fetch(SYNC_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(state)}).then(function(r){setSyncStatus(r.ok?'synced':'offline, saved on phone');}).catch(function(){setSyncStatus('offline, saved on phone');});}
+    catch(e){setSyncStatus('offline, saved on phone');}
+  },800);
+}
+function save(){state.updatedAt=Date.now(); try{localStorage.setItem(LS_KEY, JSON.stringify(state));}catch(e){} scheduleSyncPush();}
+function mergeById(a,b){var seen={},out=[]; (a||[]).concat(b||[]).forEach(function(x){if(x&&x.id&&!seen[x.id]){seen[x.id]=1; out.push(x);}}); return out;}
+function syncPullAndMerge(){
+  if(!SYNC_URL){ setSyncStatus('staging, not synced'); return; }
+  try{fetch(SYNC_URL).then(function(r){return r.json();}).then(function(remote){
+    if(!remote||typeof remote!=='object') return;
+    var localHas=(state.meals&&state.meals.length)||(state.workouts&&state.workouts.length)||(state.weights&&state.weights.length);
+    var remoteHas=(remote.meals&&remote.meals.length)||(remote.workouts&&remote.workouts.length)||(remote.weights&&remote.weights.length);
+    if(!remoteHas && localHas){ scheduleSyncPush(); setSyncStatus('synced'); return; }
+    if(!localHas && remoteHas){
+      __suppressSync=true; state=Object.assign(defaultState(), remote); state.targets={cal:2900,protein:114}; state.targets.cal=2900; try{localStorage.setItem(LS_KEY, JSON.stringify(state));}catch(e){} __suppressSync=false; render(); setSyncStatus('synced'); return;
+    }
+    if((remote.updatedAt||0) > (state.updatedAt||0)){
+      __suppressSync=true;
+      state.meals=mergeById(state.meals, remote.meals); state.workouts=mergeById(state.workouts, remote.workouts); state.weights=mergeById(state.weights, remote.weights);
+      state.water=Object.assign({}, state.water||{}, remote.water||{}); state.steps=Object.assign({}, state.steps||{}, remote.steps||{});
+      if(remote.customTimes) state.customTimes=remote.customTimes; if(remote.mealOverrides) state.mealOverrides=remote.mealOverrides; if(remote.calEvents) state.calEvents=remote.calEvents;
+      state.updatedAt=remote.updatedAt||Date.now();
+      try{localStorage.setItem(LS_KEY, JSON.stringify(state));}catch(e){} __suppressSync=false; render();
+    }
+    setSyncStatus('synced');
+  }).catch(function(){setSyncStatus('offline, saved on phone');});}catch(e){setSyncStatus('offline, saved on phone');}
+}
+function num(id){var v=parseFloat(document.getElementById(id).value); return isNaN(v)?0:v;}
+function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function currentWeight(){
+  var lastW=state.weights[state.weights.length-1];
+  return lastW ? lastW.lbs : START_WT;
+}
+function calcPlan(){
+  var wt=currentWeight();
+  var kg=wt*0.453592;
+  var bmr=10*kg + 6.25*HEIGHT_CM - 5*AGE + 5;
+  var tdee=bmr*1.55;
+  var cal=2900; /* user-chosen daily target */
+  var pro=Math.round(wt);
+  var water=Math.round(wt*0.7/8);
+  var gain=Math.max(0, GOAL_WT-wt);
+  var weeks=gain>0 ? Math.round(gain/0.5) : 0;
+  return {wt:wt, cal:cal, pro:pro, water:water, gain:gain, weeks:weeks, bmr:Math.round(bmr), tdee:Math.round(tdee)};
+}
+function weekDateKey(dayIdx){
+  var d=new Date(); d.setDate(d.getDate()-d.getDay()+dayIdx);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function renderWeekStrip(){
+  var el=document.getElementById('weekStrip'); if(!el) return;
+  var todayIdx=new Date().getDay(), done=0, html='', letters='';
+  var labels=['M','T','W','T','F','S','S'];
+  for(var i=0;i<7;i++){
+    var dayIdx=(i+1)%7;
+    var hasWo=state.workouts.some(function(w){return w.date===weekDateKey(dayIdx);});
+    if(hasWo) done++;
+    html+='<span class="weekcircle'+(hasWo?' done':'')+(dayIdx===todayIdx?' today':'')+'">'+(hasWo?'✓':(dayIdx===todayIdx?labels[i]:''))+'</span>';
+    letters+='<span>'+labels[i]+'</span>';
+  }
+  el.innerHTML=html;
+  var lw=document.getElementById('weekLetters'); if(lw) lw.innerHTML=letters;
+  var wc=document.getElementById('weekStripCount'); if(wc) wc.textContent=done+'/7 days';
+}
+function renderWaterDrops(count){
+  var el=document.getElementById('waterDrops'); if(!el) return;
+  var s='';
+  for(var i=0;i<10;i++){ s+='<svg class="drop'+(i<count?' on':'')+'" viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg>'; }
+  el.innerHTML=s;
+}
+function updateHeader(plan){
+  var sec=window.__section||'tracker';
+  var now=new Date(), g=timeGreeting(), dayName=DAYNAMES[now.getDay()];
+  var t=document.getElementById('pageTitle'), sub=document.getElementById('pageSub');
+  if(!t || !sub) return;
+  if(!plan) plan=calcPlan();
+  if(sec==='tracker'){ t.textContent='Today, '+dayName; sub.textContent=g+', Lonj • Goal: '+plan.cal.toLocaleString()+' cal/day'; }
+  else if(sec==='calendar'){ t.textContent='Calendar'; sub.textContent=dayName+', '+now.toLocaleDateString([], {month:'short', day:'numeric'})+' • '+g+', Lonj'; }
+  else if(sec==='progress'){ t.textContent='Progress'; sub.textContent='Workouts, weight and sleep.'; }
+  else { t.textContent='Streaks'; sub.textContent='One day at a time.'; }
+}
+function render(){
+  var today=todayKey(), now=new Date(), plan=calcPlan();
+  MEALS = buildMeals(now.getDay(), state.customTimes||{});
+  var meals=state.meals.filter(function(m){return m.date===today;});
+  var cal=meals.reduce(function(a,m){return a+(m.kcal||0);},0);
+  var wos=state.workouts.filter(function(w){return w.date===today;});
+  var hourNow=now.getHours()+now.getMinutes()/60;
+  var nextMeal=null;
+  for(var mi=0; mi<MEALS.length; mi++){ if(hourNow<MEALS[mi].hour){ nextMeal=MEALS[mi]; break; } }
+  var nmT=document.getElementById('nextMealTitle'), nmS=document.getElementById('nextMealSub');
+  if(nextMeal){
+    nmT.textContent=nextMeal.name+', '+nextMeal.time+', '+Math.round(plan.cal*nextMeal.share)+' cal';
+    nmS.textContent=Math.round(plan.cal*nextMeal.share)+' cal • '+Math.round(plan.pro*nextMeal.share)+'g protein';
+  } else {
+    nmT.textContent='All meals done';
+    nmS.textContent='Goal: '+plan.cal.toLocaleString()+' cal today';
+  }
+  var calLeft=plan.cal-cal;
+  document.getElementById('nextMealToday').textContent=cal.toLocaleString()+' of '+plan.cal.toLocaleString()+' cal today • '+(calLeft>0?calLeft.toLocaleString()+' to go':'Goal hit ✓');
+  document.getElementById('calBar').style.width=Math.min(100, Math.round(cal/plan.cal*100))+'%';
+  var todayPart=effectiveWorkout(now.getDay());
+  var doneToday=wos.length>0;
+  document.getElementById('workoutPartLabel').textContent=todayPart==='Rest' ? 'Rest day' : todayPart;
+  document.getElementById('workoutSubLabel').textContent=todayPart==='Rest' ? 'Eat, sleep, recover.' : (doneToday ? 'Done ✓' : '45–60 min • Ready to start');
+  var wbtn=document.getElementById('workoutDoneBtn');
+  wbtn.style.display=todayPart==='Rest' ? 'none' : 'block';
+  wbtn.textContent=doneToday ? 'Done ✓' : 'Start';
+  var wcount=state.water[today]||0;
+  document.getElementById('waterCount').textContent=wcount+' of 10 glasses';
+  document.getElementById('waterOz').textContent=(wcount*8)+' oz / 80 oz';
+  renderWaterDrops(wcount);
+  var lastW=state.weights[state.weights.length-1];
+  var wv=lastW?lastW.lbs:plan.wt;
+  document.getElementById('weightSub').textContent=wv+' lb now • +'+(Math.round((wv-START_WT)*10)/10)+' lb • '+(Math.round((GOAL_WT-wv)*10)/10)+' lb to goal';
+  var wBar=document.getElementById('weightBar');
+  if(wBar) wBar.style.width=Math.max(0,Math.min(100,Math.round((wv-START_WT)/(GOAL_WT-START_WT)*100)))+'%';
+  renderCalArc(cal, plan);
+  var paceEl=document.getElementById('paceLine');
+  if(paceEl){
+    var lastPassed=null;
+    for(var pi=0; pi<MEALS.length; pi++){ if(hourNow>=MEALS[pi].hour) lastPassed=MEALS[pi]; }
+    if(!lastPassed){ paceEl.textContent='First up: '+MEALS[0].name+' at '+MEALS[0].time+'.'; paceEl.style.color='#8ea3c8'; }
+    else{
+      var expected=Math.round(plan.cal*lastPassed.cum), behind=expected-cal;
+      if(behind>0){ paceEl.textContent=behind.toLocaleString()+' cal behind — eat something to catch up.'; paceEl.style.color='#fbbf24'; }
+      else { paceEl.textContent='On pace ✓ — you\'re good for now.'; paceEl.style.color='#7dd3fc'; }
+    }
+  }
+  var proToday=meals.reduce(function(a,m){return a+(m.protein||0);},0);
+  var fsEl=document.getElementById('foodSummary');
+  if(fsEl) fsEl.textContent='Today: '+cal.toLocaleString()+' cal • '+proToday+'g protein';
+  renderWeekSummary();
+  renderWeekStrip();
+  document.getElementById('mealList').innerHTML=meals.map(function(m){
+    return '<li><div><b>'+esc(m.name)+'</b><small>'+(m.protein?m.protein+'g protein':'')+'</small></div><b style="font-size:16px;white-space:nowrap">'+m.kcal+' cal</b><button class="danger" onclick="delMeal(\''+m.id+'\')">Delete</button></li>';
+  }).join('') || '<li class="small">Nothing yet today.</li>';
+  document.getElementById('workoutList').innerHTML=wos.map(function(w){
+    return '<li><div><b>'+esc(w.part)+(w.title?' — '+esc(w.title):'')+'</b></div><button class="danger" onclick="delWorkout(\''+w.id+'\')">Delete</button></li>';
+  }).join('') || '<li class="small">Nothing yet today.</li>';
+  document.getElementById('weightList').innerHTML=state.weights.slice().reverse().slice(0,10).map(function(w){
+    return '<li><div><b>'+w.lbs+' lb</b><small>'+w.date+(w.time?' at '+w.time:'')+'</small></div></li>';
+  }).join('') || '<li class="small">No weights logged yet.</li>';
+  document.getElementById('stepsLabel').textContent=state.steps[today]?('Steps today: '+state.steps[today]):'';
+  var days=[];
+  for(var i=1;i<8;i++){var d=new Date(); d.setDate(d.getDate()-i); var k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); days.push(k);}
+  document.getElementById('historyList').innerHTML=days.map(function(k){
+    var mc=state.meals.filter(function(m){return m.date===k;}).reduce(function(a,m){return a+(m.kcal||0);},0);
+    var wc=state.workouts.filter(function(w){return w.date===k;}).length;
+    return '<li><div><b>'+k+'</b><small>'+mc+' cal · '+wc+' workout(s) · '+(state.water[k]||0)+' water</small></div></li>';
+  }).join('');
+  renderSleep();
+  renderDragCalendar();
+  checkEatAlert(cal, plan);
+  updateHeader(plan);
+}
+function checkEatAlert(cal, plan){
+  var now=new Date(), hour=now.getHours()+now.getMinutes()/60, alertBox=document.getElementById('eatAlert');
+  var due=null;
+  for(var i=0;i<MEALS.length;i++){ if(hour>=MEALS[i].hour && hour<=MEALS[i].hour+1) due=MEALS[i]; }
+  if(due && cal < Math.round(plan.cal*due.cum)-50 && (window.__section||'tracker')==='tracker'){
+    alertBox.style.display='block';
+    document.getElementById('eatAlertText').textContent='It is past '+due.name+' ('+due.time+'). You are at '+cal+' cal, aim for about '+Math.round(plan.cal*due.cum)+' by now.';
+    if(window.__notifiedFor!==due.name && 'Notification' in window && Notification.permission==='granted'){
+      try{ new Notification('Time to eat', {body:'You are at '+cal+' cal. Aim for about '+Math.round(plan.cal*due.cum)+' by now.'}); window.__notifiedFor=due.name; }catch(e){}
+    }
+  } else { alertBox.style.display='none'; }
+}
+function enableReminders(){
+  if(!('Notification' in window)){alert('This browser does not support reminders. Open the app at meal times and the Time to Eat banner will show.'); return;}
+  Notification.requestPermission().then(function(p){
+    if(p==='granted'){alert('Reminders on while the app is open.'); setInterval(function(){render();}, 15*60*1000);}
+    else {alert('Reminders need permission. The banner in the app will still show when you open it.');}
+  });
+}
+
+var calSelectedDay = new Date().getDay();
+function buildDefaultCalEvents(){
+  var out = {};
+  for(var d=0; d<7; d++){
+    var meals = buildMeals(d, {breakfast:'08:00',lunch:'13:00',snack:'16:00',dinner:'20:30',schoolBreakfast:'06:30',home:'16:00'});
+    var ev = [{id:'wake', title:'Wake up', start:6, dur:0.5, color:'#475569', sub:'6:00 AM'}];
+    if(SCHOOL_BELLS[d]) ev.push({id:'school', title:'School', start:7.92, dur:7, color:'#7c3aed', sub:'7:55 AM - 2:55 PM', fixed:true});
+    meals.forEach(function(m, i){
+      ev.push({id:'meal'+i, title:m.name, start:m.hour, dur:0.5, color:'#3b82f6', sub:m.time});
+    });
+    if(SCHOOL_BELLS[d]) ev.push({id:'home', title:'Home', start:16, dur:0.5, color:'#334155', sub:'4:00 PM'});
+    if(SCHEDULE[d]!=='Rest') ev.push({id:'workout', title:'Workout - '+SCHEDULE[d], start:17, dur:1, color:'#14b8a6', sub:'5:00 PM - 6:00 PM'});
+    ev.push({id:'bed', title:'Bed', start:22, dur:0.5, color:'#475569', sub:'10:00 PM'});
+    out[d]=ev;
+  }
+  return out;
+}
+function fmtHour(h){
+  var hh=Math.floor(h), mm=Math.round((h-hh)*60);
+  if(mm===60){hh++; mm=0;}
+  var ap=hh>=12?'PM':'AM'; var h12=hh%12; if(h12===0) h12=12;
+  return h12+':'+String(mm).padStart(2,'0')+' '+ap;
+}
+function renderDragCalendar(){
+  var day = calSelectedDay;
+  var now=new Date(), todayIdx=now.getDay();
+  var circles=document.getElementById('calWeekCircles');
+  if(circles){
+    var names=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    var ch='';
+    for(var i=0;i<7;i++){
+      var dIdx=(i+1)%7;
+      var hasWo=state.workouts.some(function(w){return w.date===weekDateKey(dIdx);});
+      var isToday=dIdx===todayIdx;
+      ch+='<button class="'+(dIdx===day?'on':'')+(hasWo?' done':'')+'" onclick="calSelectedDay='+dIdx+';render();">'+(hasWo?'✓':(isToday?names[i].charAt(0):''))+'</button>';
+    }
+    circles.innerHTML=ch;
+  }
+  var monthEl=document.getElementById('calMonth');
+  if(monthEl) monthEl.textContent=now.toLocaleDateString([], {month:'short', year:'numeric'});
+  var headEl=document.getElementById('schedHead');
+  if(headEl) headEl.textContent=(day===todayIdx ? "Today's schedule" : "Schedule")+' • '+DAYNAMES[day];
+  var evs=((state.calEvents && state.calEvents[day]) || []).slice().sort(function(a,b){return a.start-b.start;});
+  var nowH=now.getHours()+now.getMinutes()/60;
+  var isTodayView = day===todayIdx;
+  var html='';
+  var nowInserted=false;
+  function evIcon(ev){
+    if(ev.id.indexOf('meal')===0) return '<svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a2 2 0 0 0 4 0V3"/><path d="M8 3v18"/><path d="M16 3c-2 2-3 4-3 7v3h3v8"/></svg>';
+    if(ev.id==='workout') return '<svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"><path d="M7 8v8M4 10v4M17 8v8M20 10v4M7 12h10"/></svg>';
+    return '';
+  }
+  evs.forEach(function(ev){
+    if(isTodayView && !nowInserted && ev.start>nowH){
+      html+='<div class="tlrow"><div class="tltime now">Now • '+now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})+'</div><div class="nowline"></div></div>';
+      nowInserted=true;
+    }
+    var arrows = ev.fixed ? '' : '<span class="mv" onclick="event.stopPropagation();moveCalEvent('+day+',\''+ev.id+'\',-1)">◀</span><span class="mv" onclick="event.stopPropagation();moveCalEvent('+day+',\''+ev.id+'\',1)">▶</span>';
+    var del = ev.fixed ? '' : '<span class="mv" onclick="event.stopPropagation();deleteCalEvent('+day+',\''+ev.id+'\')">✕</span>';
+    var cancel = ev.id==='workout' ? '<button class="mv cancelwo" onclick="event.stopPropagation();cancelWorkout('+day+')">Cancel workout</button>' : '';
+    var detail = fmtHour(ev.start)+' - '+fmtHour(ev.start+ev.dur);
+    var mealsForDay = buildMeals(day, state.customTimes||{});
+    if(ev.id.indexOf('meal')===0){
+      var mi = parseInt(ev.id.replace('meal',''),10);
+      var mm = mealsForDay[mi];
+      if(mm) detail += ' · '+Math.round(2900*mm.share)+' cal';
+    }
+    var evDate=new Date(); evDate.setDate(evDate.getDate()-evDate.getDay()+day); evDate.setHours(0,0,0,0);
+    var todayDate=new Date(); todayDate.setHours(0,0,0,0);
+    var isDone = evDate<todayDate || (evDate.getTime()===todayDate.getTime() && ev.start+ev.dur<=nowH);
+    var pill='<span class="pill'+(isDone?' done':'')+'">'+(isDone?'Done':'Upcoming')+'</span>';
+    html += '<div class="tlrow"><div class="tltime">'+fmtHour(ev.start)+'</div><div class="tlcard" data-day="'+day+'" data-id="'+ev.id+'">'+pill+'<span class="tlicon">'+evIcon(ev)+'</span><b>'+ev.title+'</b><small>'+detail+'</small>'+cancel+arrows+del+'</div></div>';
+  });
+  if(isTodayView && !nowInserted){
+    html+='<div class="tlrow"><div class="tltime now">Now • '+now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})+'</div><div class="nowline"></div></div>';
+  }
+  var plan0=calcPlan();
+  var detailHtml = '';
+  if(SCHOOL_PERIODS[day]) detailHtml += '<li><div><b>School periods today</b><small>'+SCHOOL_PERIODS[day].join(' · ')+'</small></div></li>';
+  detailHtml += '<li><div><b>Day total</b><small>2,900 cal · '+plan0.pro+'g protein · Bed 10:00 PM · Wake 6:00 AM</small></div></li>';
+  document.getElementById('calDetailList').innerHTML = detailHtml;
+  document.getElementById('timelineList').innerHTML = html;
+  document.querySelectorAll('#timelineList .tlcard').forEach(function(el){
+    var startY=0, origStart=0, dragging=false;
+    el.addEventListener('pointerdown', function(e){
+      if(e.target.classList.contains('mv')) return;
+      dragging=true; startY=e.clientY;
+      var ev = state.calEvents[day].find(function(x){return x.id===el.getAttribute('data-id');});
+      if(ev && ev.fixed) { dragging=false; return; }
+      origStart = ev ? ev.start : 0;
+      el.setPointerCapture(e.pointerId);
+    });
+    el.addEventListener('pointermove', function(e){
+      if(!dragging) return;
+      var deltaHours = (e.clientY-startY)/45;
+      var newStart = Math.round((origStart+deltaHours)*2)/2;
+      if(newStart<6) newStart=6; if(newStart>21.5) newStart=21.5;
+      el.style.transform='translateY('+(e.clientY-startY)+'px)';
+      el.querySelector('small').textContent = fmtHour(newStart)+' — drag to move';
+      el._newStart = newStart;
+    });
+    el.addEventListener('pointerup', function(e){
+      if(!dragging) return; dragging=false;
+      el.style.transform='';
+      if(typeof el._newStart==='number'){
+        var ev = state.calEvents[day].find(function(x){return x.id===el.getAttribute('data-id');});
+        if(ev){
+          ev.start=el._newStart; ev.sub=fmtHour(el._newStart);
+          if(ev.id.indexOf('meal')===0){
+            if(!state.mealOverrides[day]) state.mealOverrides[day]={};
+            state.mealOverrides[day][ev.title]=el._newStart;
+          }
+          save(); render();
+        }
+      }
+    });
+  });
+}
+function moveCalEvent(day, id, dir){
+  var evs = state.calEvents[day] || [];
+  var idx = evs.findIndex(function(x){return x.id===id;});
+  if(idx<0) return;
+  var ev = evs.splice(idx,1)[0];
+  var nd = (day+dir+7)%7;
+  state.calEvents[nd].push(ev);
+  if(ev.id.indexOf('meal')===0){
+    if(state.mealOverrides[day]) delete state.mealOverrides[day][ev.title];
+    if(!state.mealOverrides[nd]) state.mealOverrides[nd]={};
+    state.mealOverrides[nd][ev.title]=ev.start;
+  }
+  calSelectedDay = nd;
+  save(); render();
+}
+function effectiveWorkout(day){
+  if(!state.calEvents || !state.calEvents[day]) return SCHEDULE[day];
+  var evs=state.calEvents[day];
+  for(var i=0;i<evs.length;i++){ if(evs[i].id==='workout'){ return evs[i].title.replace('Workout - ',''); } }
+  return 'Rest';
+}
+function cancelWorkout(day){
+  var evs=state.calEvents[day]||[];
+  var idx=-1;
+  for(var i=0;i<evs.length;i++){ if(evs[i].id==='workout'){ idx=i; break; } }
+  if(idx<0) return;
+  var ev=evs.splice(idx,1)[0];
+  var target=-1;
+  for(var k=1;k<=7;k++){
+    var d=(day+k)%7;
+    if(SCHEDULE[d]!=='Rest') continue;
+    var hasWo=false;
+    var devs=state.calEvents[d]||[];
+    for(var j=0;j<devs.length;j++){ if(devs[j].id==='workout'){ hasWo=true; break; } }
+    if(!hasWo){ target=d; break; }
+  }
+  if(target<0){ for(var k2=1;k2<=7;k2++){ var d2=(day+k2)%7; if(SCHEDULE[d2]==='Rest'){ target=d2; break; } } }
+  if(target<0) return;
+  if(!state.calEvents[target]) state.calEvents[target]=[];
+  state.calEvents[target].push(ev);
+  calSelectedDay=target;
+  save(); render();
+}
+function resetCalendar(){ state.calEvents = buildDefaultCalEvents(); save(); render(); }
+
+function switchSection(name){
+  var wv=document.getElementById('weightView'); if(wv) wv.style.display='none';
+  document.getElementById('tabTracker').className = name==='tracker' ? 'on' : '';
+  document.getElementById('tabCalendar').className = name==='calendar' ? 'on' : '';
+  document.getElementById('tabProgress').className = name==='progress' ? 'on' : '';
+  document.getElementById('tabStreaks').className = name==='streaks' ? 'on' : '';
+  var trackerIds = ['nextMealCard','workoutCard','waterCard','weekStripWrap','calArcCard','logFoodBtn','pastDays'];
+  var calendarIds = ['calendarSection','scheduleTimes'];
+  var progressIds = ['workoutLogCard','weightStepsCard','sleepCard','sleepList','weightCard','weekSummaryCard'];
+  var streakIds = ['streaksLock','streaksMain','streaksAdd'];
+  trackerIds.concat(calendarIds, progressIds, streakIds).forEach(function(id){
+    var el=document.getElementById(id); if(!el) return;
+    var show = name==='tracker' ? trackerIds.indexOf(id)>=0 : name==='calendar' ? calendarIds.indexOf(id)>=0 : name==='progress' ? progressIds.indexOf(id)>=0 : streakIds.indexOf(id)>=0;
+    el.style.display = show ? '' : 'none';
+  });
+  var fc=document.getElementById('foodCard');
+  if(fc) fc.style.display = (name==='tracker' && window.__foodOpen) ? '' : 'none';
+  var alertEl=document.getElementById('eatAlert');
+  if(alertEl && name!=='tracker') alertEl.style.display='none';
+  var q=document.getElementById('streakQuote'); if(q) q.style.display = name==='streaks' ? 'block' : 'none';
+  window.__section = name;
+  updateHeader();
+  if(name==='streaks'){ pickQuote(); renderStreaks(); }
+  else { render(); }
+}
+function initSwipe(){
+  var sx=0, sy=0;
+  document.addEventListener('touchstart', function(e){
+    if(e.touches.length!==1) return;
+    sx=e.touches[0].clientX; sy=e.touches[0].clientY;
+  }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if(!sx) return;
+    var dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
+    sx=0;
+    var tgt=e.target;
+    if(tgt && tgt.closest && (tgt.closest('.tlcard') || tgt.closest('input') || tgt.closest('select') || tgt.closest('textarea'))) return;
+    if(Math.abs(dx)>70 && Math.abs(dx)>Math.abs(dy)*1.5){
+      var order=['tracker','calendar','progress','streaks'];
+      var i=order.indexOf(window.__section||'tracker');
+      if(dx<0 && i<order.length-1) switchSection(order[i+1]);
+      else if(dx>0 && i>0) switchSection(order[i-1]);
+    }
+  }, {passive:true});
+}
+var SCHOOL_PERIODS = {
+  3:['Period 2 — 8:00-9:20 AM','Recess — 9:20-9:40 AM','Advisory — 9:45-10:25 AM','Period 4 — 10:30-11:50 AM','Lunch — 11:50 AM-12:20 PM','Period 6 — 12:25-1:45 PM','Action Period — 1:45-2:25 PM','Admin Time — 2:35-2:55 PM'],
+  4:['Period 1 — 8:00-8:45 AM','Period 2 — 8:50-9:35 AM','Recess — 9:35-9:55 AM','Period 3 — 10:00-10:45 AM','Period 4 — 10:50-11:35 AM','Period 5 — 11:40 AM-12:25 PM','Lunch — 12:25-12:55 PM','Period 6 — 1:00-1:45 PM','Period 7 — 1:50-2:35 PM','Admin Time — 2:35-2:55 PM'],
+  5:['Period 1 — 8:00-8:45 AM','Period 2 — 8:50-9:35 AM','Recess — 9:35-9:55 AM','Period 3 — 10:00-10:45 AM','Period 4 — 10:50-11:35 AM','Period 5 — 11:40 AM-12:25 PM','Lunch — 12:25-12:55 PM','Period 6 — 1:00-1:45 PM','Period 7 — 1:50-2:35 PM','Admin Time — 2:35-2:55 PM']
+};
+function addCalEvent(){
+  var title=document.getElementById('newBlockTitle').value.trim();
+  var time=document.getElementById('newBlockTime').value;
+  if(!title || !time){alert('Type a name and a time.'); return;}
+  var start=timeHour(time);
+  var dur=parseFloat(document.getElementById('newBlockDur').value);
+  state.calEvents[calSelectedDay].push({id:'custom'+uid(), title:title, start:start, dur:dur, color:'#2563eb', sub:fmtHour(start)});
+  document.getElementById('newBlockTitle').value='';
+  save(); render();
+}
+function deleteCalEvent(day, id){
+  var evs=state.calEvents[day]||[];
+  var ev=null;
+  for(var i=0;i<evs.length;i++){ if(evs[i].id===id){ ev=evs[i]; break; } }
+  if(ev && ev.id.indexOf('meal')===0 && state.mealOverrides && state.mealOverrides[day]) delete state.mealOverrides[day][ev.title];
+  state.calEvents[day]=evs.filter(function(x){return x.id!==id;});
+  save(); render();
+}
+function saveTimes(){
+  state.mealOverrides = {};
+  state.customTimes = {
+    breakfast: document.getElementById('ctBreakfast').value||'08:00',
+    schoolBreakfast: document.getElementById('ctSchoolBreakfast').value||'06:30',
+    lunch: document.getElementById('ctLunch').value||'13:00',
+    snack: document.getElementById('ctSnack').value||'16:00',
+    home: document.getElementById('ctSnack').value||'16:00',
+    dinner: document.getElementById('ctDinner').value||'20:30'
+  };
+  save(); render();
+}
+function addMeal(){
+  var name=document.getElementById('mealName').value.trim();
+  var kcal=num('mealKcal');
+  if(!name || !kcal){alert('Type a food name and calories.'); return;}
+  state.meals.push({id:uid(),date:todayKey(),name:name,kcal:kcal,protein:num('mealPro')||0});
+  document.getElementById('mealName').value=''; document.getElementById('mealKcal').value=''; document.getElementById('mealPro').value='';
+  save(); render();
+}
+function delMeal(id){state.meals=state.meals.filter(function(m){return m.id!==id;}); save(); render();}
+var __scanner=null, __scanned=false, __scanOn=false, __scanGen=0, __stopPromise=null;
+function setScanStatus(t){var el=document.getElementById('scanStatus'); if(el){el.textContent=t;}}
+function startScan(){
+  if(typeof Html5Qrcode==='undefined'){alert('Scanner needs internet to load. Check your connection and try again.'); return;}
+  if(__scanOn){return;}
+  if(!__scanner){__scanner=new Html5Qrcode('reader');}
+  var doStart=function(){
+    if(__scanOn){return;}
+    document.getElementById('scanForm').style.display='none';
+    var box=document.getElementById('scanBox');
+    box.style.display='block';
+    box.scrollIntoView({behavior:'smooth'});
+    __scanned=false;
+    __scanGen++;
+    var gen=__scanGen;
+    setScanStatus('Opening back camera…');
+    setTimeout(function(){if(gen===__scanGen&&!__scanOn){setScanStatus('Still waiting on the camera — if a permission popup appeared, tap Allow. Or type the number below.');}},8000);
+    var formats=[];
+    try{formats=[Html5QrcodeSupportedFormats.EAN_13,Html5QrcodeSupportedFormats.EAN_8,Html5QrcodeSupportedFormats.UPC_A,Html5QrcodeSupportedFormats.UPC_E,Html5QrcodeSupportedFormats.CODE_128,Html5QrcodeSupportedFormats.CODE_39,Html5QrcodeSupportedFormats.CODE_93,Html5QrcodeSupportedFormats.CODABAR,Html5QrcodeSupportedFormats.ITF,Html5QrcodeSupportedFormats.QR_CODE,Html5QrcodeSupportedFormats.DATA_MATRIX,Html5QrcodeSupportedFormats.RSS_14,Html5QrcodeSupportedFormats.RSS_EXPANDED,Html5QrcodeSupportedFormats.UPC_EAN_EXTENSION,Html5QrcodeSupportedFormats.AZTEC,Html5QrcodeSupportedFormats.MAXICODE,Html5QrcodeSupportedFormats.PDF_417];}catch(e){}
+    var cfg={fps:15,qrbox:function(vw,vh){return {width:Math.floor(vw*0.9),height:Math.floor(vh*0.55)};},formatsToSupport:formats,videoConstraints:{facingMode:'environment',width:{ideal:1920},height:{ideal:1080}}};
+    var sc=__scanner;
+    var rd=document.getElementById('reader'); if(rd){rd.innerHTML='';}
+    var ok=function(code){
+      if(gen!==__scanGen)return;
+      if(__scanned)return; __scanned=true; stopScan();
+      handleScannedCode(code);
+    };
+    sc.start({facingMode:'environment'},cfg,ok,function(){}).then(function(){
+      if(gen!==__scanGen){if(!__scanOn){try{sc.stop().catch(function(){});}catch(e){}} return;}
+      __scanOn=true;
+      setScanStatus('Back camera on — hold the barcode inside the frame');
+      wasmLiveLoop(gen);
+    }).catch(function(){
+      if(gen!==__scanGen)return;
+      Html5Qrcode.getCameras().then(function(cams){
+        if(gen!==__scanGen)return;
+        if(!cams||!cams.length){setScanStatus('Camera did not open — type the barcode number below.'); alert('Could not open the camera. Type the barcode number instead.'); return;}
+        var back=null, nonFront=null;
+        for(var i=0;i<cams.length;i++){var lb=(cams[i].label||'').toLowerCase(); if(/back|rear|environment/.test(lb)){back=cams[i];break;} if(!/front|facetime|selfie/.test(lb)&&!nonFront){nonFront=cams[i];}}
+        var cam=back||nonFront||cams[cams.length-1];
+        sc.start(cam.id,cfg,ok,function(){}).then(function(){
+          if(gen!==__scanGen){if(!__scanOn){try{sc.stop().catch(function(){});}catch(e){}} return;}
+          __scanOn=true;
+          setScanStatus('Back camera on — hold the barcode inside the frame');
+          wasmLiveLoop(gen);
+        }).catch(function(){if(gen===__scanGen){setScanStatus('Camera did not open — type the barcode number below.'); alert('Could not open the camera. Type the barcode number instead.');}});
+      }).catch(function(){if(gen===__scanGen){setScanStatus('Camera did not open — type the barcode number below.'); alert('Could not open the camera. Type the barcode number instead.');}});
+    });
+  };
+  if(__stopPromise){__stopPromise.then(doStart);} else {doStart();}
+}
+function stopScan(){
+  __scanGen++;
+  if(__wasmLoopTimer){clearTimeout(__wasmLoopTimer); __wasmLoopTimer=null;}
+  __wasmDetectBusy=false;
+  if(__scanner){
+    var sc=__scanner;
+    __scanOn=false;
+    try{
+      var p=sc.stop();
+      __stopPromise=(p&&p.then)?p.then(function(){__stopPromise=null;}).catch(function(){__stopPromise=null;}):null;
+    }catch(e){__stopPromise=null;}
+  }
+  document.getElementById('scanBox').style.display='none';
+}
+function handleScannedCode(code){
+  if(/^\d+$/.test(code)){lookupBarcode(code); return;}
+  var form=document.getElementById('scanForm');
+  document.getElementById('scanFoodName').value=code.slice(0,60);
+  document.getElementById('scanCal').value=''; document.getElementById('scanPro').value=''; document.getElementById('scanServ').value='1';
+  var im0=document.getElementById('scanImg'); if(im0){im0.style.display='none'; im0.src='';}
+  document.getElementById('scanNote').textContent='That was a QR code, not a food barcode — check the numbers yourself.';
+  form.style.display='block'; form.scrollIntoView({behavior:'smooth'});
+}
+var __wasmDetector=null, __wasmLoopTimer=null, __wasmDetectBusy=false;
+function getWasmDetector(){
+  if(__wasmDetector) return __wasmDetector;
+  var BD=null;
+  if(window.BarcodeDetectionAPI && window.BarcodeDetectionAPI.BarcodeDetector) BD=window.BarcodeDetectionAPI.BarcodeDetector;
+  else if(window.BarcodeDetector) BD=window.BarcodeDetector;
+  if(!BD) return null;
+  try{ __wasmDetector=new BD(); }catch(e){ __wasmDetector=null; return null; }
+  return __wasmDetector;
+}
+function wasmLiveLoop(gen){
+  if(gen!==__scanGen || !__scanOn){return;}
+  var det=getWasmDetector();
+  var v=document.querySelector('#reader video');
+  if(det && v && v.videoWidth>0 && !__scanned && !__wasmDetectBusy){
+    __wasmDetectBusy=true;
+    det.detect(v).then(function(codes){
+      __wasmDetectBusy=false;
+      if(gen!==__scanGen || !__scanOn) return;
+      if(codes && codes.length && !__scanned){
+        __scanned=true;
+        stopScan();
+        handleScannedCode(codes[0].rawValue);
+      }
+    }).catch(function(){ __wasmDetectBusy=false; });
+  }
+  if(gen===__scanGen && __scanOn){
+    __wasmLoopTimer=setTimeout(function(){wasmLiveLoop(gen);}, 300);
+  }
+}
+function scanPhotoFile(file){
+  if(!file){return;}
+  stopScan();
+  var box=document.getElementById('scanBox');
+  box.style.display='block';
+  setScanStatus('Reading the photo…');
+  var det=getWasmDetector();
+  var img=new Image();
+  var url=URL.createObjectURL(file);
+  function showFail(){
+    box.style.display='block';
+    setScanStatus('Could not read that photo — get close so the barcode fills the picture, hold it flat and steady, and try again.');
+  }
+  function tryScanFile(){
+    if(!__scanner){__scanner=new Html5Qrcode('reader');}
+    var sc=__scanner;
+    var p=__stopPromise;
+    (p||Promise.resolve()).then(function(){return sc.scanFile(file,false);}).then(function(code){
+      handleScannedCode(code);
+    }).catch(function(){ showFail(); });
+  }
+  img.onload=function(){
+    URL.revokeObjectURL(url);
+    if(!det){ tryScanFile(); return; }
+    var settled=false;
+    var to=setTimeout(function(){ if(!settled){ settled=true; tryScanFile(); } }, 8000);
+    det.detect(img).then(function(codes){
+      if(settled) return;
+      settled=true; clearTimeout(to);
+      if(codes && codes.length){ handleScannedCode(codes[0].rawValue); }
+      else { tryScanFile(); }
+    }).catch(function(){
+      if(settled) return;
+      settled=true; clearTimeout(to);
+      tryScanFile();
+    });
+  };
+  img.onerror=function(){
+    URL.revokeObjectURL(url);
+    showFail();
+  };
+  img.src=url;
+}
+function lookupBarcode(code){
+  code=(code||'').replace(/\D/g,'');
+  if(!code){alert('Type a barcode number.'); return;}
+  stopScan();
+  var form=document.getElementById('scanForm');
+  document.getElementById('scanFoodName').value='';
+  document.getElementById('scanCal').value='';
+  document.getElementById('scanPro').value='';
+  document.getElementById('scanServ').value='1';
+  var im0=document.getElementById('scanImg'); if(im0){im0.style.display='none'; im0.src='';}
+  document.getElementById('scanNote').textContent='Looking up '+code+'…';
+  form.style.display='block';
+  form.scrollIntoView({behavior:'smooth'});
+  fetch('https://world.openfoodfacts.org/api/v0/product/'+code+'.json')
+    .then(function(r){return r.json();})
+    .then(function(j){
+      var pr=(j&&j.status===1)?j.product:null;
+      if(!pr){document.getElementById('scanNote').textContent='Not found. Type the numbers in.'; return;}
+      var nut=pr.nutriments||{};
+      document.getElementById('scanFoodName').value=pr.product_name||'Scanned food';
+      var im=document.getElementById('scanImg');
+      var imgUrl=pr.image_front_small_url||pr.image_small_url||pr.image_url||'';
+      if(im){if(imgUrl){im.src=imgUrl; im.style.display='block';}else{im.style.display='none'; im.src='';}}
+      var brand=(pr.brands||'').split(',')[0].trim();
+      var cal=nut['energy-kcal_serving'], pro=nut.proteins_serving, grams=null, basis='';
+      var m=(pr.serving_size||'').match(/([\d.]+)\s*g/i);
+      if(m) grams=parseFloat(m[1]);
+      else{var mo=(pr.serving_size||'').match(/([\d.]+)\s*oz/i); if(mo) grams=parseFloat(mo[1])*28.35;}
+      if((cal==null||pro==null)&&nut['energy-kcal_100g']!=null&&grams){
+        if(cal==null) cal=Math.round(nut['energy-kcal_100g']*grams/100);
+        if(pro==null) pro=Math.round(nut.proteins_100g*grams/100*10)/10;
+        basis='1 serving = '+grams+'g';
+      }
+      if(cal==null&&nut['energy-kcal_100g']!=null){cal=nut['energy-kcal_100g']; basis='No serving size found, numbers are per 100g.';}
+      if(pro==null&&nut.proteins_100g!=null){pro=nut.proteins_100g;}
+      document.getElementById('scanCal').value=(cal==null?'':Math.round(cal));
+      document.getElementById('scanPro').value=(pro==null?'':pro);
+      var noteBits=[];
+      if(brand) noteBits.push(brand);
+      if(basis) noteBits.push(basis);
+      noteBits.push('Barcode '+code);
+      document.getElementById('scanNote').textContent=noteBits.join(' • ')+'. Check it matches the bag, then set servings and add.';
+    })
+    .catch(function(){document.getElementById('scanNote').textContent='Lookup failed. Type the numbers in.';});
+}
+function addScanned(){
+  var name=document.getElementById('scanFoodName').value.trim()||'Scanned food';
+  var perCal=num('scanCal'), perPro=num('scanPro')||0;
+  var serv=parseFloat(document.getElementById('scanServ').value)||1;
+  if(!perCal){alert('Type calories per serving.'); return;}
+  state.meals.push({id:uid(),date:todayKey(),name:name,kcal:Math.round(perCal*serv),protein:Math.round(perPro*serv*10)/10});
+  document.getElementById('scanForm').style.display='none';
+  save(); render();
+}
+window.__foodOpen=false;
+function applyFoodToggle(){var fc=document.getElementById('foodCard'), btn=document.getElementById('logFoodBtn'); if(fc) fc.style.display=window.__foodOpen?'':'none'; if(btn) btn.textContent=window.__foodOpen?'Close food log':'+ Log food';}
+function toggleFood(){window.__foodOpen=!window.__foodOpen; applyFoodToggle(); if(window.__foodOpen) openFoodFocus();}
+function openFood(){if(!window.__foodOpen){window.__foodOpen=true; applyFoodToggle();} openFoodFocus();}
+function openFoodFocus(){var el=document.getElementById('mealName'); if(!el) return; el.scrollIntoView({behavior:'smooth'}); setTimeout(function(){el.focus();},400);}
+function goToFood(){openFood();}
+function setRing(id,pct){var el=document.getElementById(id); if(!el) return; var C=163.36; el.style.strokeDashoffset=(C*(1-Math.max(0,Math.min(1,pct)))).toFixed(1);}
+function renderCalArc(cal,plan){
+  var arc=document.getElementById('calArcFill'); if(!arc) return;
+  var pct=Math.max(0,Math.min(1,cal/plan.cal));
+  arc.style.strokeDashoffset=(298.5*(1-pct)).toFixed(1);
+  document.getElementById('calArcEaten').textContent=cal.toLocaleString();
+  var left=plan.cal-cal;
+  document.getElementById('calArcLeft').textContent=left>0?left.toLocaleString()+' calories left':'Goal hit ✓';
+  var proToday=state.meals.filter(function(m){return m.date===todayKey();}).reduce(function(a,m){return a+(m.protein||0);},0);
+  setRing('ringProFill',proToday/plan.pro);
+  document.getElementById('ringProVal').textContent=Math.round(proToday)+'g';
+  document.getElementById('ringProSub').textContent=Math.max(0,plan.pro-Math.round(proToday))+'g left';
+  var w=state.water[todayKey()]||0;
+  setRing('ringWaterFill',w/10);
+  document.getElementById('ringWaterVal').textContent=w+' / 10';
+  document.getElementById('ringWaterSub').textContent=(10-w>0?(10-w)+' to go':'Done ✓');
+  var mealsToday=state.meals.filter(function(m){return m.date===todayKey();}).length;
+  var planned=MEALS.length||4;
+  setRing('ringMealsFill',mealsToday/planned);
+  document.getElementById('ringMealsVal').textContent=mealsToday+'/'+planned;
+  document.getElementById('ringMealsSub').textContent=mealsToday>=planned?'All logged':'Meals logged';
+}
+function renderWeekSummary(){
+  var el=document.getElementById('weekSummaryLine'); if(!el) return;
+  var now=new Date(), monday=new Date(now); monday.setDate(now.getDate()-((now.getDay()+6)%7));
+  function k(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+  var wo=0, cals=0, logged=0;
+  for(var i=0;i<7;i++){var d=new Date(monday); d.setDate(monday.getDate()+i); var kk=k(d);
+    if(state.workouts.some(function(w){return w.date===kk;})) wo++;
+    var c=state.meals.filter(function(m){return m.date===kk;}).reduce(function(a,m){return a+(m.kcal||0);},0);
+    if(c>0){cals+=c; logged++;}
+  }
+  var avg=logged?Math.round(cals/logged):0;
+  el.textContent='Workouts '+wo+' of 4 this week • '+(logged?('Avg '+avg.toLocaleString()+' cal on '+logged+' logged day'+(logged>1?'s':'')):'No food logged yet this week')+' • '+currentWeight()+' lb now';
+}
+var __wvRange='All';
+function openWeightView(){var v=document.getElementById('weightView'); if(!v) return; v.style.display='block'; v.scrollTop=0; renderWeightChart(__wvRange);}
+function closeWeightView(){var v=document.getElementById('weightView'); if(v) v.style.display='none';}
+function renderWeightChart(range){
+  __wvRange=range;
+  var now=new Date(), from=null;
+  if(range==='1W'){from=new Date(now); from.setDate(now.getDate()-7);}
+  if(range==='1M'){from=new Date(now); from.setMonth(now.getMonth()-1);}
+  function kd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+  var pts=state.weights.filter(function(w){return !from || w.date>=kd(from);}).slice().sort(function(a,b){return a.date<b.date?-1:1;});
+  var avgEl=document.getElementById('wvAvg'), chEl=document.getElementById('wvChange'), bigEl=document.getElementById('wvBig'), subEl=document.getElementById('wvSub');
+  var last=state.weights[state.weights.length-1];
+  if(bigEl) bigEl.textContent=last?last.lbs:currentWeight();
+  if(subEl) subEl.textContent=last?('Last weighed '+last.date+(last.time?' at '+last.time:'')):'No weigh-ins yet.';
+  ['wvR1W','wvR1M','wvRAll'].forEach(function(id){var b=document.getElementById(id); if(!b) return; var on=id==='wvR'+range; b.style.background=on?'#38bdf8':''; b.style.color=on?'#082f49':'';});
+  var svg=document.getElementById('wvChart');
+  if(!svg) return;
+  if(pts.length<2){
+    svg.innerHTML='<text x="160" y="80" fill="#8ea3c8" font-size="14" text-anchor="middle">Log more weigh-ins to see a trend.</text>';
+    if(avgEl) avgEl.textContent='—'; if(chEl) chEl.textContent='—';
+  } else {
+    var ws=pts.map(function(p){return p.lbs;});
+    var avg=ws.reduce(function(a,b){return a+b;},0)/ws.length;
+    var ch=ws[ws.length-1]-ws[0];
+    if(avgEl) avgEl.textContent=avg.toFixed(1)+' lb';
+    if(chEl) chEl.textContent=(ch>=0?'+':'')+ch.toFixed(1)+' lb';
+    var mn=Math.min.apply(null,ws), mx=Math.max.apply(null,ws);
+    if(mx-mn<1){mn-=0.5; mx+=0.5;}
+    var W=320,H=160,P=18;
+    var xy=pts.map(function(p,i){var x=P+(W-2*P)*(pts.length===1?0.5:i/(pts.length-1)); var y=H-P-((p.lbs-mn)/(mx-mn))*(H-2*P); return [x,y];});
+    var line=xy.map(function(q){return q[0].toFixed(1)+','+q[1].toFixed(1);}).join(' ');
+    var dots=xy.map(function(q){return '<circle cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="4" fill="#38bdf8"/>';}).join('');
+    svg.innerHTML='<text x="'+P+'" y="14" fill="#8ea3c8" font-size="11">'+mx.toFixed(1)+'</text><text x="'+P+'" y="'+(H-6)+'" fill="#8ea3c8" font-size="11">'+mn.toFixed(1)+'</text><polyline points="'+line+'" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>'+dots;
+  }
+  var ent=document.getElementById('wvEntries');
+  if(ent) ent.innerHTML=state.weights.slice().reverse().map(function(w){return '<li><div><b>'+w.lbs+' lb</b><small>'+w.date+(w.time?' at '+w.time:'')+'</small></div></li>';}).join('')||'<li class="small">No weigh-ins yet.</li>';
+}
+function addWorkout(){
+  state.workouts.push({id:uid(),date:todayKey(),title:document.getElementById('workoutName').value.trim(),part:document.getElementById('workoutPart').value,minutes:0,detail:'',exercises:[]});
+  document.getElementById('workoutName').value='';
+  save(); render();
+}
+function markWorkoutDone(){
+  var part=SCHEDULE[new Date().getDay()];
+  if(part==='Rest') return;
+  state.workouts.push({id:uid(),date:todayKey(),title:'',part:part,minutes:0,detail:'',exercises:[]});
+  save(); render();
+}
+function delWorkout(id){state.workouts=state.workouts.filter(function(w){return w.id!==id;}); save(); render();}
+function addWater(n){var t=todayKey(); state.water[t]=Math.max(0,(state.water[t]||0)+n); save(); render();}
+function saveOther(){
+  var w=num('weightVal'); if(w) state.weights.push({id:uid(),date:todayKey(),time:new Date().toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}),lbs:w});
+  var s=num('stepsVal'); if(s) state.steps[todayKey()]=s;
+  document.getElementById('weightVal').value=''; document.getElementById('stepsVal').value='';
+  save(); render();
+}
+
+var STREAK_KEY='lockin_staging_streaks_v1', STREAK_PW_KEY='lockin_staging_streaks_pw_v1';
+function hashPw(s){var h=0; for(var i=0;i<s.length;i++){h=((h<<5)-h+s.charCodeAt(i))|0;} return 'h'+h;}
+function dateKeyOf(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function loadStreaks(){
+  try{var raw=localStorage.getItem(STREAK_KEY); if(raw){var arr=JSON.parse(raw); if(Array.isArray(arr) && arr.length) return arr;}}catch(e){}
+  return [{id:'nocontact',name:'No Contact',goal:30,dates:[]},{id:'nolust',name:'No Lust',goal:30,dates:[]}];
+}
+var streaks=loadStreaks();
+function saveStreaks(){try{localStorage.setItem(STREAK_KEY, JSON.stringify(streaks));}catch(e){}}
+function streakCount(s){
+  var set={}; (s.dates||[]).forEach(function(d){set[d]=1;});
+  var today=new Date(), start=null;
+  if(set[dateKeyOf(today)]) start=today;
+  else {var y=new Date(); y.setDate(y.getDate()-1); if(set[dateKeyOf(y)]) start=y; else return 0;}
+  var count=0, d=new Date(start);
+  while(set[dateKeyOf(d)]){count++; d.setDate(d.getDate()-1);}
+  return count;
+}
+
+var QUOTES=[
+"I can do all things through Christ. Phil 4:13",
+"God always gives a way out. 1 Cor 10:13",
+"Discipline is choosing what you want most.",
+"One day at a time. One check in at a time.",
+"You are stronger than yesterday.",
+"Small wins every day add up to 130.",
+"Stay locked in. That is the whole plan.",
+"Your future self is watching today.",
+"No contact is not losing. It is choosing you.",
+"Control today, and tomorrow gets easier.",
+"The pilot seat is earned one day at a time.",
+"Eat big, train hard, stay clean.",
+"Be still and know. Psalm 46:10",
+"His strength covers your weakness.",
+"Do not grow weary in doing good. Gal 6:9",
+"Run your race, do not look back.",
+"Guard your heart. Proverbs 4:23",
+"Self-control is strength, not weakness.",
+"30 days starts with today.",
+"You already decided. Just do not quit today.",
+"Strong today, stronger tomorrow.",
+"Keep your eyes forward, not behind you.",
+"One clean day beats a perfect plan.",
+"Finish what you started today."
+];
+function pickQuote(){
+  var el=document.getElementById('streakQuote'); if(!el) return;
+  var last=-1; try{last=parseInt(sessionStorage.getItem('lastQuote')||'-1',10);}catch(e){}
+  var i=Math.floor(Math.random()*QUOTES.length);
+  if(QUOTES.length>1 && i===last) i=(i+1)%QUOTES.length;
+  try{sessionStorage.setItem('lastQuote', String(i));}catch(e){}
+  el.textContent=QUOTES[i];
+}
+var streakPin='', streakFails=0;
+function updateDots(){
+  var dots=document.querySelectorAll('#streakDots .dot');
+  dots.forEach(function(d,idx){d.className = idx<streakPin.length ? 'dot on' : 'dot';});
+}
+function buildKeypad(){
+  var kp=document.getElementById('streakKeypad'); if(!kp || kp.children.length) return;
+  var keys=[['1',''],['2','ABC'],['3','DEF'],['4','GHI'],['5','JKL'],['6','MNO'],['7','PQRS'],['8','TUV'],['9','WXYZ'],['',''],['0',''],['x','']];
+  keys.forEach(function(k){
+    var b=document.createElement('button'); b.className='keybtn'; b.type='button';
+    if(k[0]===''){b.style.visibility='hidden';}
+    else if(k[0]==='x'){b.innerHTML='&#9003;'; b.onclick=function(){streakPin=streakPin.slice(0,-1); updateDots();};}
+    else {b.innerHTML=k[0]+(k[1]?'<small>'+k[1]+'</small>':''); b.onclick=(function(d){return function(){pressDigit(d);};})(k[0]);}
+    kp.appendChild(b);
+  });
+}
+function pressDigit(d){
+  if(streakPin.length>=4) return;
+  streakPin+=d; updateDots();
+  if(streakPin.length===4){
+    var pin=streakPin; streakPin=''; updateDots();
+    var stored=null; try{stored=localStorage.getItem(STREAK_PW_KEY);}catch(e){}
+    if(!stored){
+      try{localStorage.setItem(STREAK_PW_KEY, hashPw(pin)); sessionStorage.setItem('streaks-unlocked','1');}catch(e){}
+      streakFails=0; renderStreaks(); return;
+    }
+    if(hashPw(pin)===stored){
+      try{sessionStorage.setItem('streaks-unlocked','1');}catch(e){}
+      streakFails=0; renderStreaks(); return;
+    }
+    streakFails++;
+    var dotsEl=document.getElementById('streakDots'); if(dotsEl){dotsEl.classList.remove('shake'); void dotsEl.offsetWidth; dotsEl.classList.add('shake');}
+    if(streakFails>=3){document.getElementById('streakTextFallback').style.display='block';}
+  }
+}
+function changeStreakCode(){
+  if(!confirm('Change your code? You will set a new one next time you open Streaks.')) return;
+  try{localStorage.removeItem(STREAK_PW_KEY); sessionStorage.removeItem('streaks-unlocked');}catch(e){}
+  streakPin=''; updateDots(); renderStreaks();
+}
+
+function renderStreaks(){
+  if(window.__section!=='streaks') return;
+  var unlocked=false; try{unlocked=sessionStorage.getItem('streaks-unlocked')==='1';}catch(e){}
+  var hasPw=false; try{hasPw=!!localStorage.getItem(STREAK_PW_KEY);}catch(e){}
+  document.getElementById('streakLockText').textContent = hasPw ? '' : 'Set a 4-digit code';
+  buildKeypad();
+  document.getElementById('streaksLock').style.display = unlocked ? 'none' : 'block';
+  document.getElementById('streaksMain').style.display = unlocked ? 'block' : 'none';
+  document.getElementById('streaksAdd').style.display = unlocked ? 'block' : 'none';
+  if(!unlocked) return;
+  var today=todayKey();
+  document.getElementById('streakList').innerHTML = streaks.map(function(s){
+    var c=streakCount(s), checked=(s.dates||[]).indexOf(today)>=0, left=Math.max(0, s.goal-c), pct=Math.min(100, Math.round(c/s.goal*100));
+    var msg = c>=s.goal ? 'Goal reached. Keep going.' : (checked ? 'Checked today. '+left+' days left to '+s.goal+'.' : 'Not checked today. '+left+' days left to '+s.goal+'.');
+    var delBtn = (s.id!=='nocontact' && s.id!=='nolust') ? '<button class="danger" onclick="delStreak(\''+s.id+'\')">Delete</button>' : '';
+    return '<div style="margin-bottom:12px"><b style="font-size:18px">'+esc(s.name)+'</b><p style="margin:4px 0;font-size:28px;font-weight:800">'+c+' <span style="font-size:14px;font-weight:400;color:#c4b5fd">/ '+s.goal+' days</span></p><div class="bar"><i style="width:'+pct+'%"></i></div><p class="small" style="margin:6px 0">'+msg+'</p><div class="row"><button class="big" '+(checked?'disabled':'')+' onclick="checkInStreak(\''+s.id+'\')">'+(checked?'Checked \u2713':'Check in today')+'</button><button class="secondary" onclick="resetStreak(\''+s.id+'\')">Reset</button>'+delBtn+'</div></div>';
+  }).join('');
+}
+function unlockStreaks(){
+  var pw=document.getElementById('streakPw').value||'';
+  if(!pw){document.getElementById('streakLockMsg').textContent='Type a password first.'; return;}
+  var stored=null; try{stored=localStorage.getItem(STREAK_PW_KEY);}catch(e){}
+  if(!stored){try{localStorage.setItem(STREAK_PW_KEY, hashPw(pw)); sessionStorage.setItem('streaks-unlocked','1');}catch(e){} document.getElementById('streakPw').value=''; document.getElementById('streakLockMsg').textContent=''; renderStreaks(); return;}
+  if(hashPw(pw)===stored){try{sessionStorage.setItem('streaks-unlocked','1');}catch(e){} document.getElementById('streakPw').value=''; document.getElementById('streakLockMsg').textContent=''; renderStreaks();}
+  else {document.getElementById('streakLockMsg').textContent='Wrong password, try again.'; document.getElementById('streakPw').value='';}
+}
+function lockStreaks(){try{sessionStorage.removeItem('streaks-unlocked');}catch(e){} renderStreaks();}
+function checkInStreak(id){var s=streaks.find(function(x){return x.id===id;}); if(!s) return; var t=todayKey(); if(s.dates.indexOf(t)<0) s.dates.push(t); saveStreaks(); renderStreaks();}
+function resetStreak(id){if(!confirm('Reset this streak to 0?')) return; var s=streaks.find(function(x){return x.id===id;}); if(s) s.dates=[]; saveStreaks(); renderStreaks();}
+function delStreak(id){if(!confirm('Delete this goal?')) return; streaks=streaks.filter(function(x){return x.id!==id;}); saveStreaks(); renderStreaks();}
+function addStreak(){var name=document.getElementById('newStreakName').value.trim(); var goal=parseInt(document.getElementById('newStreakGoal').value,10)||30; if(!name){alert('Type a goal name.'); return;} streaks.push({id:uid(),name:name,goal:goal,dates:[]}); document.getElementById('newStreakName').value=''; saveStreaks(); renderStreaks();}
+
+
+var WELCOME_VERSES=[
+"This is the day the Lord has made; let us rejoice and be glad. Psalm 118:24",
+"His mercies are new every morning. Lamentations 3:23",
+"I can do all things through Christ who strengthens me. Philippians 4:13",
+"Commit your work to the Lord, and your plans will be established. Proverbs 16:3",
+"Be strong and courageous, for the Lord your God will be with you. Joshua 1:9",
+"The Lord is my strength and my shield. Psalm 28:7",
+"Do not grow weary in doing good. Galatians 6:9",
+"Be still, and know that I am God. Psalm 46:10",
+"His strength is made perfect in weakness. 2 Corinthians 12:9",
+"Guard your heart, for everything you do flows from it. Proverbs 4:23",
+"Run with endurance the race set before you. Hebrews 12:1",
+"The joy of the Lord is your strength. Nehemiah 8:10",
+"Trust in the Lord with all your heart. Proverbs 3:5",
+"I will give you rest. Matthew 11:28",
+"Let all that you do be done in love. 1 Corinthians 16:14"
+];
+function timeGreeting(){
+  var h=new Date().getHours();
+  if(h>=5 && h<12) return 'Good morning';
+  if(h>=12 && h<18) return 'Good afternoon';
+  return 'Good evening';
+}
+function dayTheme(){
+  var h=new Date().getHours();
+  if(h>=5 && h<12) return 'morning';
+  if(h>=12 && h<18) return 'afternoon';
+  return 'evening';
+}
+function applyDayTheme(){
+  var theme=dayTheme();
+  document.body.style.background='linear-gradient(180deg,#0d1530 0%,#0a1128 100%)';
+  var subText={morning:'Time to start the day right.',afternoon:'Keep the day going.',evening:'Finish the day strong.'}[theme];
+  var sub=document.getElementById('welcomeSub'); if(sub) sub.textContent=subText;
+  var ov=document.getElementById('welcomeOverlay');
+  if(ov) ov.style.background='linear-gradient(180deg,#0d1530 0%,#0a1128 100%)';
+  updateHeader();
+}
+function refreshTime(){ render(); }
+function showWelcome(){
+  var now=new Date();
+  var g=timeGreeting();
+  applyDayTheme();
+  var ov=document.getElementById('welcomeOverlay');
+  var start=new Date(now.getFullYear(),0,0), doy=Math.floor((now-start)/86400000);
+  document.getElementById('welcomeGreeting').textContent=g+', Lonj';
+  document.getElementById('welcomeVerse').textContent=WELCOME_VERSES[doy % WELCOME_VERSES.length];
+  ov.style.display='flex';
+}
+function dismissWelcome(){
+  document.getElementById('welcomeOverlay').style.display='none';
+  var seen=null; try{seen=localStorage.getItem('lockin_staging_seen_version');}catch(e){}
+  if(seen!==APP_VERSION){document.getElementById('updatesOverlay').style.display='flex';}
+}
+function dismissUpdates(){
+  try{localStorage.setItem('lockin_staging_seen_version',APP_VERSION);}catch(e){}
+  document.getElementById('updatesOverlay').style.display='none';
+}
+var __sleepClockTimer=null, __wakingUp=false;
+function buildStars(){
+  var box=document.getElementById('sstars');
+  if(!box || box.children.length) return;
+  var html='';
+  for(var i=0;i<60;i++){
+    var s=(Math.random()*2+1).toFixed(1);
+    var left=(Math.random()*100).toFixed(1), top=(Math.random()*70).toFixed(1);
+    var d=(Math.random()*2.5+1.5).toFixed(1), dl=(Math.random()*3).toFixed(1);
+    html+='<span class="star" style="left:'+left+'%;top:'+top+'%;width:'+s+'px;height:'+s+'px;animation-duration:'+d+'s;animation-delay:'+dl+'s"></span>';
+  }
+  box.innerHTML=html;
+}
+function updateSleepClock(){
+  var now=new Date();
+  var c=document.getElementById('ssClock'); if(c) c.textContent=now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+  var el=document.getElementById('ssElapsed');
+  if(el && state.sleepStart){
+    var mins=Math.max(0, Math.round((now-new Date(state.sleepStart))/60000));
+    el.textContent='Sleeping for '+Math.floor(mins/60)+'h '+(mins%60)+'m';
+  }
+  var sub=document.getElementById('ssSub');
+  if(sub && state.sleepStart){
+    sub.textContent='You went to sleep at '+new Date(state.sleepStart).toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+  }
+}
+function showSleepScreen(){
+  buildStars();
+  var ov=document.getElementById('sleepScreen');
+  ov.classList.remove('sunrise');
+  ov.style.display='block';
+  updateSleepClock();
+  if(__sleepClockTimer) clearInterval(__sleepClockTimer);
+  __sleepClockTimer=setInterval(updateSleepClock, 1000);
+  __wakingUp=false;
+}
+function hideSleepScreen(){
+  var ov=document.getElementById('sleepScreen');
+  ov.style.display='none';
+  if(__sleepClockTimer){clearInterval(__sleepClockTimer); __sleepClockTimer=null;}
+  __wakingUp=false;
+}
+function finishWakeUp(){
+  var now=new Date();
+  if(state.sleepStart){
+    var start=new Date(state.sleepStart);
+    var hours=Math.round(((now-start)/3600000)*10)/10;
+    if(!state.sleep) state.sleep=[];
+    state.sleep.push({id:uid(),date:todayKey(),start:start.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}),end:now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}),hours:hours});
+    state.sleepStart=null;
+  }
+  save(); render();
+}
+function wakeUpFromScreen(){
+  if(__wakingUp) return;
+  __wakingUp=true;
+  var now=new Date();
+  var h=now.getHours();
+  var greet=document.getElementById('ssDayGreet');
+  if(greet) greet.textContent=(h<5?'You\'re up':timeGreeting())+', Lonj';
+  if(state.sleepStart){
+    var start=new Date(state.sleepStart);
+    var hours=Math.round(((now-start)/3600000)*10)/10;
+    var hh=Math.floor(hours), mm=Math.round((hours-hh)*60);
+    var ds=document.getElementById('ssDaySub'); if(ds) ds.textContent='You slept '+hh+'h '+mm+'m';
+  }
+  var ov=document.getElementById('sleepScreen');
+  if(ov.style.display!=='block'){
+    ov.classList.remove('sunrise');
+    ov.style.display='block';
+    updateSleepClock();
+    setTimeout(function(){ ov.classList.add('sunrise'); }, 60);
+  } else {
+    ov.classList.add('sunrise');
+  }
+  setTimeout(function(){
+    finishWakeUp();
+    hideSleepScreen();
+  }, 1900);
+}
+function toggleSleep(){
+  if(state.sleepStart){
+    wakeUpFromScreen();
+  } else {
+    state.sleepStart=new Date().toISOString();
+    save(); render();
+    showSleepScreen();
+  }
+}
+function renderSleep(){
+  var btn=document.getElementById('sleepBtn'), st=document.getElementById('sleepStatus'), list=document.getElementById('sleepList'), sub=document.getElementById('sleepSub');
+  if(!btn) return;
+  if(state.sleepStart){
+    var s=new Date(state.sleepStart);
+    st.textContent='Sleeping since '+s.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+    btn.textContent='Wake up';
+    if(sub) sub.textContent='Tap Wake up when you get up.';
+  } else {
+    var last=(state.sleep||[])[(state.sleep||[]).length-1];
+    if(last){
+      var h=Math.floor(last.hours), m=Math.round((last.hours-h)*60);
+      st.textContent=h+'h '+m+'m last night';
+      if(sub) sub.textContent='Bed 10:00 PM • Wake 6:00 AM';
+    } else {
+      st.textContent='No sleep logged yet.';
+      if(sub) sub.textContent='Tap Go to sleep at bedtime.';
+    }
+    btn.textContent='Go to sleep';
+  }
+  list.innerHTML=(state.sleep||[]).slice().reverse().slice(0,5).map(function(s){
+    return '<li><div><b>'+s.hours+' hours</b><small>'+s.date+' · '+s.start+' - '+s.end+'</small></div></li>';
+  }).join('') || '';
+}
+
+initSwipe();
+showWelcome();
+render();
+if(state.sleepStart){ showSleepScreen(); dismissWelcome(); }
+setInterval(function(){ applyDayTheme(); refreshTime(); }, 60000);
+document.addEventListener('visibilitychange', function(){ if(!document.hidden){ applyDayTheme(); refreshTime(); } });
+switchSection('tracker');
+var q0=document.getElementById('streakQuote'); if(q0) q0.style.display='none';
+syncPullAndMerge();
+</script>
+</body>
+</html>
