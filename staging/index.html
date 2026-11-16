@@ -54,6 +54,10 @@
   *{scroll-behavior:smooth}
   .card{animation:fadeIn .18s ease}
   @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @keyframes slideInL{from{opacity:0;transform:translateX(-28px)}to{opacity:1;transform:none}}
+  @keyframes slideInR{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
+  body.slide-l .card{animation:slideInL .28s cubic-bezier(.22,.8,.3,1)}
+  body.slide-r .card{animation:slideInR .28s cubic-bezier(.22,.8,.3,1)}
   button{transition:transform .12s ease,background-color .15s ease}
   button:active{transform:scale(.95)}
   button:disabled{opacity:.45;filter:saturate(.5);transform:none}
@@ -138,6 +142,10 @@
   .gcard .bar{margin:4px 0}
   .gcard .pillbtn{align-self:flex-start;margin-top:2px}
   .gcard .stepper{align-self:flex-start}
+  .ordiv{display:flex;align-items:center;gap:12px;color:#64748b;font-size:14px;margin:14px 0}
+  .ordiv:before,.ordiv:after{content:'';flex:1;height:1px;background:rgba(255,255,255,.12)}
+  .inner{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:16px;margin-top:14px}
+  .inner h2{margin-bottom:8px}
   #paceLine{background:rgba(255,255,255,.06);border-radius:999px;padding:10px 14px;text-align:center}
   #foodCard{animation:foodIn .35s cubic-bezier(.22,.8,.3,1)}
   @keyframes foodIn{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
@@ -269,19 +277,19 @@
   <div class="gsub" id="nextMealToday" style="margin-top:2px">—</div>
 </div>
 
-<div class="card gcard" id="workoutCard">
+<div class="card gcard pressable" id="workoutCard" onclick="goToWorkoutLog()">
   <div class="glabel"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"><path d="M7 8v8M4 10v4M17 8v8M20 10v4M7 12h10"/></svg>Workout today</div>
   <div class="gbig" id="workoutPartLabel">—</div>
   <div class="gsub" id="workoutSubLabel">—</div>
-  <button class="pillbtn" id="workoutDoneBtn" onclick="markWorkoutDone()">Start</button>
+  <button class="pillbtn" id="workoutDoneBtn" onclick="event.stopPropagation();markWorkoutDone()">Start</button>
 </div>
 
-<div class="card gcard" id="waterCard">
+<div class="card gcard pressable" id="waterCard" onclick="goToWeekSummary()">
   <div class="glabel"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg>Water</div>
   <div class="gbig" id="waterCount">0 of 10 glasses</div>
   <div class="drops" id="waterDrops"></div>
   <div class="gsub" id="waterOz">0 oz / 80 oz</div>
-  <div class="stepper"><button onclick="addWater(1)">+</button><button onclick="addWater(-1)">−</button></div>
+  <div class="stepper" onclick="event.stopPropagation()"><button onclick="addWater(1)">+</button><button onclick="addWater(-1)">−</button></div>
 </div>
 
 <div class="card gcard pressable" id="weightCardFront" onclick="openWeightView()">
@@ -359,15 +367,8 @@
 <button class="big" id="logFoodBtn" onclick="toggleFood()" style="margin-bottom:14px">+ Log food</button>
 
 <div class="card" id="foodCard" style="display:none">
-  <h2>Food</h2>
-  <p class="small" id="foodSummary" style="margin:0 0 10px"></p>
-  <input id="mealName" placeholder="What did you eat?" autocomplete="off">
-  <div class="row">
-    <input id="mealKcal" type="number" inputmode="numeric" placeholder="Calories">
-    <input id="mealPro" type="number" inputmode="numeric" placeholder="Protein g">
-  </div>
-  <button class="big" onclick="addMeal()">Add food</button>
-  <button class="big" style="margin-top:8px;background:#0ea5e9" onclick="startScan()">Scan barcode</button>
+  <h2>Add food</h2>
+  <button class="big" style="background:#0ea5e9" onclick="startScan()">Scan barcode</button>
   <div id="scanBox" style="display:none;margin-top:12px">
     <div style="position:relative;border-radius:16px;overflow:hidden;background:#000">
       <div id="reader" style="width:100%"></div>
@@ -394,7 +395,25 @@
     <p id="scanNote" style="font-size:13px;color:#8ea3c8;margin:4px 0 8px"></p>
     <button class="big" onclick="addScanned()">Add to today</button>
   </div>
-  <ul id="mealList"></ul>
+  <div class="ordiv"><span>or add it yourself</span></div>
+  <div class="inner">
+    <div style="font-size:15px;font-weight:700;color:#8ea3c8;text-align:center;margin-bottom:8px">What did you eat?</div>
+    <input id="mealName" placeholder="e.g. Grilled chicken salad" autocomplete="off">
+    <div class="row">
+      <input id="mealKcal" type="number" inputmode="numeric" placeholder="Calories">
+      <input id="mealPro" type="number" inputmode="numeric" placeholder="Protein g">
+    </div>
+    <button class="big" onclick="addMeal()">Add food</button>
+  </div>
+  <div class="inner">
+    <h2>Today's foods</h2>
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div id="foodSummary" style="font-size:18px;font-weight:800">—</div>
+      <div id="foodPct" style="font-size:16px;font-weight:800;color:#38bdf8">0%</div>
+    </div>
+    <div class="bar"><i id="foodBar" style="width:0%"></i></div>
+    <ul id="mealList"></ul>
+  </div>
 </div>
 
 <div class="card" id="workoutLogCard">
@@ -737,7 +756,9 @@ function render(){
   }
   var proToday=meals.reduce(function(a,m){return a+(m.protein||0);},0);
   var fsEl=document.getElementById('foodSummary');
-  if(fsEl) fsEl.textContent='Today: '+cal.toLocaleString()+' cal • '+proToday+'g protein';
+  if(fsEl) fsEl.textContent=cal.toLocaleString()+' / '+plan.cal.toLocaleString()+' cal';
+  var fb=document.getElementById('foodBar'); if(fb) fb.style.width=Math.min(100,Math.round(cal/plan.cal*100))+'%';
+  var fp=document.getElementById('foodPct'); if(fp) fp.textContent=Math.min(100,Math.round(cal/plan.cal*100))+'%';
   renderWeekSummary();
   renderWeekStrip();
   document.getElementById('mealList').innerHTML=meals.map(function(m){
@@ -946,6 +967,13 @@ function cancelWorkout(day){
 function resetCalendar(){ state.calEvents = buildDefaultCalEvents(); save(); render(); }
 
 function switchSection(name){
+  var order=['tracker','calendar','progress','streaks'];
+  var oldI=order.indexOf(window.__section||'tracker'), newI=order.indexOf(name);
+  if(oldI!==newI && newI>=0){
+    document.body.classList.remove('slide-l','slide-r');
+    document.body.classList.add(newI>oldI?'slide-r':'slide-l');
+    setTimeout(function(){ document.body.classList.remove('slide-l','slide-r'); },300);
+  }
   var wv=document.getElementById('weightView'); if(wv) wv.style.display='none';
   document.getElementById('tabTracker').className = name==='tracker' ? 'on' : '';
   document.getElementById('tabCalendar').className = name==='calendar' ? 'on' : '';
@@ -982,7 +1010,7 @@ function initSwipe(){
     sx=0;
     var tgt=e.target;
     if(tgt && tgt.closest && (tgt.closest('.tlcard') || tgt.closest('input') || tgt.closest('select') || tgt.closest('textarea'))) return;
-    if(Math.abs(dx)>70 && Math.abs(dx)>Math.abs(dy)*1.5){
+    if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)*1.5){
       var order=['tracker','calendar','progress','streaks'];
       var i=order.indexOf(window.__section||'tracker');
       if(dx<0 && i<order.length-1) switchSection(order[i+1]);
@@ -1241,6 +1269,9 @@ function toggleFood(){window.__foodOpen=!window.__foodOpen; applyFoodToggle(); i
 function openFood(){if(!window.__foodOpen){window.__foodOpen=true; applyFoodToggle();} openFoodFocus();}
 function openFoodFocus(){var el=document.getElementById('mealName'); if(!el) return; el.scrollIntoView({behavior:'smooth'}); setTimeout(function(){el.focus();},400);}
 function goToFood(){openFood();}
+function goToProgressCard(id){ switchSection('progress'); setTimeout(function(){ var el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },80); }
+function goToWorkoutLog(){ goToProgressCard('workoutLogCard'); }
+function goToWeekSummary(){ goToProgressCard('weekSummaryCard'); }
 function setRing(id,pct){var el=document.getElementById(id); if(!el) return; var C=163.36; el.style.strokeDashoffset=(C*(1-Math.max(0,Math.min(1,pct)))).toFixed(1);}
 function renderCalArc(cal,plan){
   var arc=document.getElementById('calArcFill'); if(!arc) return;
