@@ -19,8 +19,8 @@
   body.lockpager .pager{overflow-x:hidden}
   body.lockpager .page{overflow:hidden}
   .pager::-webkit-scrollbar{display:none}
-  .page{flex:0 0 100%;scroll-snap-align:start;overflow-y:auto;overflow-x:hidden;padding:calc(64px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
-  .apphead{position:fixed;top:0;left:0;right:0;z-index:60;text-align:center;padding:calc(8px + env(safe-area-inset-top)) 16px 10px;margin:0;transition:transform .35s ease,opacity .35s ease}
+  .page{flex:0 0 100%;scroll-snap-align:start;overflow-y:auto;overflow-x:hidden;padding:calc(64px + env(safe-area-inset-top)) 16px calc(8px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+  .apphead{position:fixed;top:0;left:0;right:0;z-index:60;text-align:center;padding:calc(8px + env(safe-area-inset-top)) 16px 10px;margin:0;background:#0d1530;transition:transform .35s ease,opacity .35s ease}
   .apphead.hidden{transform:translateY(-110%);opacity:0;pointer-events:none}
   .apphead h1{font-size:30px;letter-spacing:-.5px}
   .headicons{position:absolute;right:16px;top:calc(12px + env(safe-area-inset-top));display:flex;gap:10px;z-index:5}
@@ -59,8 +59,8 @@
   #mealList,#workoutList,#weightList{max-height:110px;overflow:auto}
   .card h2{margin-bottom:8px}
   @media(max-width:480px){
-    .apphead{padding:calc(8px + env(safe-area-inset-top)) 12px 10px}
-    .page{padding:calc(64px + env(safe-area-inset-top)) 12px calc(24px + env(safe-area-inset-bottom))}
+    .apphead{padding:calc(8px + env(safe-area-inset-top)) 12px 10px;background:#0d1530}
+    .page{padding:calc(64px + env(safe-area-inset-top)) 12px calc(8px + env(safe-area-inset-bottom))}
     h1{font-size:26px}
     .card{padding:14px;margin-bottom:12px;border-radius:20px}
     button{padding:11px 12px;font-size:15px}
@@ -1095,8 +1095,7 @@ function moveCalEvent(day, id, dir){
     state.mealOverrides[nd][ev.title]=ev.start;
   }
   calSelectedDay = nd;
-  save();
-  switchSection('tracker');
+  save(); render();
 }
 function effectiveWorkout(day){
   if(!state.calEvents || !state.calEvents[day]) return SCHEDULE[day];
@@ -1865,7 +1864,8 @@ function finishWakeUp(){ setOverlayOpen('sleep', false);
     state.sleep.push({id:uid(),date:todayKey(),start:start.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}),end:now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}),hours:hours});
     state.sleepStart=null;
   }
-  save(); render();
+  save();
+  switchSection('tracker');
 }
 function wakeUpFromScreen(){
   if(__wakingUp) return;
