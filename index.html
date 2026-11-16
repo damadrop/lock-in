@@ -113,7 +113,54 @@
   .pill.done{background:#bae6fd;color:#0c4a6e}
   .nowline{flex:1;height:2px;background:#ef4444;align-self:center;position:relative}
   .nowline::before{content:'';position:absolute;left:-6px;top:-5px;width:12px;height:12px;border-radius:50%;background:#ef4444}
-  .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;justify-content:center;background:rgba(10,17,40,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(125,211,252,.15);padding:8px 12px calc(10px + env(safe-area-inset-bottom))}
+  .updBanner{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(56,189,248,.18),rgba(125,211,252,.08));border:1px solid rgba(56,189,248,.4);border-radius:18px;padding:14px 16px;margin:0 0 14px;text-align:left}
+.updBanner b{font-size:16px}
+.updBanner span{font-size:13px;color:#8ea3c8;display:block;margin-top:2px}
+.updBtn{flex:0 0 auto;background:#38bdf8;color:#082f49;border:0;border-radius:999px;padding:10px 18px;font-size:15px;font-weight:800;box-shadow:0 4px 16px rgba(56,189,248,.4)}
+#updOverlay{position:fixed;inset:0;z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:linear-gradient(180deg,#0d1530,#0a1128);padding:32px}
+#updTimer{font-size:84px;font-weight:800;letter-spacing:-2px;line-height:1;margin:16px 0 8px;font-variant-numeric:tabular-nums}
+#updBarWrap{width:220px;height:8px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;margin:18px auto 0}
+#updBar{height:100%;background:#38bdf8;border-radius:999px;width:0%;transition:width .5s linear}
+#updLockInBtn{display:none;background:#38bdf8;color:#082f49;border:0;border-radius:999px;padding:18px 44px;font-size:26px;font-weight:800;letter-spacing:2px;box-shadow:0 0 40px rgba(56,189,248,.6);animation:lockinPulse 1.6s ease-in-out infinite}
+@keyframes lockinPulse{0%,100%{transform:scale(1);box-shadow:0 0 30px rgba(56,189,248,.45)}50%{transform:scale(1.06);box-shadow:0 0 60px rgba(56,189,248,.8)}}
+#launchOverlay{position:fixed;inset:0;z-index:10000;display:none;overflow:hidden;background:#050214}
+#launchOverlay .lstars{position:absolute;inset:0}
+#launchOverlay .lstar{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;animation:ltwink 2s ease-in-out infinite}
+@keyframes ltwink{0%,100%{opacity:.2}50%{opacity:1}}
+#launchLogo{position:absolute;left:0;right:0;top:34%;text-align:center;animation:logoIn 2s cubic-bezier(.22,1,.36,1) both}
+@keyframes logoIn{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+#launchLogo .lbig{font-size:64px;font-weight:800;letter-spacing:6px;background:linear-gradient(135deg,#7dd3fc,#38bdf8,#0ea5e9);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 60px rgba(56,189,248,.5)}
+#launchLogo .lsub{font-size:18px;color:#8ea3c8;margin-top:8px;letter-spacing:2px}
+#launchRing{position:absolute;left:50%;top:50%;width:280px;height:280px;margin:-140px 0 0 -140px;border-radius:50%;border:2px solid rgba(56,189,248,.5);animation:ringExpand 3s ease-out infinite}
+@keyframes ringExpand{0%{transform:scale(.4);opacity:1}100%{transform:scale(1.6);opacity:0}}
+#launchBarWrap{position:absolute;left:50%;bottom:18%;width:240px;margin-left:-120px;height:6px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}
+#launchBar{height:100%;background:linear-gradient(90deg,#7dd3fc,#38bdf8);border-radius:999px;width:0%}
+#launchPct{position:absolute;left:0;right:0;bottom:12%;text-align:center;font-size:15px;color:#8ea3c8;font-weight:700}
+#launchOverlay.flash{animation:lflash .8s ease-out both}
+@keyframes lflash{from{opacity:1}to{opacity:0}}
+#launchCaption{position:absolute;left:0;right:0;bottom:26%;text-align:center;font-size:17px;color:#c7d6ee;font-weight:600;letter-spacing:.3px;z-index:5}
+#launchChar{position:absolute;left:50%;bottom:32%;width:64px;height:96px;margin-left:-32px;z-index:4;opacity:0;animation:charWalkIn 1.2s ease-out 3s both}
+@keyframes charWalkIn{from{opacity:0;transform:translateX(-140px)}to{opacity:1;transform:translateX(0)}}
+#launchChar .hat{position:absolute;left:8px;top:0;width:48px;height:22px;background:#fbbf24;border-radius:24px 24px 4px 4px}
+#launchChar .hat:before{content:'';position:absolute;left:0;right:0;bottom:-4px;height:6px;background:#f59e0b;border-radius:3px}
+#launchChar .head{position:absolute;left:16px;top:20px;width:32px;height:32px;background:#fcd9b8;border-radius:50%}
+#launchChar .head:before{content:'';position:absolute;left:7px;top:14px;width:4px;height:4px;background:#1e293b;border-radius:50%;box-shadow:14px 0 0 #1e293b}
+#launchChar .head:after{content:'';position:absolute;left:12px;top:24px;width:8px;height:4px;border-radius:0 0 8px 8px;background:#1e293b}
+#launchChar .body{position:absolute;left:14px;top:52px;width:36px;height:30px;background:#38bdf8;border-radius:10px 10px 4px 4px}
+#launchChar .armL{position:absolute;left:4px;top:56px;width:10px;height:24px;background:#38bdf8;border-radius:5px;transform-origin:top center;animation:hammer 1s ease-in-out infinite}
+#launchChar .armR{position:absolute;right:4px;top:56px;width:10px;height:24px;background:#38bdf8;border-radius:5px;transform-origin:top center;animation:hammer 1s ease-in-out .5s infinite}
+@keyframes hammer{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-55deg)}}
+#launchChar .legL{position:absolute;left:18px;top:80px;width:10px;height:16px;background:#1e3a5f;border-radius:0 0 5px 5px}
+#launchChar .legR{position:absolute;right:18px;top:80px;width:10px;height:16px;background:#1e3a5f;border-radius:0 0 5px 5px}
+#launchChar.jump{animation:charJump .6s ease-in-out infinite}
+@keyframes charJump{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+#launchBuild{position:absolute;left:0;right:0;top:56%;display:flex;justify-content:center;gap:10px;z-index:3}
+#launchBuild .bpiece{width:64px;height:64px;border-radius:16px;background:#111c3d;border:1px solid rgba(125,211,252,.4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;opacity:0;transform:translateY(40px) scale(.7);transition:opacity .5s ease,transform .5s cubic-bezier(.22,1,.36,1)}
+#launchBuild .bpiece.show{opacity:1;transform:translateY(0) scale(1)}
+#launchBuild .bpiece .bic{font-size:24px}
+#launchBuild .bpiece .blab{font-size:10px;color:#8ea3c8;font-weight:700;letter-spacing:.5px}
+#launchBuild .bpiece .bring{width:28px;height:28px;border-radius:50%;border:4px solid rgba(56,189,248,.3);border-top-color:#38bdf8}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;justify-content:center;background:rgba(10,17,40,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(125,211,252,.15);padding:8px 12px calc(10px + env(safe-area-inset-bottom))}
   .tabbar button{flex:1;max-width:180px;background:transparent;box-shadow:none;color:#64748b;font-size:13px;font-weight:600;padding:8px 4px;border-radius:16px;display:flex;flex-direction:column;align-items:center;gap:4px}
   .tabbar button svg{width:24px;height:24px}
   .tabbar button.on{background:#bae6fd;color:#0c4a6e}
@@ -203,6 +250,10 @@
   </div>
 </div>
 
+<div class="updBanner">
+  <div style="flex:1"><b>Update available &mdash; Version 3.0</b><span>New look, profile, settings, and more.</span></div>
+  <button class="updBtn" onclick="startUpdate()">Update</button>
+</div>
 <div class="card" id="calArcCard" style="text-align:center">
   <div style="font-size:16px;font-weight:700;text-align:left">Calories today</div>
   <div style="position:relative;width:220px;height:122px;margin:10px auto 0">
@@ -1618,6 +1669,57 @@ function renderSleep(){
 initSwipe();
 showWelcome();
 render();
+var __updTimer=null, __updLeft=180;
+function startUpdate(){
+  var ov=document.getElementById('updOverlay'); if(!ov) return;
+  ov.style.display='flex';
+  document.getElementById('updLockInBtn').style.display='none';
+  document.getElementById('updTimer').style.display='block';
+  document.getElementById('updBarWrap').style.display='block';
+  document.getElementById('updSub').textContent='Getting the new app ready\u2026';
+  document.getElementById('updNote').style.display='block';
+  __updLeft=180; updTick(true);
+  if(__updTimer) clearInterval(__updTimer);
+  __updTimer=setInterval(function(){ __updLeft--; if(__updLeft<=0){ clearInterval(__updTimer); __updTimer=null; updDone(); } else { updTick(false); } }, 1000);
+}
+function updTick(first){
+  var m=Math.floor(__updLeft/60), s=__updLeft%60;
+  var t=document.getElementById('updTimer'); if(t) t.textContent=m+':'+String(s).padStart(2,'0');
+  var bar=document.getElementById('updBar'); if(bar) bar.style.width=((180-__updLeft)/180*100).toFixed(1)+'%';
+}
+function updDone(){
+  document.getElementById('updTimer').style.display='none';
+  document.getElementById('updBarWrap').style.display='none';
+  document.getElementById('updSub').textContent='Ready. Tap below to open the new app.';
+  document.getElementById('updNote').style.display='none';
+  document.getElementById('updLockInBtn').style.display='inline-block';
+}
+function startLaunch(){
+  var upd=document.getElementById('updOverlay'); if(upd) upd.style.display='none';
+  var lo=document.getElementById('launchOverlay'); if(!lo) return;
+  lo.style.display='block';
+  var st=document.getElementById('launchStars');
+  if(st && !st.children.length){ var h=''; for(var i=0;i<60;i++){ var x=(Math.random()*100).toFixed(1), y=(Math.random()*100).toFixed(1), d=(Math.random()*2).toFixed(1); h+='<span class="lstar" style="left:'+x+'%;top:'+y+'%;animation-delay:'+d+'s"></span>'; } st.innerHTML=h; }
+  var start=Date.now(), dur=25000;
+  var bar=document.getElementById('launchBar'), pct=document.getElementById('launchPct');
+  var cap=document.getElementById('launchCaption');
+  var ch=document.getElementById('launchChar');
+  var caps=[[0,'Your new Lock In is coming...'],[0.16,'Building your new app...'],[0.32,'Adding the ring...'],[0.48,'Adding your food...'],[0.62,'Adding your calendar...'],[0.74,'Bringing your data...'],[0.88,'Your new Lock In is ready!']];
+  var shown=[false,false,false,false];
+  function showPiece(i){ var el=document.getElementById('bp'+(i+1)); if(el) el.classList.add('show'); }
+  var iv=setInterval(function(){
+    var el=Date.now()-start, p=Math.min(el/dur,1);
+    if(bar) bar.style.width=(p*100).toFixed(1)+'%';
+    if(pct) pct.textContent=Math.round(p*100)+'%';
+    if(cap){ for(var i=caps.length-1;i>=0;i--){ if(p>=caps[i][0]){ cap.textContent=caps[i][1]; break; } } }
+    if(p>=0.32 && !shown[0]){ shown[0]=true; showPiece(0); }
+    if(p>=0.48 && !shown[1]){ shown[1]=true; showPiece(1); }
+    if(p>=0.62 && !shown[2]){ shown[2]=true; showPiece(2); }
+    if(p>=0.74 && !shown[3]){ shown[3]=true; showPiece(3); }
+    if(p>=0.88 && ch && !ch.classList.contains('jump')){ ch.classList.add('jump'); }
+    if(p>=1){ clearInterval(iv); lo.classList.add('flash'); setTimeout(function(){ window.location.href='https://damadrop.github.io/lock-in/staging/?tour=1'; }, 800); }
+  }, 100);
+}
 if(state.sleepStart){ showSleepScreen(); dismissWelcome(); }
 setInterval(function(){ applyDayTheme(); refreshTime(); }, 60000);
 document.addEventListener('visibilitychange', function(){ if(!document.hidden){ applyDayTheme(); refreshTime(); } });
@@ -1625,5 +1727,29 @@ switchSection('tracker');
 var q0=document.getElementById('streakQuote'); if(q0) q0.style.display='none';
 syncPullAndMerge();
 </script>
+<div id="updOverlay">
+  <div style="font-size:13px;letter-spacing:3px;color:#38bdf8;font-weight:700">LOCK IN</div>
+  <h1 style="font-size:28px;margin:12px 0 0">Updating to 3.0</h1>
+  <p class="sub" id="updSub" style="margin:8px 0 0">Getting the new app ready&hellip;</p>
+  <div id="updTimer">3:00</div>
+  <div id="updBarWrap"><div id="updBar"></div></div>
+  <button id="updLockInBtn" onclick="startLaunch()">LOCK IN</button>
+  <p class="sub" id="updNote" style="margin:18px 0 0;font-size:13px">Your food, workouts, water, weight and sleep all carry over.</p>
+</div>
+<div id="launchOverlay">
+  <div class="lstars" id="launchStars"></div>
+  <div id="launchRing"></div>
+  <div id="launchLogo"><div class="lbig">LOCK IN</div><div class="lsub">VERSION 3.0</div></div>
+  <div id="launchChar"><div class="hat"></div><div class="head"></div><div class="armL"></div><div class="armR"></div><div class="body"></div><div class="legL"></div><div class="legR"></div></div>
+  <div id="launchBuild">
+    <div class="bpiece" id="bp1"><div class="bring"></div><div class="blab">RING</div></div>
+    <div class="bpiece" id="bp2"><div class="bic">&#127828;</div><div class="blab">FOOD</div></div>
+    <div class="bpiece" id="bp3"><div class="bic">&#128197;</div><div class="blab">CALENDAR</div></div>
+    <div class="bpiece" id="bp4"><div class="bic">&#128100;</div><div class="blab">PROFILE</div></div>
+  </div>
+  <div id="launchCaption">Your new Lock In is coming...</div>
+  <div id="launchBarWrap"><div id="launchBar"></div></div>
+  <div id="launchPct">0%</div>
+</div>
 </body>
 </html>
