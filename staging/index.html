@@ -193,6 +193,17 @@
   .miniring .ringic span{font-size:12px;font-weight:800}
   #reader video{border-radius:16px}
 /* Sleep screen */
+#splash{position:fixed;inset:0;z-index:10001;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);transition:opacity .8s ease}
+#splash.gone{opacity:0;pointer-events:none}
+#wstars{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+#wstars .star{position:absolute;border-radius:50%;background:#fff;animation:twinkle 2.8s ease-in-out infinite}
+.wcloud{position:absolute;border-radius:50%;background:rgba(148,163,184,.10);filter:blur(18px);animation:drift 32s linear infinite;pointer-events:none}
+.wcloud.wc1{width:220px;height:56px;top:20%;left:-240px}
+.wcloud.wc2{width:180px;height:44px;top:55%;left:-200px;animation-duration:44s;animation-delay:-18s}
+.wcard{position:relative;z-index:2;background:rgba(255,255,255,.08);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.15);border-radius:24px;padding:28px 24px;max-width:340px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+#swipeUpBar{position:absolute;left:0;right:0;bottom:calc(28px + env(safe-area-inset-bottom));z-index:2;text-align:center;cursor:pointer}
+#swipeUpBar .swipechev{font-size:26px;line-height:1;color:#7dd3fc;animation:chevup 1.6s ease-in-out infinite}
+@keyframes chevup{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(-6px);opacity:1}}
 #sleepScreen{position:fixed;inset:0;z-index:9999;display:none;overflow:hidden;background:#050214;animation:sswin .7s ease-out;}
 #sleepScreen.fadeout{opacity:0;transition:opacity .6s ease;}
 @keyframes sswin{from{opacity:0}to{opacity:1}}
@@ -235,15 +246,27 @@
 </style>
 </head>
 <body>
+<div id="splash">
+  <img src="../icon.jpg" style="width:96px;height:96px;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,.4)" alt="Lock In" onerror="this.style.display='none'">
+  <p style="font-size:18px;letter-spacing:4px;color:#bae6fd;margin:18px 0 0;font-weight:700">LOCK IN</p>
+</div>
 <div class="stagingbadge">STAGING</div>
 
-<div id="welcomeOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px">
-  <p style="font-size:15px;letter-spacing:3px;color:#bae6fd;margin:0 0 8px">LOCK IN</p>
-  <h1 id="welcomeGreeting" style="font-size:44px;margin:0 0 8px">Good morning, Lonj</h1>
-  <p id="welcomeSub" style="font-size:17px;color:#fff;margin:0 0 20px">Time to start the day right.</p>
-  <p id="welcomeVerse" style="font-size:18px;line-height:1.5;color:#e9d5ff;margin:0 0 32px"></p>
-  <button class="big" style="min-width:200px" onclick="dismissWelcome()">Enter</button>
-  <p style="font-size:12px;opacity:.55;margin:20px 0 0">v2.7-staging &middot; Sleep Screen</p>
+<div id="welcomeOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px;overflow:hidden">
+  <div id="wstars"></div>
+  <div class="wcloud wc1"></div>
+  <div class="wcloud wc2"></div>
+  <div class="wcard">
+    <p style="font-size:15px;letter-spacing:3px;color:#bae6fd;margin:0 0 8px">LOCK IN</p>
+    <h1 id="welcomeGreeting" style="font-size:44px;margin:0 0 8px">Good morning, Lonj</h1>
+    <p id="welcomeSub" style="font-size:17px;color:#fff;margin:0 0 20px">Time to start the day right.</p>
+    <p id="welcomeVerse" style="font-size:24px;line-height:1.5;color:#e9d5ff;margin:0"></p>
+  </div>
+  <p style="font-size:12px;opacity:.55;margin:16px 0 0;position:relative;z-index:2">v2.7-staging &middot; Sleep Screen</p>
+  <div id="swipeUpBar" onclick="dismissWelcome()">
+    <div class="swipechev">&#708;</div>
+    <div style="font-size:15px;font-weight:700;color:#bae6fd;letter-spacing:1px">Swipe up to enter</div>
+  </div>
 </div>
 
 <div id="updatesOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);z-index:1000;flex-direction:column;align-items:center;justify-content:center;padding:32px;overflow-y:auto">
@@ -1790,6 +1813,7 @@ function showWelcome(){ setOverlayOpen('welcome', true);
   var start=new Date(now.getFullYear(),0,0), doy=Math.floor((now-start)/86400000);
   document.getElementById('welcomeGreeting').textContent=g+', Lonj';
   document.getElementById('welcomeVerse').textContent=WELCOME_VERSES[doy % WELCOME_VERSES.length];
+  buildWelcomeStars();
   ov.style.display='flex';
 }
 function dismissWelcome(){ setOverlayOpen('welcome', false);
@@ -1809,6 +1833,18 @@ function buildStars(){
   for(var i=0;i<60;i++){
     var s=(Math.random()*2+1).toFixed(1);
     var left=(Math.random()*100).toFixed(1), top=(Math.random()*70).toFixed(1);
+    var d=(Math.random()*2.5+1.5).toFixed(1), dl=(Math.random()*3).toFixed(1);
+    html+='<span class="star" style="left:'+left+'%;top:'+top+'%;width:'+s+'px;height:'+s+'px;animation-duration:'+d+'s;animation-delay:'+dl+'s"></span>';
+  }
+  box.innerHTML=html;
+}
+function buildWelcomeStars(){
+  var box=document.getElementById('wstars');
+  if(!box || box.children.length) return;
+  var html='';
+  for(var i=0;i<50;i++){
+    var s=(Math.random()*2+1).toFixed(1);
+    var left=(Math.random()*100).toFixed(1), top=(Math.random()*100).toFixed(1);
     var d=(Math.random()*2.5+1.5).toFixed(1), dl=(Math.random()*3).toFixed(1);
     html+='<span class="star" style="left:'+left+'%;top:'+top+'%;width:'+s+'px;height:'+s+'px;animation-duration:'+d+'s;animation-delay:'+dl+'s"></span>';
   }
@@ -1973,8 +2009,25 @@ addSheetSwipeDown(document.getElementById('foodCard'), closeFood);
 addSheetSwipeDown(document.getElementById('calEditSheet'), closeCalEdit);
 initPager();
 bindPageScroll();
+(function(){
+  var ov=document.getElementById('welcomeOverlay');
+  if(ov){
+    var sy=null;
+    ov.addEventListener('touchstart', function(e){ if(e.touches.length===1){ sy=e.touches[0].clientY; } }, {passive:true});
+    ov.addEventListener('touchend', function(e){
+      if(sy===null) return;
+      var dy=(e.changedTouches[0]||{}).clientY - sy;
+      sy=null;
+      if(dy < -60){ dismissWelcome(); }
+    }, {passive:true});
+  }
+})();
 showWelcome();
 render();
+setTimeout(function(){
+  var sp=document.getElementById('splash');
+  if(sp){ sp.classList.add('gone'); setTimeout(function(){ sp.style.display='none'; }, 850); }
+}, 700);
 if(state.sleepStart){ showSleepScreen(); dismissWelcome(); }
 setInterval(function(){ applyDayTheme(); refreshTime(); }, 60000);
 document.addEventListener('visibilitychange', function(){ if(!document.hidden){ applyDayTheme(); refreshTime(); } });
