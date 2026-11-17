@@ -155,9 +155,9 @@
   .shake{animation:shake .3s ease}
   .pressable{cursor:pointer;transition:transform .15s ease}
   .pressable:active{transform:scale(.985)}
-  .dashgrid{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:auto;align-items:start;gap:12px;margin-bottom:14px}
+  .dashgrid{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:auto;align-items:stretch;gap:12px;margin-bottom:14px}
   .dashgrid .card{margin-bottom:0}
-  .gcard{display:flex;flex-direction:column;gap:6px;padding:14px}
+  .gcard{display:flex;flex-direction:column;gap:6px;padding:14px;min-height:150px}
   .glabel{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700}
   .glabel svg{width:22px;height:22px;flex:0 0 22px}
   .gbig{font-size:20px;font-weight:800;line-height:1.15;letter-spacing:-.5px}
@@ -179,6 +179,9 @@
   .gcard .bar{margin:4px 0}
   .gcard .pillbtn{align-self:flex-start;margin-top:2px}
   .gcard .stepper{align-self:flex-start}
+  #waterCard{gap:4px;padding:12px 14px}
+  #waterCard .bar{margin:2px 0}
+  #waterCard .stepper button{width:30px;height:30px;font-size:17px}
   .ordiv{display:flex;align-items:center;gap:12px;color:#64748b;font-size:14px;margin:14px 0}
   .ordiv:before,.ordiv:after{content:'';flex:1;height:1px;background:rgba(255,255,255,.12)}
   .inner{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:16px;margin-top:14px}
@@ -331,7 +334,7 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
     <p id="welcomeSub" style="font-size:17px;color:#fff;margin:0 0 20px">Time to start the day right.</p>
     <p id="welcomeVerse" style="font-size:24px;line-height:1.5;color:#e9d5ff;margin:0"></p>
   </div>
-  <p style="font-size:12px;opacity:.55;margin:16px 0 0;position:relative;z-index:2">v3.3.1</p>
+  <p style="font-size:12px;opacity:.55;margin:16px 0 0;position:relative;z-index:2">v3.3.2</p>
   <div id="swipeUpBar" onclick="dismissWelcome()">
     <div class="swipechev">&#708;</div>
     <div style="font-size:15px;font-weight:700;color:#bae6fd;letter-spacing:1px">Swipe up to enter</div>
@@ -341,11 +344,13 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
 <div id="updatesOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 100%);z-index:1000;flex-direction:column;align-items:center;justify-content:center;padding:32px;overflow-y:auto">
   <img src="/lock-in/icon.jpg" style="width:72px;height:72px;border-radius:18px;margin-bottom:14px" alt="Lock In icon">
   <h1 style="font-size:26px;margin:0 0 4px">Lock In</h1>
-  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 3.3.1</p>
+  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 3.3.2</p>
   <p style="font-size:14px;color:#8ea3c8;margin:0 0 24px">November 17, 2026</p>
   <p style="font-size:15px;letter-spacing:3px;color:var(--accent);margin:0 0 16px">WHAT'S NEW</p>
   <div style="text-align:left;max-width:360px;width:100%">
     <div style="margin-bottom:4px"><b style="font-size:16px">Scans fill in the right numbers now</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Fixed a bug where scanning could fill in the per-100g numbers as if they were for one serving. It now works out the real serving size, and if it can't, it tells you to type the numbers from the bag instead of guessing.</p></div>
+    <div style="margin-bottom:4px"><b style="font-size:16px">Calendar hold to drag and swipe to delete fixed</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Holding a block now lifts it so you can drag it to a new time, and swiping a block left deletes it. They were getting stolen by the page swipe on iPhone.</p></div>
+    <div style="margin-bottom:4px"><b style="font-size:16px">Tracker cards all the same size</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">The four cards on the Tracker are the same height now, with the Water card made a little more compact.</p></div>
   </div>
 <button class="big" style="min-width:200px;margin-top:24px" onclick="dismissUpdates()">Continue</button>
 </div>
@@ -808,7 +813,7 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/barcode-detector@3.2.4/dist/iife/ponyfill.min.js"></script>
 <script>
-var APP_VERSION='3.3.1';
+var APP_VERSION='3.3.2';
 var _needClear=true; try{_needClear=localStorage.getItem('lockin_cache_cleared_for')!==APP_VERSION;}catch(e){}
 if(_needClear){try{localStorage.setItem('lockin_cache_cleared_for',APP_VERSION);}catch(e){} if('serviceWorker' in navigator){try{navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}catch(e){} try{if(window.caches){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});});}}catch(e){}}}
 var LS_KEY = 'lockin_homescreen_v1';
@@ -1148,6 +1153,7 @@ function renderDragCalendar(){
     var startX=0, startY=0, origStart=0, dragging=false, mode=null, armed=false, holdTimer=null;
     function clearHold(){ if(holdTimer){ clearTimeout(holdTimer); holdTimer=null; } }
     el.addEventListener('pointerdown', function(e){
+      if(e.pointerType==='touch') return;
       dragging=true; mode=null; armed=false; startX=e.clientX; startY=e.clientY;
       var ev = state.calEvents[day].find(function(x){return x.id===el.getAttribute('data-id');});
       if(ev && ev.fixed) { dragging=false; return; }
@@ -1163,6 +1169,7 @@ function renderDragCalendar(){
       }, 450);
     });
     el.addEventListener('pointermove', function(e){
+      if(e.pointerType==='touch') return;
       if(!dragging) return;
       var dx=e.clientX-startX, dy=e.clientY-startY;
       if(!mode){
@@ -1188,6 +1195,7 @@ function renderDragCalendar(){
       }
     });
     el.addEventListener('pointerup', function(e){
+      if(e.pointerType==='touch') return;
       if(!dragging) return; dragging=false;
       clearHold();
       var dx=e.clientX-startX, dy=e.clientY-startY;
@@ -1214,12 +1222,94 @@ function renderDragCalendar(){
       el._newStart=undefined; el._swipeX=undefined;
     });
     el.addEventListener('pointercancel', function(e){
+      if(e.pointerType==='touch') return;
       dragging=false; clearHold();
       el.style.transform=''; el.style.opacity='';
       el.classList.remove('pickup');
       el.style.touchAction='';
       el._newStart=undefined; el._swipeX=undefined;
     });
+    // Touch gestures (iOS): the browser steals touches for page and pager
+    // scrolling, so take the gesture over with preventDefault once it is a
+    // card drag or a left swipe. Pointer events handle mouse/pen only.
+    el.addEventListener('touchstart', function(e){
+      if(e.touches.length!==1) return;
+      var t=e.touches[0];
+      dragging=true; mode=null; armed=false; startX=t.clientX; startY=t.clientY;
+      var ev = state.calEvents[day].find(function(x){return x.id===el.getAttribute('data-id');});
+      if(ev && ev.fixed) { dragging=false; return; }
+      origStart = ev ? ev.start : 0;
+      clearHold();
+      holdTimer=setTimeout(function(){
+        if(!dragging) return;
+        armed=true;
+        el.classList.add('pickup');
+        el.style.touchAction='none';
+        if(navigator.vibrate){ try{ navigator.vibrate(10); }catch(err){} }
+      }, 450);
+    }, {passive:true});
+    el.addEventListener('touchmove', function(e){
+      if(!dragging || e.touches.length!==1) return;
+      var t=e.touches[0];
+      var dx=t.clientX-startX, dy=t.clientY-startY;
+      if(!mode){
+        if(Math.abs(dx)>10 || Math.abs(dy)>10){
+          if(Math.abs(dx)>Math.abs(dy)){ mode='x'; }
+          else if(armed){ mode='y'; }
+          else { mode='scroll'; clearHold(); }
+        }
+        else return;
+      }
+      if(mode==='x'){
+        if(dx<0){ e.preventDefault(); }
+        var cdx=Math.min(0,dx);
+        el.style.transform='translateX('+cdx+'px)';
+        el.style.opacity = cdx<-40 ? '0.55' : '1';
+        el._swipeX = cdx;
+      } else if(mode==='y'){
+        e.preventDefault();
+        var deltaHours = dy/45;
+        var newStart = Math.round((origStart+deltaHours)*2)/2;
+        if(newStart<6) newStart=6; if(newStart>21.5) newStart=21.5;
+        el.style.transform='translateY('+dy+'px)';
+        el.querySelector('small').textContent = fmtHour(newStart)+' — drag to move';
+        el._newStart = newStart;
+      }
+    }, {passive:false});
+    el.addEventListener('touchend', function(e){
+      if(!dragging) return; dragging=false;
+      clearHold();
+      var t=(e.changedTouches && e.changedTouches[0]) || null;
+      var dx=t?t.clientX-startX:0, dy=t?t.clientY-startY:0;
+      el.style.transform=''; el.style.opacity='';
+      el.classList.remove('pickup');
+      el.style.touchAction='';
+      var ev = state.calEvents[day].find(function(x){return x.id===el.getAttribute('data-id');});
+      if(mode==='x' && el._swipeX<-80 && ev && !ev.fixed){
+        deleteCalEvent(day, ev.id);
+        return;
+      }
+      if(mode==='y' && typeof el._newStart==='number' && ev){
+        ev.start=el._newStart; ev.sub=fmtHour(el._newStart);
+        if(ev.id.indexOf('meal')===0){
+          if(!state.mealOverrides[day]) state.mealOverrides[day]={};
+          state.mealOverrides[day][ev.title]=el._newStart;
+        }
+        save(); render();
+        return;
+      }
+      if(!armed && Math.abs(dx)<10 && Math.abs(dy)<10 && ev){
+        openCalEdit(day, ev.id);
+      }
+      el._newStart=undefined; el._swipeX=undefined;
+    }, {passive:true});
+    el.addEventListener('touchcancel', function(){
+      dragging=false; clearHold();
+      el.style.transform=''; el.style.opacity='';
+      el.classList.remove('pickup');
+      el.style.touchAction='';
+      el._newStart=undefined; el._swipeX=undefined;
+    }, {passive:true});
   });
 }
 function fmtTime24(h){ var hh=Math.floor(h), mm=Math.round((h-hh)*60); if(mm===60){hh++;mm=0;} return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0'); }
