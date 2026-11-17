@@ -1598,13 +1598,18 @@ function lookupBarcode(code){
       if(im){if(imgUrl){im.src=imgUrl; im.style.display='block';}else{im.style.display='none'; im.src='';}}
       var brand=(pr.brands||'').split(',')[0].trim();
       var cal=nut['energy-kcal_serving'], pro=nut.proteins_serving, grams=null, gramsFrom='', basis='';
-      var m=(pr.serving_size||'').match(/([\d.]+)\s*g/i);
-      if(m){grams=parseFloat(m[1]); gramsFrom='serving';}
-      else{var mo=(pr.serving_size||'').match(/([\d.]+)\s*oz/i); if(mo){grams=parseFloat(mo[1])*28.35; gramsFrom='serving';}}
-      if(!grams){var mq=(pr.quantity||'').match(/([\d.]+)\s*g/i); if(mq){grams=parseFloat(mq[1]); gramsFrom='pack';}}
+      function gFromText(s){var mm=(s||'').match(/([\d.]+)\s*g/i); return mm?parseFloat(mm[1]):null;}
+      function ozFromText(s){var mm=(s||'').match(/([\d.]+)\s*oz/i); return mm?parseFloat(mm[1])*28.35:null;}
+      var servG=gFromText(pr.serving_size)||ozFromText(pr.serving_size)||((pr.serving_quantity!=null&&pr.serving_quantity>0)?parseFloat(pr.serving_quantity):null);
+      var packG=null;
+      if(pr.product_quantity!=null&&pr.product_quantity_unit==='g'&&pr.product_quantity>0){packG=parseFloat(pr.product_quantity);}
+      if(packG==null){packG=gFromText(pr.quantity);}
       // A 100g "serving" usually means the database never got a real serving size.
       // If the whole pack is smaller than 100g, the pack is the serving.
-      if(grams===100){var mq2=(pr.quantity||'').match(/([\d.]+)\s*g/i); if(mq2&&parseFloat(mq2[1])<100){grams=parseFloat(mq2[1]); gramsFrom='pack';}}
+      if(servG!=null&&servG!==100){grams=servG; gramsFrom='serving';}
+      else if(packG!=null&&packG<100){grams=packG; gramsFrom='pack';}
+      else if(servG!=null){grams=servG; gramsFrom='serving';}
+      else if(packG!=null){grams=packG; gramsFrom='pack';}
       // Open Food Facts sometimes lists the per-100g number as the serving number.
       // If the serving number matches the per-100g number but the serving is not 100g, recompute it.
       if(grams&&grams!==100){
