@@ -331,7 +331,7 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
     <p id="welcomeSub" style="font-size:17px;color:#fff;margin:0 0 20px">Time to start the day right.</p>
     <p id="welcomeVerse" style="font-size:24px;line-height:1.5;color:#e9d5ff;margin:0"></p>
   </div>
-  <p style="font-size:12px;opacity:.55;margin:16px 0 0;position:relative;z-index:2">v3.3.0</p>
+  <p style="font-size:12px;opacity:.55;margin:16px 0 0;position:relative;z-index:2">v3.3.1</p>
   <div id="swipeUpBar" onclick="dismissWelcome()">
     <div class="swipechev">&#708;</div>
     <div style="font-size:15px;font-weight:700;color:#bae6fd;letter-spacing:1px">Swipe up to enter</div>
@@ -341,11 +341,11 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
 <div id="updatesOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 100%);z-index:1000;flex-direction:column;align-items:center;justify-content:center;padding:32px;overflow-y:auto">
   <img src="/lock-in/icon.jpg" style="width:72px;height:72px;border-radius:18px;margin-bottom:14px" alt="Lock In icon">
   <h1 style="font-size:26px;margin:0 0 4px">Lock In</h1>
-  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 3.3.0</p>
+  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 3.3.1</p>
   <p style="font-size:14px;color:#8ea3c8;margin:0 0 24px">November 17, 2026</p>
   <p style="font-size:15px;letter-spacing:3px;color:var(--accent);margin:0 0 16px">WHAT'S NEW</p>
   <div style="text-align:left;max-width:360px;width:100%">
-    <div style="margin-bottom:4px"><b style="font-size:16px">Switchable themes</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Seven whole looks for the app: Splash, Sunset, Volt, Ocean, Bubblegum, Sunshine and Tropical. Pick one in Settings and it switches instantly.</p></div>
+    <div style="margin-bottom:4px"><b style="font-size:16px">Scans fill in the right numbers now</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Fixed a bug where scanning could fill in the per-100g numbers as if they were for one serving. It now works out the real serving size, and if it can't, it tells you to type the numbers from the bag instead of guessing.</p></div>
   </div>
 <button class="big" style="min-width:200px;margin-top:24px" onclick="dismissUpdates()">Continue</button>
 </div>
@@ -808,7 +808,7 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/barcode-detector@3.2.4/dist/iife/ponyfill.min.js"></script>
 <script>
-var APP_VERSION='3.3.0';
+var APP_VERSION='3.3.1';
 var _needClear=true; try{_needClear=localStorage.getItem('lockin_cache_cleared_for')!==APP_VERSION;}catch(e){}
 if(_needClear){try{localStorage.setItem('lockin_cache_cleared_for',APP_VERSION);}catch(e){} if('serviceWorker' in navigator){try{navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}catch(e){} try{if(window.caches){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});});}}catch(e){}}}
 var LS_KEY = 'lockin_homescreen_v1';
@@ -1597,17 +1597,23 @@ function lookupBarcode(code){
       var imgUrl=pr.image_front_small_url||pr.image_small_url||pr.image_url||'';
       if(im){if(imgUrl){im.src=imgUrl; im.style.display='block';}else{im.style.display='none'; im.src='';}}
       var brand=(pr.brands||'').split(',')[0].trim();
-      var cal=nut['energy-kcal_serving'], pro=nut.proteins_serving, grams=null, basis='';
+      var cal=nut['energy-kcal_serving'], pro=nut.proteins_serving, grams=null, gramsFrom='', basis='';
       var m=(pr.serving_size||'').match(/([\d.]+)\s*g/i);
-      if(m) grams=parseFloat(m[1]);
-      else{var mo=(pr.serving_size||'').match(/([\d.]+)\s*oz/i); if(mo) grams=parseFloat(mo[1])*28.35;}
-      if((cal==null||pro==null)&&nut['energy-kcal_100g']!=null&&grams){
-        if(cal==null) cal=Math.round(nut['energy-kcal_100g']*grams/100);
-        if(pro==null) pro=Math.round(nut.proteins_100g*grams/100*10)/10;
-        basis='1 serving = '+grams+'g';
+      if(m){grams=parseFloat(m[1]); gramsFrom='serving';}
+      else{var mo=(pr.serving_size||'').match(/([\d.]+)\s*oz/i); if(mo){grams=parseFloat(mo[1])*28.35; gramsFrom='serving';}}
+      if(!grams){var mq=(pr.quantity||'').match(/([\d.]+)\s*g/i); if(mq){grams=parseFloat(mq[1]); gramsFrom='pack';}}
+      // Open Food Facts sometimes lists the per-100g number as the serving number.
+      // If the serving number matches the per-100g number but the serving is not 100g, recompute it.
+      if(grams&&grams!==100){
+        if(cal!=null&&nut['energy-kcal_100g']!=null&&Math.abs(cal-nut['energy-kcal_100g'])<1){cal=Math.round(nut['energy-kcal_100g']*grams/100);}
+        if(pro!=null&&nut.proteins_100g!=null&&Math.abs(pro-nut.proteins_100g)<0.05){pro=Math.round(nut.proteins_100g*grams/100*10)/10;}
       }
-      if(cal==null&&nut['energy-kcal_100g']!=null){cal=nut['energy-kcal_100g']; basis='No serving size found, numbers are per 100g.';}
-      if(pro==null&&nut.proteins_100g!=null){pro=nut.proteins_100g;}
+      if(cal==null&&nut['energy-kcal_100g']!=null&&grams){cal=Math.round(nut['energy-kcal_100g']*grams/100);}
+      if(pro==null&&nut.proteins_100g!=null&&grams){pro=Math.round(nut.proteins_100g*grams/100*10)/10;}
+      // Never fill a per-100g number into a per-serving field when the serving size is unknown.
+      if(grams){basis='1 serving = '+grams+'g'+(gramsFrom==='pack'?' (whole pack)':'');}
+      else if(cal==null&&pro==null){basis='No serving size found — check the bag and type the numbers.';}
+      else{basis='Serving size unknown — check these numbers match the bag.';}
       document.getElementById('scanCal').value=(cal==null?'':Math.round(cal));
       document.getElementById('scanPro').value=(pro==null?'':pro);
       var noteBits=[];
