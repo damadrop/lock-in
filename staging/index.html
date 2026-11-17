@@ -791,7 +791,7 @@ try{
   if(raw){var p=JSON.parse(raw); if(p && typeof p==='object'){
     state = Object.assign(defaultState(), p);
     state.targets = Object.assign({cal:2900,protein:114}, p.targets||{});
-    state.targets.cal = 2900; /* Jacob's chosen target, 2026-11-01, overrides the calculated 2650 */
+    /* cal defaults to 2900 (Jacob's chosen target) when nothing is saved; a saved goal is kept */
     if(!Array.isArray(state.workouts)) state.workouts=[];
     if(!Array.isArray(state.meals)) state.meals=[];
     if(!state.water || typeof state.water!=='object') state.water={};
@@ -826,7 +826,7 @@ function syncPullAndMerge(){
     var remoteHas=(remote.meals&&remote.meals.length)||(remote.workouts&&remote.workouts.length)||(remote.weights&&remote.weights.length);
     if(!remoteHas && localHas){ scheduleSyncPush(); setSyncStatus('synced'); return; }
     if(!localHas && remoteHas){
-      __suppressSync=true; state=Object.assign(defaultState(), remote); state.targets={cal:2900,protein:114}; state.targets.cal=2900; try{localStorage.setItem(LS_KEY, JSON.stringify(state));}catch(e){} __suppressSync=false; render(); setSyncStatus('synced'); return;
+      __suppressSync=true; state=Object.assign(defaultState(), remote); if(!state.targets||typeof state.targets.cal!=='number'||state.targets.cal<=0){ state.targets={cal:2900,protein:114}; } try{localStorage.setItem(LS_KEY, JSON.stringify(state));}catch(e){} __suppressSync=false; render(); setSyncStatus('synced'); return;
     }
     if((remote.updatedAt||0) > (state.updatedAt||0)){
       __suppressSync=true;
@@ -850,9 +850,9 @@ function calcPlan(){
   var kg=wt*0.453592;
   var bmr=10*kg + 6.25*HEIGHT_CM - 5*AGE + 5;
   var tdee=bmr*1.55;
-  var cal=2900; /* user-chosen daily target */
+  var cal=(state.targets&&typeof state.targets.cal==='number'&&state.targets.cal>0)?state.targets.cal:2900; /* saved daily target, 2900 default */
   var pro=Math.round(wt);
-  var water=Math.round(wt*0.7/8);
+  var water=(state.targets&&typeof state.targets.water==='number'&&state.targets.water>0)?state.targets.water:Math.round(wt*0.7/8);
   var gain=Math.max(0, GOAL_WT-wt);
   var weeks=gain>0 ? Math.round(gain/0.5) : 0;
   return {wt:wt, cal:cal, pro:pro, water:water, gain:gain, weeks:weeks, bmr:Math.round(bmr), tdee:Math.round(tdee)};
@@ -888,7 +888,7 @@ function showReminders(){
   lines.push(nextMeal?('Next meal: '+nextMeal.name+' at '+nextMeal.time+' ('+Math.round(plan.cal*nextMeal.share)+' cal)'):'All meals done for today.');
   lines.push('Calories: '+cal.toLocaleString()+' / '+plan.cal.toLocaleString()+' so far.');
   lines.push(part==='Rest'?'Workout: Rest day.':'Workout: '+part+' today.');
-  lines.push('Water: '+w+' of 10 glasses.');
+  lines.push('Water: '+w+' of '+plan.water+' glasses.');
   alert(lines.join('\n'));
 }
 function render(){
@@ -914,9 +914,9 @@ function render(){
   document.getElementById('workoutPartLabel').textContent=todayPart==='Rest' ? 'Rest day' : todayPart;
   document.getElementById('workoutSubLabel').textContent=todayPart==='Rest' ? 'Eat, sleep, recover.' : (doneToday ? 'Done ✓' : 'Strength • 45–60 min');
   var wcount=state.water[today]||0;
-  document.getElementById('waterCount').textContent=wcount+' / 10 glasses';
-  var wBarF=document.getElementById('waterBarF'); if(wBarF) wBarF.style.width=Math.min(100,Math.round(wcount/10*100))+'%';
-  var wPct=document.getElementById('waterPct'); if(wPct) wPct.textContent=Math.min(100,Math.round(wcount/10*100))+'% of daily goal';
+  document.getElementById('waterCount').textContent=wcount+' / '+plan.water+' glasses';
+  var wBarF=document.getElementById('waterBarF'); if(wBarF) wBarF.style.width=Math.min(100,Math.round(wcount/plan.water*100))+'%';
+  var wPct=document.getElementById('waterPct'); if(wPct) wPct.textContent=Math.min(100,Math.round(wcount/plan.water*100))+'% of daily goal';
   var lastW=state.weights[state.weights.length-1];
   var wv=lastW?lastW.lbs:plan.wt;
   var wT=document.getElementById('weightTitle'); if(wT) wT.textContent=wv+' lb';
@@ -1580,8 +1580,8 @@ function renderCalArc(cal,plan){
   setRing('ringProFill',proToday/plan.pro);
   document.getElementById('ringProVal').textContent=Math.round(proToday)+'/'+plan.pro+'g';
   var w=state.water[todayKey()]||0;
-  setRing('ringWaterFill',w/10);
-  document.getElementById('ringWaterVal').textContent=w+'/10';
+  setRing('ringWaterFill',w/plan.water);
+  document.getElementById('ringWaterVal').textContent=w+'/'+plan.water;
   var mealsToday=state.meals.filter(function(m){return m.date===todayKey();}).length;
   var planned=MEALS.length||4;
   setRing('ringMealsFill',mealsToday/planned);
@@ -1636,7 +1636,7 @@ var settings=loadSettings();
 function saveSettings(){ try{localStorage.setItem(SET_KEY, JSON.stringify(settings));}catch(e){} }
 function applyTheme(){ var b=document.body; if(!b) return; THEMES.forEach(function(t){ b.classList.remove('theme-'+t[0]); }); if(settings.theme && settings.theme!=='sky'){ b.classList.add('theme-'+settings.theme); } }
 function setTheme(name){ settings.theme=name; saveSettings(); applyTheme(); renderSettings(); }
-function toggleSetting(key){ settings[key]=!settings[key]; saveSettings(); renderSettings(); if(settings.haptic && navigator.vibrate){ try{navigator.vibrate(10);}catch(e){} } }
+function toggleSetting(key){ settings[key]=!settings[key]; saveSettings(); var __map={eatRem:'tgEatRem',woRem:'tgWoRem',weighRem:'tgWeighRem',sound:'tgSound',haptic:'tgHaptic'}; var __el=document.getElementById(__map[key]); if(__el){ __el.classList.toggle('on', !!settings[key]); } if(settings.haptic && navigator.vibrate){ try{navigator.vibrate(10);}catch(e){} } }
 function openProfile(){ setOverlayOpen('profile', true);var v=document.getElementById('profileOverlay'); if(!v) return; v.style.display='block'; v.scrollTop=0; renderProfile(); }
 function closeProfile(){ setOverlayOpen('profile', false);var v=document.getElementById('profileOverlay'); if(v) v.style.display='none'; }
 function openSettings(){ setOverlayOpen('settings', true);var v=document.getElementById('settingsOverlay'); if(!v) return; v.style.display='block'; v.scrollTop=0; renderSettings(); }
@@ -1671,7 +1671,7 @@ function renderProfile(){
   var wb=document.getElementById('workoutBreakdown');
   if(wb){ wb.innerHTML='<div class="setrow"><span>Legs</span><b>'+r.legs+' time'+(r.legs===1?'':'s')+' this week</b></div><div class="setrow"><span>Upper Body</span><b>'+r.upper+' time'+(r.upper===1?'':'s')+' this week</b></div><div class="setrow"><span>Rest days</span><b>'+(7-r.wo)+' this week</b></div>'; }
   var tips=[];
-  if(r.waterAvg<5) tips.push('Drink more water. You are averaging '+r.waterAvg+' glasses a day, aim for 10.');
+  if(r.waterAvg<5) tips.push('Drink more water. You are averaging '+r.waterAvg+' glasses a day, aim for '+(state.targets.water||10)+'.');
   if(r.proAvg!==null && r.proAvg<(state.targets.protein||114)) tips.push('Add more protein. You are averaging '+r.proAvg+'g a day, aim for '+(state.targets.protein||114)+'g.');
   if(r.wo<4) tips.push('You did '+r.wo+' of 4 workouts this week. Try to hit them all, even a short one counts.');
   if(r.foodDays<5) tips.push('Log your food every day so the score is real, even small snacks count.');
