@@ -1602,6 +1602,9 @@ function lookupBarcode(code){
       if(m){grams=parseFloat(m[1]); gramsFrom='serving';}
       else{var mo=(pr.serving_size||'').match(/([\d.]+)\s*oz/i); if(mo){grams=parseFloat(mo[1])*28.35; gramsFrom='serving';}}
       if(!grams){var mq=(pr.quantity||'').match(/([\d.]+)\s*g/i); if(mq){grams=parseFloat(mq[1]); gramsFrom='pack';}}
+      // A 100g "serving" usually means the database never got a real serving size.
+      // If the whole pack is smaller than 100g, the pack is the serving.
+      if(grams===100){var mq2=(pr.quantity||'').match(/([\d.]+)\s*g/i); if(mq2&&parseFloat(mq2[1])<100){grams=parseFloat(mq2[1]); gramsFrom='pack';}}
       // Open Food Facts sometimes lists the per-100g number as the serving number.
       // If the serving number matches the per-100g number but the serving is not 100g, recompute it.
       if(grams&&grams!==100){
@@ -1615,7 +1618,7 @@ function lookupBarcode(code){
       else if(cal==null&&pro==null){basis='No serving size found — check the bag and type the numbers.';}
       else{basis='Serving size unknown — check these numbers match the bag.';}
       document.getElementById('scanCal').value=(cal==null?'':Math.round(cal));
-      document.getElementById('scanPro').value=(pro==null?'':pro);
+      document.getElementById('scanPro').value=(pro==null?'':Math.round(pro*10)/10);
       var noteBits=[];
       if(brand) noteBits.push(brand);
       if(basis) noteBits.push(basis);
