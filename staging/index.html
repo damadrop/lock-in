@@ -1618,8 +1618,17 @@ function lookupBarcode(code){
       }
       if(cal==null&&nut['energy-kcal_100g']!=null&&grams){cal=Math.round(nut['energy-kcal_100g']*grams/100);}
       if(pro==null&&nut.proteins_100g!=null&&grams){pro=Math.round(nut.proteins_100g*grams/100*10)/10;}
+      // If the "serving" is 100g, its numbers are just copies of the per-100g
+      // numbers, and there is no pack weight anywhere, the database does not
+      // actually know the serving — do not show those numbers as a serving.
+      var calIsCopy=(servG===100&&packG==null&&cal!=null&&nut['energy-kcal_100g']!=null&&Math.abs(cal-nut['energy-kcal_100g'])<1);
+      var proIsCopy=(servG===100&&packG==null&&pro!=null&&nut.proteins_100g!=null&&Math.abs(pro-nut.proteins_100g)<0.05);
+      var servingIsCopy=calIsCopy||proIsCopy;
+      if(calIsCopy){cal=null;}
+      if(proIsCopy){pro=null;}
       // Never fill a per-100g number into a per-serving field when the serving size is unknown.
-      if(grams){basis='1 serving = '+grams+'g'+(gramsFrom==='pack'?' (whole pack)':'');}
+      if(servingIsCopy){basis='Serving size not listed — check the bag and type the numbers.';}
+      else if(grams){basis='1 serving = '+grams+'g'+(gramsFrom==='pack'?' (whole pack)':'');}
       else if(cal==null&&pro==null){basis='No serving size found — check the bag and type the numbers.';}
       else{basis='Serving size unknown — check these numbers match the bag.';}
       document.getElementById('scanCal').value=(cal==null?'':Math.round(cal));
