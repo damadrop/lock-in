@@ -9,8 +9,15 @@
 <meta name="apple-mobile-web-app-title" content="Lock In">
 <meta name="color-scheme" content="dark">
 <link rel="apple-touch-startup-image" href="/lock-in/splash.png">
-<link rel="icon" type="image/jpeg" href="icon.jpg">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-startup-image" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/lock-in/splash.png">
+<link rel="apple-touch-startup-image" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/lock-in/splash.png">
+<link rel="apple-touch-startup-image" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/lock-in/splash.png">
+<link rel="apple-touch-startup-image" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/lock-in/splash.png">
+<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/lock-in/splash.png">
+<link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/lock-in/splash.png">
+<link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/lock-in/splash.png">
+<link rel="icon" type="image/jpeg" href="/lock-in/icon.jpg">
+<link rel="apple-touch-icon" href="/lock-in/apple-touch-icon.png">
 <title>Lock In</title>
 <style>
   *{box-sizing:border-box}
@@ -301,7 +308,7 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
 </head>
 <body>
 <div id="splash">
-  <img src="../icon.jpg" style="width:96px;height:96px;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,.4)" alt="Lock In" onerror="this.style.display='none'">
+  <img src="/lock-in/icon.jpg" style="width:128px;height:128px;border-radius:28px;box-shadow:0 10px 30px rgba(0,0,0,.4)" alt="Lock In" onerror="this.style.display='none'">
   <p style="font-size:18px;letter-spacing:4px;color:#bae6fd;margin:18px 0 0;font-weight:700">LOCK IN</p>
 </div>
 
@@ -315,7 +322,7 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
     <p id="welcomeSub" style="font-size:17px;color:#fff;margin:0 0 20px">Time to start the day right.</p>
     <p id="welcomeVerse" style="font-size:24px;line-height:1.5;color:#e9d5ff;margin:0"></p>
   </div>
-  <p style="font-size:12px;opacity:.55;margin:16px 0 0;position:relative;z-index:2">v3.2.1</p>
+  <p style="font-size:12px;opacity:.55;margin:16px 0 0;position:relative;z-index:2">v3.2.2</p>
   <div id="swipeUpBar" onclick="dismissWelcome()">
     <div class="swipechev">&#708;</div>
     <div style="font-size:15px;font-weight:700;color:#bae6fd;letter-spacing:1px">Swipe up to enter</div>
@@ -323,13 +330,13 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
 </div>
 
 <div id="updatesOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);z-index:1000;flex-direction:column;align-items:center;justify-content:center;padding:32px;overflow-y:auto">
-  <img src="icon.jpg" style="width:72px;height:72px;border-radius:18px;margin-bottom:14px" alt="Lock In icon">
+  <img src="/lock-in/icon.jpg" style="width:72px;height:72px;border-radius:18px;margin-bottom:14px" alt="Lock In icon">
   <h1 style="font-size:26px;margin:0 0 4px">Lock In</h1>
-  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 3.2.1</p>
+  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 3.2.2</p>
   <p style="font-size:14px;color:#8ea3c8;margin:0 0 24px">November 17, 2026</p>
   <p style="font-size:15px;letter-spacing:3px;color:var(--accent);margin:0 0 16px">WHAT'S NEW</p>
   <div style="text-align:left;max-width:360px;width:100%">
-    <div style="margin-bottom:4px"><b style="font-size:16px">Smoother swipe up</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">The welcome screen now follows your finger as you swipe up, then glides away smooth instead of just vanishing. Let go too soon and it springs back.</p></div>
+    <div style="margin-bottom:4px"><b style="font-size:16px">Opens on the logo now</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">No more white screen while the app loads. It opens straight onto the dark Lock In logo screen now.</p></div>
   </div>
 <button class="big" style="min-width:200px;margin-top:24px" onclick="dismissUpdates()">Continue</button>
 </div>
@@ -787,7 +794,7 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/barcode-detector@3.2.4/dist/iife/ponyfill.min.js"></script>
 <script>
-var APP_VERSION='3.2.1';
+var APP_VERSION='3.2.2';
 var _needClear=true; try{_needClear=localStorage.getItem('lockin_cache_cleared_for')!==APP_VERSION;}catch(e){}
 if(_needClear){try{localStorage.setItem('lockin_cache_cleared_for',APP_VERSION);}catch(e){} if('serviceWorker' in navigator){try{navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}catch(e){} try{if(window.caches){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});});}}catch(e){}}}
 var LS_KEY = 'lockin_homescreen_v1';
