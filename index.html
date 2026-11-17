@@ -270,6 +270,28 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
 .swake{position:absolute;left:50%;bottom:16%;transform:translateX(-50%);background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:18px;font-weight:700;padding:16px 34px;border-radius:999px;backdrop-filter:blur(6px);transition:opacity .6s ease;}
 .swake:active{transform:translateX(-50%) scale(.96);}
 #sleepScreen.sunrise .swake{opacity:0;pointer-events:none;}
+/* 3.2 sleep flow: night veil entry, cozy Z's, staged wake-up */
+#sleepVeil{position:fixed;inset:0;z-index:10001;display:none;background:radial-gradient(120% 120% at 50% 92%,#0b1030 0%,#050214 70%);clip-path:circle(0px at 50% 92%);transition:clip-path .85s cubic-bezier(.6,.05,.3,1),opacity .55s ease;}
+#sleepVeil.cover{clip-path:circle(150% at 50% 92%);}
+#sleepVeil.gone{opacity:0;}
+.sglow{position:absolute;left:50%;top:33%;width:340px;height:340px;margin-left:-170px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,.16) 0%,rgba(56,189,248,0) 65%);animation:breathe 5s ease-in-out infinite;pointer-events:none;}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.12);opacity:1}}
+#sleepScreen.sunrise .sglow{opacity:0;transition:opacity 1s ease;}
+.szzz{position:absolute;bottom:26%;font-weight:800;color:#bae6fd;opacity:0;animation:zfloat 5s ease-in infinite;pointer-events:none;}
+.szzz.z1{left:30%;font-size:22px;animation-delay:.6s;}
+.szzz.z2{left:46%;font-size:28px;animation-delay:2.2s;}
+.szzz.z3{left:62%;font-size:20px;animation-delay:3.6s;}
+@keyframes zfloat{0%{transform:translateY(0) rotate(-6deg);opacity:0}15%{opacity:.85}100%{transform:translateY(-180px) rotate(8deg);opacity:0}}
+#sleepScreen.sunrise .szzz{animation:none;opacity:0;}
+#wakeSeq{position:fixed;inset:0;z-index:10000;display:none;background:linear-gradient(180deg,#2b1055 0%,#7c2d5e 35%,#f97316 65%,#fbbf24 100%);color:#fff;animation:wsfade .8s ease-out;}
+@keyframes wsfade{from{opacity:0}to{opacity:1}}
+.wstep{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 30px;opacity:0;transform:translateY(18px) scale(.98);transition:opacity .7s ease,transform .7s ease;pointer-events:none;}
+.wstep.on{opacity:1;transform:none;pointer-events:auto;}
+.wstep .wlabel{font-size:12px;letter-spacing:4px;color:#fde68a;margin-bottom:16px;font-weight:700;}
+.wstep .wbig{font-size:32px;font-weight:800;line-height:1.25;}
+.wstep .wverse{font-size:24px;font-weight:600;line-height:1.5;}
+.wstep .wsub{font-size:15px;color:rgba(255,255,255,.85);margin-top:14px;line-height:1.5;}
+.wstep .wsmall{font-size:13px;color:rgba(255,255,255,.7);margin-top:26px;letter-spacing:1px;}
 </style>
 </head>
 <body>
@@ -288,7 +310,7 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
     <p id="welcomeSub" style="font-size:17px;color:#fff;margin:0 0 20px">Time to start the day right.</p>
     <p id="welcomeVerse" style="font-size:24px;line-height:1.5;color:#e9d5ff;margin:0"></p>
   </div>
-  <p style="font-size:12px;opacity:.55;margin:16px 0 0;position:relative;z-index:2">v3.1.1</p>
+  <p style="font-size:12px;opacity:.55;margin:16px 0 0;position:relative;z-index:2">v3.2</p>
   <div id="swipeUpBar" onclick="dismissWelcome()">
     <div class="swipechev">&#708;</div>
     <div style="font-size:15px;font-weight:700;color:#bae6fd;letter-spacing:1px">Swipe up to enter</div>
@@ -298,15 +320,13 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
 <div id="updatesOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);z-index:1000;flex-direction:column;align-items:center;justify-content:center;padding:32px;overflow-y:auto">
   <img src="icon.jpg" style="width:72px;height:72px;border-radius:18px;margin-bottom:14px" alt="Lock In icon">
   <h1 style="font-size:26px;margin:0 0 4px">Lock In</h1>
-  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 3.1.1</p>
+  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 3.2</p>
   <p style="font-size:14px;color:#8ea3c8;margin:0 0 24px">November 16, 2026</p>
   <p style="font-size:15px;letter-spacing:3px;color:var(--accent);margin:0 0 16px">WHAT'S NEW</p>
   <div style="text-align:left;max-width:360px;width:100%">
-    <div style="margin-bottom:14px"><b style="font-size:16px">Know where you stand</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">The line under your calorie ring now tells you exactly how far ahead or behind schedule you are, and how much is left today.</p></div>
-    <div style="margin-bottom:14px"><b style="font-size:16px">Protein icon matches your theme</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">The little chicken icon by your protein ring now follows your color theme instead of staying yellow.</p></div>
-    <div style="margin-bottom:14px"><b style="font-size:16px">Opens dark, no white flash</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">The app opens on a dark screen now. No more white flash when you tap it.</p></div>
-    <div style="margin-bottom:14px"><b style="font-size:16px">Your goals actually save</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Change your daily calories or water goal in Settings and it sticks. The Tracker follows it now too.</p></div>
-    <div style="margin-bottom:4px"><b style="font-size:16px">Updates show up here</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">From now on, this screen pops up whenever a new version lands, so you always know the updates reached your app.</p></div>
+    <div style="margin-bottom:14px"><b style="font-size:16px">A real goodnight</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Tap Go to sleep and the night sweeps over the whole screen into a cozy animated sleep screen, moon, stars, drifting clouds and little Z's floating up.</p></div>
+    <div style="margin-bottom:14px"><b style="font-size:16px">Wake up, slowly</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Wake up plays the sunrise, then today's Bible verse, a reminder to thank God, and a good morning, before the unlock page.</p></div>
+    <div style="margin-bottom:4px"><b style="font-size:16px">Sleepy and animated</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">The sleep screen is alive now: twinkling stars, shooting stars, a bobbing moon and a soft glow breathing behind the clock.</p></div>
   </div>
 <button class="big" style="min-width:200px;margin-top:24px" onclick="dismissUpdates()">Continue</button>
 </div>
@@ -637,6 +657,7 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
   <button id="tabProgress" onclick="switchSection('progress')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>Progress</button>
 </div>
 
+<div id="sleepVeil"></div>
 <div id="sleepScreen">
   <div class="nightbg"></div>
   <div class="sunrisebg"></div>
@@ -646,6 +667,8 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
   <div class="scloud c2"></div>
   <div class="shoot s1"></div>
   <div class="shoot s2"></div>
+  <div class="sglow"></div>
+  <span class="szzz z1">Z</span><span class="szzz z2">Z</span><span class="szzz z3">Z</span>
   <div class="ssun"></div>
   <div class="scontent" id="ssNight">
     <div class="sgreet">Good night, Lonj</div>
@@ -659,6 +682,26 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
     <div class="ssub">Nice, you're up.</div>
   </div>
   <button class="swake" onclick="wakeUpFromScreen()">☀&nbsp; Wake up</button>
+</div>
+<div id="wakeSeq" onclick="advanceWakeSeq()">
+  <div class="wstep" id="wstep0">
+    <div class="wlabel">TODAY'S VERSE</div>
+    <div class="wverse" id="wakeVerse"></div>
+    <div class="wsmall">tap to continue</div>
+  </div>
+  <div class="wstep" id="wstep1">
+    <div class="wlabel">BEFORE THE DAY STARTS</div>
+    <div class="wbig">Don't forget<br>to thank God</div>
+    <div class="wsub">for a new day</div>
+    <div class="wsmall">tap to continue</div>
+  </div>
+  <div class="wstep" id="wstep2">
+    <div class="wlabel">GOOD MORNING</div>
+    <div class="wbig" id="wakeGreet">Good morning, Lonj</div>
+    <div class="wsub" id="wakeSlept">You slept 0h 0m</div>
+    <div class="wsub" style="margin-top:6px">Ready to lock in today.</div>
+    <div class="wsmall">tap to enter</div>
+  </div>
 </div>
 
 <div id="profileOverlay" style="display:none;position:fixed;inset:0;z-index:900;background:#0a1128;overflow-y:auto;padding:calc(20px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))">
@@ -741,7 +784,7 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/barcode-detector@3.2.4/dist/iife/ponyfill.min.js"></script>
 <script>
-var APP_VERSION='3.1.1';
+var APP_VERSION='3.2';
 var _needClear=true; try{_needClear=localStorage.getItem('lockin_cache_cleared_for')!==APP_VERSION;}catch(e){}
 if(_needClear){try{localStorage.setItem('lockin_cache_cleared_for',APP_VERSION);}catch(e){} if('serviceWorker' in navigator){try{navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}catch(e){} try{if(window.caches){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});});}}catch(e){}}}
 var LS_KEY = 'lockin_homescreen_v1';
@@ -2093,10 +2136,44 @@ function wakeUpFromScreen(){
   } else {
     ov.classList.add('sunrise');
   }
-  setTimeout(function(){
-    finishWakeUp();
-    hideSleepScreen();
-  }, 1900);
+  setTimeout(startWakeSeq, 1900);
+}
+var __wakeStep=-1, __wakeTimer=null;
+function verseOfDay(){ var now=new Date(); var start=new Date(now.getFullYear(),0,0); var doy=Math.floor((now-start)/86400000); return WELCOME_VERSES[doy % WELCOME_VERSES.length]; }
+function startWakeSeq(){
+  var seq=document.getElementById('wakeSeq');
+  if(!seq){ finishWakeUp(); hideSleepScreen(); return; }
+  var v=document.getElementById('wakeVerse'); if(v) v.textContent='\u201C'+verseOfDay()+'\u201D';
+  var now=new Date();
+  var g=document.getElementById('wakeGreet'); if(g) g.textContent=(now.getHours()<5?'You\'re up':timeGreeting())+', Lonj';
+  if(state.sleepStart){
+    var start=new Date(state.sleepStart);
+    var hours=Math.round(((now-start)/3600000)*10)/10;
+    var hh=Math.floor(hours), mm=Math.round((hours-hh)*60);
+    var ws=document.getElementById('wakeSlept'); if(ws) ws.textContent='You slept '+hh+'h '+mm+'m';
+  }
+  seq.style.display='block';
+  __wakeStep=-1;
+  advanceWakeSeq();
+}
+function advanceWakeSeq(){
+  if(__wakeTimer){ clearTimeout(__wakeTimer); __wakeTimer=null; }
+  __wakeStep++;
+  if(__wakeStep>=3){ finishWakeSeq(); return; }
+  for(var i=0;i<3;i++){
+    var el=document.getElementById('wstep'+i);
+    if(el) el.classList.toggle('on', i===__wakeStep);
+  }
+  __wakeTimer=setTimeout(advanceWakeSeq, 2800);
+}
+function finishWakeSeq(){
+  if(__wakeTimer){ clearTimeout(__wakeTimer); __wakeTimer=null; }
+  var seq=document.getElementById('wakeSeq');
+  finishWakeUp();
+  hideSleepScreen();
+  if(seq) seq.style.display='none';
+  __wakeStep=-1;
+  setTimeout(showWelcome, 650);
 }
 function toggleSleep(){
   if(state.sleepStart){
@@ -2104,7 +2181,20 @@ function toggleSleep(){
   } else {
     state.sleepStart=new Date().toISOString();
     save(); render();
-    showSleepScreen();
+    var veil=document.getElementById('sleepVeil');
+    if(veil){
+      veil.style.display='block';
+      veil.classList.remove('gone');
+      void veil.offsetWidth;
+      veil.classList.add('cover');
+      setTimeout(function(){
+        showSleepScreen();
+        veil.classList.add('gone');
+        setTimeout(function(){ veil.style.display='none'; veil.classList.remove('cover'); }, 600);
+      }, 850);
+    } else {
+      showSleepScreen();
+    }
   }
 }
 function renderSleep(){
