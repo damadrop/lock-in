@@ -888,7 +888,7 @@ function showReminders(){
   lines.push(nextMeal?('Next meal: '+nextMeal.name+' at '+nextMeal.time+' ('+Math.round(plan.cal*nextMeal.share)+' cal)'):'All meals done for today.');
   lines.push('Calories: '+cal.toLocaleString()+' / '+plan.cal.toLocaleString()+' so far.');
   lines.push(part==='Rest'?'Workout: Rest day.':'Workout: '+part+' today.');
-  lines.push('Water: '+w+' of 10 glasses.');
+  lines.push('Water: '+w+' of '+plan.water+' glasses.');
   alert(lines.join('\n'));
 }
 function render(){
@@ -914,9 +914,9 @@ function render(){
   document.getElementById('workoutPartLabel').textContent=todayPart==='Rest' ? 'Rest day' : todayPart;
   document.getElementById('workoutSubLabel').textContent=todayPart==='Rest' ? 'Eat, sleep, recover.' : (doneToday ? 'Done ✓' : 'Strength • 45–60 min');
   var wcount=state.water[today]||0;
-  document.getElementById('waterCount').textContent=wcount+' / 10 glasses';
-  var wBarF=document.getElementById('waterBarF'); if(wBarF) wBarF.style.width=Math.min(100,Math.round(wcount/10*100))+'%';
-  var wPct=document.getElementById('waterPct'); if(wPct) wPct.textContent=Math.min(100,Math.round(wcount/10*100))+'% of daily goal';
+  document.getElementById('waterCount').textContent=wcount+' / '+plan.water+' glasses';
+  var wBarF=document.getElementById('waterBarF'); if(wBarF) wBarF.style.width=Math.min(100,Math.round(wcount/plan.water*100))+'%';
+  var wPct=document.getElementById('waterPct'); if(wPct) wPct.textContent=Math.min(100,Math.round(wcount/plan.water*100))+'% of daily goal';
   var lastW=state.weights[state.weights.length-1];
   var wv=lastW?lastW.lbs:plan.wt;
   var wT=document.getElementById('weightTitle'); if(wT) wT.textContent=wv+' lb';
@@ -1580,8 +1580,8 @@ function renderCalArc(cal,plan){
   setRing('ringProFill',proToday/plan.pro);
   document.getElementById('ringProVal').textContent=Math.round(proToday)+'/'+plan.pro+'g';
   var w=state.water[todayKey()]||0;
-  setRing('ringWaterFill',w/10);
-  document.getElementById('ringWaterVal').textContent=w+'/10';
+  setRing('ringWaterFill',w/plan.water);
+  document.getElementById('ringWaterVal').textContent=w+'/'+plan.water;
   var mealsToday=state.meals.filter(function(m){return m.date===todayKey();}).length;
   var planned=MEALS.length||4;
   setRing('ringMealsFill',mealsToday/planned);
@@ -1671,7 +1671,7 @@ function renderProfile(){
   var wb=document.getElementById('workoutBreakdown');
   if(wb){ wb.innerHTML='<div class="setrow"><span>Legs</span><b>'+r.legs+' time'+(r.legs===1?'':'s')+' this week</b></div><div class="setrow"><span>Upper Body</span><b>'+r.upper+' time'+(r.upper===1?'':'s')+' this week</b></div><div class="setrow"><span>Rest days</span><b>'+(7-r.wo)+' this week</b></div>'; }
   var tips=[];
-  if(r.waterAvg<5) tips.push('Drink more water. You are averaging '+r.waterAvg+' glasses a day, aim for 10.');
+  if(r.waterAvg<5) tips.push('Drink more water. You are averaging '+r.waterAvg+' glasses a day, aim for '+(state.targets.water||10)+'.');
   if(r.proAvg!==null && r.proAvg<(state.targets.protein||114)) tips.push('Add more protein. You are averaging '+r.proAvg+'g a day, aim for '+(state.targets.protein||114)+'g.');
   if(r.wo<4) tips.push('You did '+r.wo+' of 4 workouts this week. Try to hit them all, even a short one counts.');
   if(r.foodDays<5) tips.push('Log your food every day so the score is real, even small snacks count.');
