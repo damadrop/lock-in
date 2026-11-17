@@ -31,7 +31,7 @@
   body.lockpager .page{overflow:hidden}
   .pager::-webkit-scrollbar{display:none}
   .page{flex:0 0 100%;scroll-snap-align:start;overflow-y:auto;overflow-x:hidden;padding:calc(64px + env(safe-area-inset-top)) 16px calc(8px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
-  .apphead{position:fixed;top:0;left:0;right:0;z-index:60;text-align:center;padding:calc(8px + env(safe-area-inset-top)) 16px 10px;margin:0;background:var(--bg1);transition:transform .35s ease,opacity .35s ease,background-color .6s ease}
+  .apphead{position:fixed;top:0;left:0;right:0;z-index:60;text-align:center;padding:calc(8px + env(safe-area-inset-top)) 16px 10px;margin:0;background:var(--bg1);transition:transform .35s ease,opacity .35s ease,background-color .8s ease}
   .apphead.hidden{transform:translateY(-110%);opacity:0;pointer-events:none}
   .apphead h1{font-size:30px;letter-spacing:-.5px}
   .headicons{position:absolute;right:16px;top:calc(12px + env(safe-area-inset-top));display:flex;gap:10px;z-index:5}
@@ -240,10 +240,10 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
 .packpick{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:var(--field);border:2px solid transparent;color:#fff;font-size:15px;font-weight:700;cursor:pointer;box-shadow:none;flex:1 1 40%;text-align:left}
 .packpick.on{border-color:var(--accent)}
 .packprev{width:28px;height:28px;border-radius:50%;flex:0 0 auto;border:2px solid rgba(255,255,255,.25)}
-.card,.alert,input,select,.bar,#weightView,#profileOverlay,#settingsOverlay{transition:background-color .6s ease,border-color .6s ease}
+.card,.alert,input,select,.bar,#weightView,#profileOverlay,#settingsOverlay{transition:background-color .8s ease,border-color .8s ease}
 #themeVeil{position:fixed;inset:0;z-index:10002;pointer-events:none;background:linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 100%);clip-path:circle(0% at 50% 50%)}
-#themeVeil.go{transition:clip-path .55s cubic-bezier(.22,1,.36,1);clip-path:circle(150% at 50% 50%)}
-#themeVeil.fade{transition:opacity .45s ease;opacity:0}
+#themeVeil.go{transition:clip-path .85s cubic-bezier(.65,0,.35,1);clip-path:circle(150% at 50% 50%)}
+#themeVeil.fade{transition:opacity .5s ease;opacity:0}
 .pbadge{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:12px 8px;text-align:center}
 .pbadge b{display:block;font-size:20px}
 .pbadge span{font-size:12px;color:#8ea3c8}
@@ -1706,7 +1706,7 @@ function loadSettings(){var d=defaultSettings(); try{var raw=localStorage.getIte
 var settings=loadSettings();
 function saveSettings(){ try{localStorage.setItem(SET_KEY, JSON.stringify(settings));}catch(e){} }
 function applyTheme(){ var b=document.body; if(!b) return; var h=document.documentElement; THEME_PACKS.forEach(function(t){ h.classList.remove('pack-'+t[0]); }); if(settings.pack && settings.pack!=='splash'){ h.classList.add('pack-'+settings.pack); } THEMES.forEach(function(t){ b.classList.remove('theme-'+t[0]); }); if(settings.theme && settings.theme!=='sky'){ b.classList.add('theme-'+settings.theme); } }
-function animateThemeChange(applyFn){ var v=document.getElementById('themeVeil'); if(!v){ applyFn(); return; } applyFn(); v.classList.remove('go','fade'); void v.offsetWidth; v.classList.add('go'); setTimeout(function(){ v.classList.add('fade'); setTimeout(function(){ v.classList.remove('go','fade'); },500); },600); }
+function animateThemeChange(applyFn){ var v=document.getElementById('themeVeil'); if(!v){ applyFn(); return; } applyFn(); v.classList.remove('go','fade'); void v.offsetWidth; v.classList.add('go'); setTimeout(function(){ v.classList.add('fade'); setTimeout(function(){ v.classList.remove('go','fade'); },550); },600); }
 function setTheme(name){ settings.theme=name; saveSettings(); animateThemeChange(function(){ applyTheme(); renderSettings(); }); }
 function setPack(name){ settings.pack=name; settings.theme='sky'; saveSettings(); animateThemeChange(function(){ applyTheme(); renderSettings(); }); if(settings.haptic && navigator.vibrate){ try{navigator.vibrate(15);}catch(e){} } }
 function toggleSetting(key){ settings[key]=!settings[key]; saveSettings(); var __map={eatRem:'tgEatRem',woRem:'tgWoRem',weighRem:'tgWeighRem',sound:'tgSound',haptic:'tgHaptic'}; var __el=document.getElementById(__map[key]); if(__el){ __el.classList.toggle('on', !!settings[key]); } if(settings.haptic && navigator.vibrate){ try{navigator.vibrate(10);}catch(e){} } }
