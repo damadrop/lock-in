@@ -206,6 +206,11 @@
 #swipeUpBar{position:absolute;left:0;right:0;bottom:calc(28px + env(safe-area-inset-bottom));z-index:2;text-align:center;cursor:pointer}
 #swipeUpBar .swipechev{font-size:26px;line-height:1;color:var(--accent2);animation:chevup 1.6s ease-in-out infinite}
 @keyframes chevup{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(-6px);opacity:1}}
+/* 3.2.1 smooth welcome swipe: overlay follows the finger, glides off on release */
+#welcomeOverlay{will-change:transform,opacity}
+#welcomeOverlay.w-anim{transition:transform .55s cubic-bezier(.22,1,.36,1),opacity .55s ease}
+#welcomeOverlay.w-enter{animation:wfadein .5s ease-out}
+@keyframes wfadein{from{opacity:0}to{opacity:1}}
 :root{--accent:#38bdf8;--accent2:#7dd3fc}
 body.theme-green{--accent:#34d399;--accent2:#6ee7b7}
 body.theme-purple{--accent:#a78bfa;--accent2:#c4b5fd}
@@ -310,7 +315,7 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
     <p id="welcomeSub" style="font-size:17px;color:#fff;margin:0 0 20px">Time to start the day right.</p>
     <p id="welcomeVerse" style="font-size:24px;line-height:1.5;color:#e9d5ff;margin:0"></p>
   </div>
-  <p style="font-size:12px;opacity:.55;margin:16px 0 0;position:relative;z-index:2">v3.2</p>
+  <p style="font-size:12px;opacity:.55;margin:16px 0 0;position:relative;z-index:2">v3.2.1</p>
   <div id="swipeUpBar" onclick="dismissWelcome()">
     <div class="swipechev">&#708;</div>
     <div style="font-size:15px;font-weight:700;color:#bae6fd;letter-spacing:1px">Swipe up to enter</div>
@@ -320,13 +325,11 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
 <div id="updatesOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,#0d1530 0%,#0a1128 100%);z-index:1000;flex-direction:column;align-items:center;justify-content:center;padding:32px;overflow-y:auto">
   <img src="icon.jpg" style="width:72px;height:72px;border-radius:18px;margin-bottom:14px" alt="Lock In icon">
   <h1 style="font-size:26px;margin:0 0 4px">Lock In</h1>
-  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 3.2</p>
-  <p style="font-size:14px;color:#8ea3c8;margin:0 0 24px">November 16, 2026</p>
+  <p style="font-size:14px;color:#8ea3c8;margin:0 0 4px">Version 3.2.1</p>
+  <p style="font-size:14px;color:#8ea3c8;margin:0 0 24px">November 17, 2026</p>
   <p style="font-size:15px;letter-spacing:3px;color:var(--accent);margin:0 0 16px">WHAT'S NEW</p>
   <div style="text-align:left;max-width:360px;width:100%">
-    <div style="margin-bottom:14px"><b style="font-size:16px">A real goodnight</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Tap Go to sleep and the night sweeps over the whole screen into a cozy animated sleep screen, moon, stars, drifting clouds and little Z's floating up.</p></div>
-    <div style="margin-bottom:14px"><b style="font-size:16px">Wake up, slowly</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">Wake up plays the sunrise, then today's Bible verse, a reminder to thank God, and a good morning, before the unlock page.</p></div>
-    <div style="margin-bottom:4px"><b style="font-size:16px">Sleepy and animated</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">The sleep screen is alive now: twinkling stars, shooting stars, a bobbing moon and a soft glow breathing behind the clock.</p></div>
+    <div style="margin-bottom:4px"><b style="font-size:16px">Smoother swipe up</b><p style="font-size:14px;color:#8ea3c8;line-height:1.45;margin:4px 0 0">The welcome screen now follows your finger as you swipe up, then glides away smooth instead of just vanishing. Let go too soon and it springs back.</p></div>
   </div>
 <button class="big" style="min-width:200px;margin-top:24px" onclick="dismissUpdates()">Continue</button>
 </div>
@@ -784,7 +787,7 @@ body.theme-red{--accent:#f87171;--accent2:#fca5a5}
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/barcode-detector@3.2.4/dist/iife/ponyfill.min.js"></script>
 <script>
-var APP_VERSION='3.2';
+var APP_VERSION='3.2.1';
 var _needClear=true; try{_needClear=localStorage.getItem('lockin_cache_cleared_for')!==APP_VERSION;}catch(e){}
 if(_needClear){try{localStorage.setItem('lockin_cache_cleared_for',APP_VERSION);}catch(e){} if('serviceWorker' in navigator){try{navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}catch(e){} try{if(window.caches){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});});}}catch(e){}}}
 var LS_KEY = 'lockin_homescreen_v1';
@@ -2030,9 +2033,33 @@ function showWelcome(){ setOverlayOpen('welcome', true);
   document.getElementById('welcomeVerse').textContent=WELCOME_VERSES[doy % WELCOME_VERSES.length];
   buildWelcomeStars();
   ov.style.display='flex';
+  ov.classList.remove('w-anim');
+  ov.style.transform=''; ov.style.opacity='';
+  ov.classList.remove('w-enter'); void ov.offsetWidth; ov.classList.add('w-enter');
 }
-function dismissWelcome(){ setOverlayOpen('welcome', false);
-  document.getElementById('welcomeOverlay').style.display='none';
+var __welcomeLeaving=false;
+function dismissWelcome(instant){
+  var ov=document.getElementById('welcomeOverlay');
+  if(!ov || ov.style.display==='none' || __welcomeLeaving) return;
+  setOverlayOpen('welcome', false);
+  ov.classList.remove('w-enter');
+  if(instant){
+    ov.style.display='none'; ov.style.transform=''; ov.style.opacity='';
+    afterWelcomeDismiss();
+    return;
+  }
+  __welcomeLeaving=true;
+  ov.classList.add('w-anim');
+  ov.style.transform='translateY(-100%)';
+  ov.style.opacity='0';
+  setTimeout(function(){
+    ov.style.display='none'; ov.style.transform=''; ov.style.opacity='';
+    ov.classList.remove('w-anim');
+    __welcomeLeaving=false;
+    afterWelcomeDismiss();
+  }, 560);
+}
+function afterWelcomeDismiss(){
   var seen=null; try{seen=localStorage.getItem('lockin_seen_version');}catch(e){}
   if(seen!==APP_VERSION){document.getElementById('updatesOverlay').style.display='flex'; setOverlayOpen('updates', true);}
   else if(__tourPending){ __tourPending=false; setTimeout(startTour, 400); }
@@ -2298,13 +2325,29 @@ bindPageScroll();
 (function(){
   var ov=document.getElementById('welcomeOverlay');
   if(ov){
-    var sy=null;
-    ov.addEventListener('touchstart', function(e){ if(e.touches.length===1){ sy=e.touches[0].clientY; } }, {passive:true});
+    var sy=null, st=0, dragging=false;
+    ov.addEventListener('touchstart', function(e){ if(e.touches.length===1){ sy=e.touches[0].clientY; st=Date.now(); dragging=false; ov.classList.remove('w-anim'); } }, {passive:true});
+    ov.addEventListener('touchmove', function(e){
+      if(sy===null) return;
+      var dy=e.touches[0].clientY - sy;
+      if(dy < 0){
+        dragging=true;
+        ov.style.transform='translateY('+dy+'px)';
+        ov.style.opacity=String(Math.max(0.35, 1 + dy/window.innerHeight));
+      }
+    }, {passive:true});
     ov.addEventListener('touchend', function(e){
       if(sy===null) return;
       var dy=(e.changedTouches[0]||{}).clientY - sy;
+      var dt=Math.max(1, Date.now()-st);
+      var vel=dy/dt;
       sy=null;
-      if(dy < -60){ dismissWelcome(); }
+      if(dy < -80 || (dy < -40 && vel < -0.5)){ dismissWelcome(); }
+      else if(dragging){
+        ov.classList.add('w-anim');
+        ov.style.transform='';
+        ov.style.opacity='';
+      }
     }, {passive:true});
   }
 })();
@@ -2332,7 +2375,7 @@ setTimeout(function(){
   var sp=document.getElementById('splash');
   if(sp){ sp.classList.add('gone'); setTimeout(function(){ sp.style.display='none'; }, 850); }
 }, 700);
-if(state.sleepStart){ showSleepScreen(); dismissWelcome(); }
+if(state.sleepStart){ showSleepScreen(); dismissWelcome(true); }
 setInterval(function(){ applyDayTheme(); refreshTime(); }, 60000);
 document.addEventListener('visibilitychange', function(){ if(!document.hidden){ applyDayTheme(); refreshTime(); } });
 switchSection('tracker');
